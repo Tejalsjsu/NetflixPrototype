@@ -8,6 +8,11 @@ import Dashboard from './dashboard';
 import Signup from './signup';
 // import NavBar from '../components/navbar';
 import AdminNavBar from '../components/adminNavBar';
+import AddMovie from '../components/addMovie';
+import UpdateMovie from '../components/updateMovie';
+import DeleteMovie from '../components/deleteMovie';
+// import Signup from '../components/signup';
+
 import queryString from 'query-string';
 import cookie from "react-cookies";
 // let imgStyle = {height: '70px', padding: '10px'};
@@ -150,11 +155,12 @@ class AdminAddMovie extends Component{
                 </div>
                     <div className="container">
                     <div  className="col-sm-8">
-                        <h2> No Interested? </h2>
-                         {this.state.showAddMovieComponent ? <p> ADD was clicked!!!!!!!!!!!!!!!!</p> : null}
-                         {this.state.showUpdateMovieComponent ? <p> UPDATE was clicked!!!!!!!!!!!!!!!!</p> : null}
-                         {this.state.showDeleteMovieComponent ? <p> DELETE was clicked!!!!!!!!!!!!!!!!</p> : null}
+
+                         {this.state.showAddMovieComponent ? <AddMovie/> : null}
+                         {this.state.showUpdateMovieComponent ? <UpdateMovie/> : null}
+                         {this.state.showDeleteMovieComponent ? <DeleteMovie/> : null}
                         <br/>
+                        {!this.state.showDeleteMovieComponent && !this.state.showAddMovieComponent && !this.state.showUpdateMovieComponent ?
                         <div align="left">
                                 &#x2705; What’s great about it?  <br/>
                         &#x2705; You only have to pay for work when it has been completed and you’re 100% satisfied. <br/>
@@ -162,7 +168,7 @@ class AdminAddMovie extends Component{
                             &#x2705; We’re always here to help. Our support consists of real people who are available 24/7. <br/>
                                     &#x2705; You can live chat to get constant updates on the progress of your work. <br/>
                         </div>
-
+                          : null}
                     </div>
                     </div>
                     <div ><br/>
