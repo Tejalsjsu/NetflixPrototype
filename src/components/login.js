@@ -86,7 +86,7 @@ class Login extends Component{
                             <img src={logo} style={imgStyle} alt="logo"/>
                             <hr color="#E3E1E1"/>
                             <input type="email" className="form-control" placeholder="Enter email" value={this.state.userdata.username}
-                                   
+
                                    onChange={(event) => {
                                        this.setState({
                                            userdata: {

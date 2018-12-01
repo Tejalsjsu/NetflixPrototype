@@ -11,6 +11,7 @@ import AdminNavBar from '../components/adminNavBar';
 import AddMovie from '../components/addMovie';
 import UpdateMovie from '../components/updateMovie';
 import DeleteMovie from '../components/deleteMovie';
+import AdminFinancials from '../components/adminFinancials';
 // import Signup from '../components/signup';
 
 import queryString from 'query-string';

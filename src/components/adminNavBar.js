@@ -45,10 +45,9 @@ function AdminNavBar() {
                         <div className="collapse navbar-collapse bar-item" id="myNavbar">
                             <ul className="nav navbar-nav">
                                 <li onClick={this.activateClass} ><NavLink exact to="/adminAddMovie">Admin Dashboard</NavLink></li>
-                                <li onClick={this.activateClass} ><NavLink to="/myprojects">Movies</NavLink></li>
-                                <li onClick={this.activateClass} ><NavLink to="/addMoney">Subscription Reports</NavLink></li>
-
-                                <li onClick={this.activateClass} ><a href="/editprofile">User Reports</a></li>
+                                <li onClick={this.activateClass} ><NavLink to="/userActivity">User Activity</NavLink></li>
+                                <li onClick={this.activateClass} ><NavLink to="/movieActivity">Movie Activity</NavLink></li>
+                                <li onClick={this.activateClass} ><NavLink to="/AdminFinancials">Financial Reports</NavLink></li>
                                 {/*className='active is-active'*/}
                             </ul>
 

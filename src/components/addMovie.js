@@ -15,25 +15,64 @@ let formHead1 = {color:'blue', fontFamily : 'Open Sans', fontSize: '55', fontWei
 class AddMovie extends Component{
   constructor(props){
     super(props);
-  }
-    state = {
-        userdata: {
-            username: '',
-            password: '',
-            email:'',
-            typeOfUser:''
+
+    this.state = {
+        addmoviedata: {
+            title: '',
+            genre: '',
+            year:'',
+            studio:'',
+            synopsis: '',
+            image: '',
+            url: '',
+            actor: '',
+            director: '',
+            country: '',
+            rating: '',
+            subscription: '',
+            price: ''
+
         },
         validation_error: [],
         isLoggedIn: false,
-        message: ''
+        message: '',
+        isSubmitted: false
+
     };
-
-
-    handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    // this.handleChange = this.handleChange.bind(this);
   }
 
+  componentWillMount(){
+      this.setState({
+        title: '',
+        genre: '',
+        year:'',
+        studio:'',
+        synopsis: '',
+        image: '',
+        url: '',
+        actor: '',
+        director: '',
+        country: '',
+        rating: '',
+        subscription: '',
+        price: ''
+      });
+  }
+
+  //   handleChange(event) {
+  //   this.setState({ [event.target.name]: event.target.value });
+  // }
+
     handleSubmit = () => {
+      const isSubmitted="true"
+      // const submitted = "true",
+      const isEnabled = this.state.addmoviedata.title.length > 0;
+      console.log("Submitted");
+      console.log("Values : " +this.state.addmoviedata.title);
+      console.log("length : " +this.state.addmoviedata.title.length);
+      console.log(this.isEnabled);
+
         //validations
 
 
@@ -96,37 +135,49 @@ class AddMovie extends Component{
             <p style={formHead1}>Add Movie details below</p>
             <hr color="#E3E1E1"/>
                 <form>
-                <input type="text" className="form-control" placeholder="Title" value={this.state.userdata.email} /> <br/>
-                <input type="text" className="form-control" placeholder="Genre" onChange={this.handleInputChange} /><br />
-                <input type="number" className="form-control" placeholder="Year" onChange={this.handleInputChange} /><br />
-                <input type="text" className="form-control" placeholder="Studio" onChange={this.handleInputChange} /><br />
-                <textarea type="text" className="form-control" placeholder="Short movie synopsis" onChange={this.handleInputChange} /><br />
-                <input type="file" className="form-control" placeholder="upload image" onChange={this.handleInputChange} /><br />
-                <input type="text" className="form-control" placeholder="Movie URL" onChange={this.handleInputChange} /><br />
-                <input type="text" className="form-control" placeholder="Actor" onChange={this.handleInputChange} /><br />
-                <input type="text" className="form-control" placeholder="Director" onChange={this.handleInputChange} /><br />
-                <input type="text" className="form-control" placeholder="Country" onChange={this.handleInputChange} /><br />
-                <input type="text" className="form-control" placeholder="Rating" onChange={this.handleInputChange} /><br />
+                <input name="title" type="text" className="form-control" placeholder="Title"  value={this.state.addmoviedata.title}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,title: event.target.value}});}}/> <br/>
+                <input name="genre" type="text" className="form-control" placeholder="Genre" value={this.state.addmoviedata.genre}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,genre: event.target.value}});}}/><br />
+                <input name="year" type="number" className="form-control" placeholder="Year" value={this.state.addmoviedata.year}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,year: event.target.value}});}}/><br />
+                <input name="studio" type="text" className="form-control" placeholder="Studio"  value={this.state.addmoviedata.studio}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,studio: event.target.value}});}}/><br />
+                <textarea name="synopsis" type="text" className="form-control" placeholder="Short movie synopsis"  value={this.state.addmoviedata.synopsis}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,synopsis: event.target.value}});}}/><br />
+                <input name="image" type="file" className="form-control" placeholder="upload image" value={this.state.addmoviedata.image}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,image: event.target.value}});}}/><br />
+                <input name="url" type="text" className="form-control" placeholder="Movie URL" value={this.state.addmoviedata.url}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,url: event.target.value}});}}/><br />
+                <input name="actor" type="text" className="form-control" placeholder="Actor" value={this.state.addmoviedata.actor}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,actor: event.target.value}});}}/><br />
+                <input name="director" type="text" className="form-control" placeholder="Director" value={this.state.addmoviedata.director}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,director: event.target.value}});}}/><br />
+                <input name="country" type="text" className="form-control" placeholder="Country" value={this.state.addmoviedata.country}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,country: event.target.value}});}}/><br />
+                <input name="rating" type="text" className="form-control" placeholder="Rating"  value={this.state.addmoviedata.rating}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,rating: event.target.value}});}}/><br />
 
-                <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
-                  <option value="Select">Select option</option>
+                <select className="form-control" name="subscription" value={this.state.addmoviedata.subscription}>
+                  <option value="Select">Select subscription type</option>
                   <option value="Free">Free</option>
                   <option value="Subscription">Subscription only</option>
                   <option value="Pay-per-view">Pay-per-view</option>
                   <option value="Paid">Paid</option>
                 </select><br />
-                <input type="number" className="form-control" placeholder="Price in $" onChange={this.handleInputChange} /><br />
-                <Button name="Add Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myModal">Add Movie</Button><br/>
+                <input name="price" type="number" className="form-control" placeholder="Price in $" value={this.state.addmoviedata.price}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,price: event.target.value}});}}/><br />
+                <Button name="Add Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myModal" onClick={this.handleSubmit}>Add Movie</Button><br/>
 
                 <div class="modal fade" id="myModal" data-toggle="myModal">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Movie added successfully!</h4>
+                        <h4 class="modal-title">Movie <b><i>{this.state.addmoviedata.title}</i></b> added successfully!</h4>
                       </div>
                       <div class="modal-body">
-                        <p>Users now can access ABC movie from their profiles!</p>
+                        <p>Users now can access <b><i>{this.state.addmoviedata.title}</i></b> movie from their profiles!</p>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

@@ -95,12 +95,18 @@ class UpdateMovie extends Component{
 
             <p style={formHead1}>Search and update Movie details below</p>
             <hr color="#E3E1E1"/>
+            <input type="text" className="form-control" placeholder="Search movie" value={this.state.userdata.email} /> <br/>
+            <Button name="Search Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#mySearchModal">Search Movie</Button><br/>
+            <hr color="#E3E1E1"/>
                 <form>
-                <input type="text" className="form-control" placeholder="Title" value={this.state.userdata.email} /> <br/>
+                <input type="text" className="form-control" placeholder="Title" value={this.state.userdata.email} readonly="readonly"/> <br/>
                 <input type="text" className="form-control" placeholder="Genre" onChange={this.handleInputChange} /><br />
                 <input type="number" className="form-control" placeholder="Year" onChange={this.handleInputChange} /><br />
                 <input type="text" className="form-control" placeholder="Studio" onChange={this.handleInputChange} /><br />
                 <textarea type="text" className="form-control" placeholder="Short movie synopsis" onChange={this.handleInputChange} /><br />
+                <label>Current Image:</label>
+                <input type="text" className="form-control" placeholder="current-image.jpg" onChange={this.handleInputChange} /><br />
+                <label>Choose another</label>
                 <input type="file" className="form-control" placeholder="upload image" onChange={this.handleInputChange} /><br />
                 <input type="text" className="form-control" placeholder="Movie URL" onChange={this.handleInputChange} /><br />
                 <input type="text" className="form-control" placeholder="Actor" onChange={this.handleInputChange} /><br />
@@ -116,8 +122,8 @@ class UpdateMovie extends Component{
                   <option value="Paid">Paid</option>
                 </select><br />
                 <input type="number" className="form-control" placeholder="Price in $" onChange={this.handleInputChange} /><br />
-                <Button name="Add Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myModal">Update Movie</Button><br/>
-
+                <Button name="Add Movie" bsStyle="success" class="btn btn-primary " data-toggle="modal" data-target="#myModal">Update Movie</Button><br/>
+                    {/*Modal for update movie*/}
                 <div class="modal fade" id="myModal" data-toggle="myModal">
                   <div class="modal-dialog">
                     <div class="modal-content">
@@ -137,6 +143,26 @@ class UpdateMovie extends Component{
                     {/*<!-- /.modal-content -->*/}
                   </div>{/*<!-- /.modal-dialog -->*/}
                 </div>{/*<!-- /.modal -->*/}
+
+                  {/*Modal for search movie*/}
+                  <div class="modal fade" id="mySearchModal" data-toggle="mySearchModal">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                          <h4 class="modal-title">Movie search was successful/unsuccessful message.</h4>
+                        </div>
+                        <div class="modal-body">
+                          <p>You can now update the movie features populated.</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+
+                        </div>
+                      </div>
+                      {/*<!-- /.modal-content -->*/}
+                    </div>{/*<!-- /.modal-dialog -->*/}
+                  </div>{/*<!-- /.modal -->*/}
 
                 </form>
                 </div>
