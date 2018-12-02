@@ -19,6 +19,10 @@ import FinancialDashboard from './components/financialDashboard'
 import AddMoney from './components/addMoney'
 import WithdrawMoney from './components/withdrawMoney'
 import FinancialDashboardIn from './components/financialDashboardIn'
+import AdminAddMovie from './components/adminAddMovie'
+import AdminFinancials from './components/adminFinancials'
+import UserActivity from './components/userActivity'
+import MovieActivity from './components/movieActivity'
 
 class App extends Component {
   render() {
@@ -46,6 +50,10 @@ class App extends Component {
                   <Route path="/financialDashboardIn" component={FinancialDashboardIn}/>
                   <Route path="/addMoney" component={AddMoney}/>
                   <Route path="/withdrawMoney" component={WithdrawMoney}/>
+                  <Route path="/adminAddMovie" component={AdminAddMovie}/>
+                  <Route path="/adminFinancials" component={AdminFinancials}/>
+                  <Route path="/userActivity" component={UserActivity}/>
+                  <Route path="/movieActivity" component={MovieActivity}/>
               </div>
           </BrowserRouter>
 
