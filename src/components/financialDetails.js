@@ -14,7 +14,7 @@ let formHead1 = {color:'blue', fontFamily : 'Open Sans', fontSize: '55', fontWei
 let formStyle1 = {align:'center', fontFamily : 'Open Sans', fontSize: '70'}
 // let tableStyle1 = {align:'center', padding: '19px 9px 9px 9px'}
 
-class MovieDetails extends Component{
+class FinancialDetails extends Component{
   constructor(props){
     super(props);
   }
@@ -95,97 +95,66 @@ class MovieDetails extends Component{
             <div style={divStyle1} className="col-sm-3">
             {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
 
-            <p style={formHead1}>Movie details in MovieCentral</p>
+            <p style={formHead1}>Financial details of users in MovieCentral</p>
             <hr color="#E3E1E1"/>
                 <form style={formStyle1}>
+                <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
+                  <option value="Select">Select month</option>
+                  <option value="Jan">January</option>
+                  <option value="Feb">February</option>
+                  <option value="Mar">March</option>
+                  <option value="Apr">April</option>
+                  <option value="May">May</option>
+                  <option value="Jun">June</option>
+                  <option value="Jul">July</option>
+                  <option value="Aug">August</option>
+                  <option value="Sep">September</option>
+                  <option value="Oct">October</option>
+                  <option value="Nov">November</option>
+                  <option value="Dec">December</option>
+                </select><br/>
+                <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
+                  <option value="Select">Select year</option>
+                  <option value="2018">2018</option>
+                  <option value="2017">2017</option>
+                  <option value="2016">2016</option>
+                  <option value="2015">2015</option>
+                  <option value="2014">2014</option>
+                  <option value="2013">2013</option>
+                </select><br />
                 <table>
                   <tr>
                     <td>Sr. No.</td>&nbsp;&nbsp;
-                    <td>Movie Name</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Number of plays</td>
+                    <td>User type</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>Total users</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>Total income</td>
                   </tr>
                   <tr>
                     <td>1</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Movie A</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>Free</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>-</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>-</td>
                   </tr>
-                  <tr >
+                  <tr>
                     <td>2</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Movie B</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>Subscribed</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>-</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>-</td>
                   </tr>
                   <tr>
                     <td>3</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Movie C</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>PayPerView</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>-</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>-</td>
                   </tr>
-                  <tr>
+                  <tr >
                     <td>4</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Movie D</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>Paid</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>-</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>-</td>
                   </tr>
                 </table>
-                <Button name="Top10" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myTop10Modal">Click here to view top 10 movie list</Button><br/>
-
-              {/*Modal for customer list*/}
-                <div class="modal fade" id="myModal" data-toggle="myModal">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">User details and movie history of user ABC</h4>
-                      </div>
-                      <div class="modal-body">
-                      <label> User name:</label><input className="form-control" name="type" readonly="readonly" placeholder="ABC"/><br/>
-                      <label> Subscription:</label><input className="form-control" name="type" readonly="readonly" placeholder="Free"/><br/>
-                      <label> Enrolled since:</label><input className="form-control" name="type" readonly="readonly" placeholder="11/30/18"/><br/>
-                      <p>Movie History for user:</p>
-                        <p>Movie 1</p>
-                        <p>Movie 2</p>
-                        <p>Movie 3</p>
-                        <p>Movie 4</p>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                      </div>
-                    </div>
-
-                    {/*<!-- /.modal-content -->*/}
-                  </div>{/*<!-- /.modal-dialog -->*/}
-                </div>{/*<!-- /.modal -->*/}
-
-{/*Modal for customer list*/}
-<div class="modal fade" id="myTop10Modal" data-toggle="myTop10Modal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Current top 10 movie list</h4>
-      </div>
-      <div class="modal-body">
-      <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
-        <option value="Select">Select duration</option>
-        <option value="day">Last 24 hours</option>
-        <option value="week">Last week</option>
-        <option value="month">Last month</option>
-      </select><br />
-        <p>Movie 1</p>
-        <p>Movie 2</p>
-        <p>Movie 3</p>
-        <p>Movie 4</p>
-        <p> .</p>
-        <p> .</p>
-        <p>Movie 10</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-
-      </div>
-    </div>
-    {/*<!-- /.modal-content -->*/}
-  </div>{/*<!-- /.modal-dialog -->*/}
-</div>{/*<!-- /.modal -->*/}
-
+            <label>Total income for selected month:</label><input className="form-control" placeholder="$111" readonly="readonly"/>
                 </form>
                 </div>
             </div>
@@ -193,4 +162,4 @@ class MovieDetails extends Component{
     }
   }
 
-export default withRouter(MovieDetails);
+export default withRouter(FinancialDetails);
