@@ -20,20 +20,58 @@ class UserDetails extends Component{
   }
     state = {
         userdata: {
-            username: '',
-            password: '',
-            email:'',
-            typeOfUser:''
+            profileName: '',
+            subscriptionType: '',
+            renewalDate: '',
+            viewed_movie_list: []
         },
         validation_error: [],
         isLoggedIn: false,
-        message: ''
+        message: '',
+        top_ten_movies : []
     };
 
+    componentWillMount() {
+        this.setState({
+          profileName: '',
+          subscriptionType: '',
+          renewalDate: '',
+          viewed_movie_list: [],
+          validation_error: [],
+          message: '',
+          top_ten_movies : []
 
-    handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
+        });
+}
+        // API.fetchSensorData()
+        //     .then((res) => {
+        //         //console.log("status " +[res]);
+        //         if (res) {
+        //             console.log(' Success')
+        //             this.setState({
+        //                 isLoggedIn: true,
+        //                 sensordata: res
+        //             });
+        //             data = res;
+        //             console.log('ID: ', this.state.sensordata.sensorID)
+        //             console.log('map', data)
+        //             this.props.history.push('/addSensor');
+        //         } else if (res.status === '401') {
+        //             console.log("No records");
+        //             this.setState({
+        //                 isLoggedIn: true,
+        //                 message: "No Senosrs found..!!",
+        //             });
+        //         } else if (res.status === '402') {
+        //             this.setState({
+        //                 isLoggedIn: false,
+        //                 message: "Session Expired..!!",
+        //             });
+        //             this.props.history.push('/login');
+        //         }
+        //     });
+
+
 
     handleSubmit = () => {
         //validations
@@ -124,7 +162,12 @@ class UserDetails extends Component{
                     <td>D</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>Paid</td>
                   </tr>
-                </table>
+                </table><br/>
+                <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
+                  <option value="day">Last 24 hours</option>
+                  <option value="week">Last week</option>
+                  <option value="month">Last month</option>
+                </select><br />
                 <Button name="Top10" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myTop10Modal">Click here to view top 10 users list</Button><br/>
 
               {/*Modal for customer list*/}
@@ -138,7 +181,7 @@ class UserDetails extends Component{
                       <div class="modal-body">
                       <label> User name:</label><input className="form-control" name="type" readonly="readonly" placeholder="ABC"/><br/>
                       <label> Subscription:</label><input className="form-control" name="type" readonly="readonly" placeholder="Free"/><br/>
-                      <label> Enrolled since:</label><input className="form-control" name="type" readonly="readonly" placeholder="11/30/18"/><br/>
+                      <label> Renewal Date:</label><input className="form-control" name="type" readonly="readonly" placeholder="11/30/18"/><br/>
                       <p>Movie History for user:</p>
                         <p>Movie 1</p>
                         <p>Movie 2</p>
@@ -163,12 +206,12 @@ class UserDetails extends Component{
         <h4 class="modal-title">Current top 10 user list</h4>
       </div>
       <div class="modal-body">
-      <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
+      {/*<select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
         <option value="Select">Select duration</option>
         <option value="day">Last 24 hours</option>
         <option value="week">Last week</option>
         <option value="month">Last month</option>
-      </select><br />
+      </select><br />*/}
         <p>User 1</p>
         <p>User 2</p>
         <p>User 3</p>
