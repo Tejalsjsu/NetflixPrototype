@@ -125,9 +125,8 @@ const withKeys = this.state.movieList.map((function(item){
                         {/*changed coloumn names as per mongo db column names*/}
                         <td><input type="radio" checked={false}/></td>&nbsp;&nbsp;&nbsp;&nbsp;
                         <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <td><Button name="Update Movie" bsStyle="info" class="btn btn-primary ">Update Movie</Button></td>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <td><Button name="Delete Movie" bsStyle="info" class="btn btn-primary ">Delete Movie</Button></td>
-
+                        <td><Button name="Update Movie" bsStyle="info" class="btn btn-primary ">Update</Button></td>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <td><Button name="Delete Movie" bsStyle="info" class="btn btn-primary ">Delete</Button></td>
                     </tr>
                 )
             }))
@@ -141,17 +140,15 @@ const withKeys = this.state.movieList.map((function(item){
 
             <p style={formHead1}>Search and update Movie details below</p>
             <hr color="#E3E1E1"/>
-            <input type="text" className="form-control" placeholder="Search movie" value={this.state.moviedata.searchMovie} /> <br/>
+            <input type="text" className="form-control" placeholder="Search movie"/> <br/>
             <Button name="Search Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#mySearchModal">Search Movie</Button><br/>
             <hr color="#E3E1E1"/>
                 <form>
-
-
                 <table>
                   <tr>
                     <td>Sr. No.</td>&nbsp;&nbsp;
                     <td>Movie Title</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Update</td>
+                    <td>Update</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>Delete</td>
                   </tr>
                   {withKeys}
