@@ -1,5 +1,5 @@
 
-const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:3001'
+const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:8081'
 
 const headers = {
     'Accept': 'application/json',
@@ -362,3 +362,40 @@ export const hireFreelancer = (projectdetails) =>
             console.log("This is error");
             return error;
         });
+
+  export const getJWTToken = (loginDetails) =>
+            fetch(`${api}/login`, {
+                method: 'POST',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify(loginDetails)
+            }).then((res) => res.json())
+                .then((data) => {
+                  console.log("Sending JWT token and other details in response : ", data);
+                  return data;
+                })
+                .catch(error => {
+                    console.log("This is error");
+                    return error;
+                });
+
+export const addMovie = (details) =>
+            fetch(`${api}/admin/movie`, {
+                method: 'POST',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json',
+                    'Authorization': details.jwtToken
+                    // 'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk1MjE5Miwicm9sZSI6IkFETUlOIn0.54VDqcfMyNmPTPG4JMvxksGPZzW142Pd--7NUl8ULp--GQvixVRH2t9TBZdku9Urbwwlqq7CFaWQkmEau1iBUw'
+                },
+                credentials: 'include',
+                body: JSON.stringify(details)
+            }).then((res) => res.json())
+                .then((data) => {return data;})
+                .catch(error => {
+                    console.log("This is error");
+                    return error;
+                });
