@@ -25,6 +25,7 @@ class UserDetails extends Component{
             renewalDate: '',
             viewed_movie_list: []
         },
+        currentCustomers: [],
         validation_error: [],
         isLoggedIn: false,
         message: '',
@@ -33,14 +34,12 @@ class UserDetails extends Component{
 
     componentWillMount() {
         this.setState({
-          profileName: '',
-          subscriptionType: '',
-          renewalDate: '',
-          viewed_movie_list: [],
-          validation_error: [],
-          message: '',
-          top_ten_movies : []
-
+                profileName: 'Aparna',
+                subscriptionType: 'Free',
+                renewalDate: '12/20',
+                viewed_movie_list: ["12", "23", "34","45"],
+              top_ten_movies : ["B", "C", "D", "A", "B", "C", "D"],
+              currentCustomers: ["Amy","Bob", "John", "Tom"]
         });
 }
         // API.fetchSensorData()
@@ -127,7 +126,17 @@ class UserDetails extends Component{
     };
 
     render(){
+      const customers = this.state.currentCustomers.map((function(item){
+                      return(
+                          <tr>
+                              {/*changed coloumn names as per mongo db column names*/}
+                              <td data-toggle="modal" data-target="#myModal">{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          </tr>
+                      )
+                  }))
+
         return(
+
             <div>
             <div className="col-sm-4"> </div>
             <div style={divStyle1} className="col-sm-3">
@@ -138,30 +147,21 @@ class UserDetails extends Component{
                 <form style={formStyle1}>
                 <table>
                   <tr>
-                    <td>Sr. No.</td>&nbsp;&nbsp;
-                    <td>Customer Name</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>User Type</td>
+                    <td><b><i>Current Customers Using Movie Central </i></b></td>&nbsp;&nbsp;&nbsp;&nbsp;
                   </tr>
-                  <tr data-toggle="modal" data-target="#myModal">
-                    <td>1</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                  {customers}
+                  {/*<tr data-toggle="modal" data-target="#myModal">
                     <td>A</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Free</td>
                   </tr>
                   <tr data-toggle="modal" data-target="#myModal" >
-                    <td>2</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>B</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Subscribed</td>
                   </tr>
                   <tr data-toggle="modal" data-target="#myModal">
-                    <td>3</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>C</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>PayPerView</td>
                   </tr>
                   <tr data-toggle="modal" data-target="#myModal" >
-                    <td>4</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>D</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Paid</td>
-                  </tr>
+                  </tr>*/}
                 </table><br/>
                 <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
                   <option value="day">Last 24 hours</option>
