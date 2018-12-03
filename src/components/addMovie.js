@@ -30,13 +30,20 @@ class AddMovie extends Component{
             country: '',
             rating: '',
             subscription: '',
-            price: ''
+            price: '',
+            jwtToken: ''
 
+        },
+        loginDetails:
+        {
+                  username: '',
+                  password: ''
         },
         validation_error: [],
         isLoggedIn: false,
         message: '',
-        isSubmitted: false
+        isSubmitted: false,
+
 
     };
     // this.handleChange = this.handleChange.bind(this);
@@ -56,73 +63,66 @@ class AddMovie extends Component{
         country: '',
         rating: '',
         subscription: '',
-        price: ''
-      });
+        price: '',
+        jwtToken: '',
+        username: 'tuan.ung@sjsu.edu',
+        password: 'user'
+      }
+    );
+
+    API.getJWTToken(this.loginDetails)
+    .then((res) => {
+      // console.log("Response from getJWTToken(): ", res);
+      console.log("JWTToken: ", res.JWTToken);
+      if(res){
+        this.setState({
+          jwtToken : res.JWTToken,
+          isLoggedIn: true,
+          message: "User not validated. Wrong username or password."
+
+        });
+        this.props.history.push("/adminAddMovie");
+        console.log("Recieved JWTtoken from Login: ", this.state.jwtToken);
+      } else if (res.status === 401 || res.status === 403 || res.status === 500){
+        console.log("Error while receiving JWT token.");
+
+      }
+    });
   }
 
   //   handleChange(event) {
   //   this.setState({ [event.target.name]: event.target.value });
   // }
 
+
     handleSubmit = () => {
       const isSubmitted="true"
       // const submitted = "true",
       const isEnabled = this.state.addmoviedata.title.length > 0;
       console.log("Submitted");
-      console.log("Values : " +this.state.addmoviedata.title);
+      console.log("Title : " +this.state.addmoviedata.title);
       console.log("length : " +this.state.addmoviedata.title.length);
       console.log(this.isEnabled);
+    
 
-        //validations
 
+          API.addMovie(this.state.addmoviedata)
+            .then((res) => {
+                if (res) {
+                    this.setState({
+                        message: "Movie Added!!",
+                    });
+                    this.props.history.push("/adminAddMovie");
+                    console.log("In add movie call.");
+                } else if (res.status === '401') {
+                    console.log("in fail");
+                    this.setState({
+                        isLoggedIn: false,
+                        message: "Wrong username or password. Try again..!!"
+                    });
 
-        // if(this.state.userdata.username.length === 0){
-        //     errors.push("Kindly enter user Name");
-        //  }
-         //else if(!noAlphabets.test(this.state.userdata.username)) {
-        //     errors.push("Invalid Username");
-        // }
-
-        // if(this.state.userdata.password.length === 0){
-        //     errors.push("Kindly enter a password");
-        // }
-        // else if(!noAlphabets.test(this.state.userdata.password)) {
-        //     errors.push("Invalid Password");
-        // }
-
-        // if(this.state.userdata.email.length === 0){
-        //     errors.push("Kindly enter email");
-        // } else if (!email_regex.test(this.state.userdata.email)){
-        //     errors.push("Invalid email");
-        // }
-        //
-        // if(errors.length === 0) {
-        //     this.props.history.push('/dashboard');
-        //     API.saveData(this.state.userdata)
-        //         .then((res) => {
-        //             console.log(res.status);
-        //             if (res.status === '201') {
-        //                 this.setState({
-        //                     isLoggedIn: true,
-        //                     message: "Account Created! You can Login..!!"
-        //                 });
-        //                 console.log("after set", this.props);
-        //                 this.props.history.push('/signup');
-        //                 console.log("after set", this.props);
-        //                 //history.push('/login');
-        //             } else if (res.status === '401') {
-        //                 this.setState({
-        //                     isLoggedIn: false,
-        //                     message: "Signup. Try again..!!",
-        //
-        //                 });
-        //             }
-        //         });
-        // }else{
-        //     this.setState ({
-        //         validation_error: errors
-        //     })
-         //}
+                }
+            });
     };
 
     render(){
@@ -145,7 +145,7 @@ class AddMovie extends Component{
                 onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,studio: event.target.value}});}}/><br />
                 <textarea name="synopsis" type="text" className="form-control" placeholder="Short movie synopsis"  value={this.state.addmoviedata.synopsis}
                 onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,synopsis: event.target.value}});}}/><br />
-                <input name="image" type="file" className="form-control" placeholder="upload image" value={this.state.addmoviedata.image}
+                <input name="image" type="text" className="form-control" placeholder="Image URL" value={this.state.addmoviedata.image}
                 onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,image: event.target.value}});}}/><br />
                 <input name="url" type="text" className="form-control" placeholder="Movie URL" value={this.state.addmoviedata.url}
                 onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,url: event.target.value}});}}/><br />
