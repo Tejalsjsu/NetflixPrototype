@@ -30,7 +30,7 @@ class UpdateMovie extends Component{
     componentWillMount() {
       this.setState({
         searchMovie: '',
-        movieList:["Movie1", "Movie2", "Movie3", "Movie4"]
+        movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"]
       });
     //             API.fetchMovieData()
     //                 .then((res) => {
