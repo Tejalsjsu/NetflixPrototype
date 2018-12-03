@@ -9,7 +9,7 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 let imgStyle = {height: '100px', padding: '10px', width: '300px'};
 let divStyle2 = {height:'45px'};
 let divStyle3 ={backgroundColor:'#E3E1E1'};
-let divStyle1 = {align: 'right', backgroundColor: '#FEFDFD', padding: '12px', marginTop: '27px', width: '300px'};
+let divStyle1 = {align: 'right', backgroundColor: '#FEFDFD', padding: '12px', marginTop: '27px', width: '700px'};
 let formHead1 = {color:'blue', fontFamily : 'Open Sans', fontSize: '55', fontWeight: 'bold'};
 
 class UpdateMovie extends Component{
@@ -17,17 +17,48 @@ class UpdateMovie extends Component{
     super(props);
   }
     state = {
-        userdata: {
-            username: '',
-            password: '',
-            email:'',
-            typeOfUser:''
+        moviedata: {
+            searchMovie: '',
+            movieList: []
         },
         validation_error: [],
         isLoggedIn: false,
         message: ''
     };
 
+
+    componentWillMount() {
+      this.setState({
+        searchMovie: '',
+        movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"]
+      });
+    //             API.fetchMovieData()
+    //                 .then((res) => {
+    //                     //console.log("status " +[res]);
+    //                     if (res) {
+    //                         console.log(' Success')
+    //                         this.setState({
+    //                             isLoggedIn: true,
+    //                             sensorData: res
+    //                         });
+    //                         data = res;
+    //                         //console.log("state " +data[0].sensor_make);
+    //                         this.props.history.push('/icons');
+    //                     } else if (res.status === '401') {
+    //                         console.log("No records");
+    //                         this.setState({
+    //                             isLoggedIn: true,
+    //                             message: "No Senosrs found..!!",
+    //                         });
+    //                     } else if (res.status === '402') {
+    //                         this.setState({
+    //                             isLoggedIn: false,
+    //                             message: "Session Expired..!!",
+    //                         });
+    //                         this.props.history.push('/login');
+    //                     }
+    //                 });
+            }
 
     handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
@@ -87,6 +118,21 @@ class UpdateMovie extends Component{
     };
 
     render(){
+{/*return component for withKeys*/}
+const withKeys = this.state.movieList.map((function(item){
+                return(
+                    <tr>
+                        {/*changed coloumn names as per mongo db column names*/}
+                        <td><input type="radio" checked={false}/></td>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <td><Button name="Update Movie" bsStyle="info" class="btn btn-primary ">Update Movie</Button></td>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <td><Button name="Delete Movie" bsStyle="info" class="btn btn-primary ">Delete Movie</Button></td>
+
+                    </tr>
+                )
+            }))
+
+
         return(
             <div>
             <div className="col-sm-4"> </div>
@@ -95,10 +141,22 @@ class UpdateMovie extends Component{
 
             <p style={formHead1}>Search and update Movie details below</p>
             <hr color="#E3E1E1"/>
-            <input type="text" className="form-control" placeholder="Search movie" value={this.state.userdata.email} /> <br/>
+            <input type="text" className="form-control" placeholder="Search movie" value={this.state.moviedata.searchMovie} /> <br/>
             <Button name="Search Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#mySearchModal">Search Movie</Button><br/>
             <hr color="#E3E1E1"/>
                 <form>
+
+
+                <table>
+                  <tr>
+                    <td>Sr. No.</td>&nbsp;&nbsp;
+                    <td>Movie Title</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>Update</td>
+                    <td>Delete</td>
+                  </tr>
+                  {withKeys}
+                </table>
+{/*
                 <input type="text" className="form-control" placeholder="Title" value={this.state.userdata.email} readonly="readonly"/> <br/>
                 <input type="text" className="form-control" placeholder="Genre" onChange={this.handleInputChange} /><br />
                 <input type="number" className="form-control" placeholder="Year" onChange={this.handleInputChange} /><br />
@@ -122,7 +180,7 @@ class UpdateMovie extends Component{
                   <option value="Paid">Paid</option>
                 </select><br />
                 <input type="number" className="form-control" placeholder="Price in $" onChange={this.handleInputChange} /><br />
-                <Button name="Add Movie" bsStyle="success" class="btn btn-primary " data-toggle="modal" data-target="#myModal">Update Movie</Button><br/>
+                <Button name="Add Movie" bsStyle="success" class="btn btn-primary " data-toggle="modal" data-target="#myModal">Update Movie</Button><br/>*/}
                     {/*Modal for update movie*/}
                 <div class="modal fade" id="myModal" data-toggle="myModal">
                   <div class="modal-dialog">

@@ -20,20 +20,57 @@ class UserDetails extends Component{
   }
     state = {
         userdata: {
-            username: '',
-            password: '',
-            email:'',
-            typeOfUser:''
+            profileName: '',
+            subscriptionType: '',
+            renewalDate: '',
+            viewed_movie_list: []
         },
+        currentCustomers: [],
         validation_error: [],
         isLoggedIn: false,
-        message: ''
+        message: '',
+        top_ten_movies : []
     };
 
+    componentWillMount() {
+        this.setState({
+                profileName: 'Aparna',
+                subscriptionType: 'Free',
+                renewalDate: '12/20',
+                viewed_movie_list: ["Movie 12", "Movie 23", "Movie 34","Movie 45"],
+              top_ten_users : ["User top1 B", "User top9", "User D", "User A", "User B", "User C", "User D"],
+              currentCustomers: ["Amy","Bob", "John", "Tom"]
+        });
+}
+        // API.fetchSensorData()
+        //     .then((res) => {
+        //         //console.log("status " +[res]);
+        //         if (res) {
+        //             console.log(' Success')
+        //             this.setState({
+        //                 isLoggedIn: true,
+        //                 sensordata: res
+        //             });
+        //             data = res;
+        //             console.log('ID: ', this.state.sensordata.sensorID)
+        //             console.log('map', data)
+        //             this.props.history.push('/addSensor');
+        //         } else if (res.status === '401') {
+        //             console.log("No records");
+        //             this.setState({
+        //                 isLoggedIn: true,
+        //                 message: "No Senosrs found..!!",
+        //             });
+        //         } else if (res.status === '402') {
+        //             this.setState({
+        //                 isLoggedIn: false,
+        //                 message: "Session Expired..!!",
+        //             });
+        //             this.props.history.push('/login');
+        //         }
+        //     });
 
-    handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
+
 
     handleSubmit = () => {
         //validations
@@ -89,7 +126,31 @@ class UserDetails extends Component{
     };
 
     render(){
+      const customers = this.state.currentCustomers.map((function(item){
+                      return(
+                          <tr>
+                              {/*changed coloumn names as per mongo db column names*/}
+                              <td data-toggle="modal" data-target="#myModal">{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          </tr>
+                      )
+                  }))
+      const topTenUsers = this.state.top_ten_users.map((function(item){
+                                              return(
+                                                  <tr>
+                                                      <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                  </tr>
+                                              )
+                                          }))
+      const movieHistory = this.state.viewed_movie_list.map((function(item){
+                                                                                  return(
+                                                                                      <tr>
+                                                                                          <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                                      </tr>
+                                                                                  )
+                                                                              }))
+
         return(
+
             <div>
             <div className="col-sm-4"> </div>
             <div style={divStyle1} className="col-sm-3">
@@ -100,31 +161,27 @@ class UserDetails extends Component{
                 <form style={formStyle1}>
                 <table>
                   <tr>
-                    <td>Sr. No.</td>&nbsp;&nbsp;
-                    <td>Customer Name</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>User Type</td>
+                    <td><b><i>Current Customers Using Movie Central </i></b></td>&nbsp;&nbsp;&nbsp;&nbsp;
                   </tr>
-                  <tr data-toggle="modal" data-target="#myModal">
-                    <td>1</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                  {customers}
+                  {/*<tr data-toggle="modal" data-target="#myModal">
                     <td>A</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Free</td>
                   </tr>
                   <tr data-toggle="modal" data-target="#myModal" >
-                    <td>2</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>B</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Subscribed</td>
                   </tr>
                   <tr data-toggle="modal" data-target="#myModal">
-                    <td>3</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>C</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>PayPerView</td>
                   </tr>
                   <tr data-toggle="modal" data-target="#myModal" >
-                    <td>4</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>D</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Paid</td>
-                  </tr>
-                </table>
+                  </tr>*/}
+                </table><br/>
+                <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
+                  <option value="day">Last 24 hours</option>
+                  <option value="week">Last week</option>
+                  <option value="month">Last month</option>
+                </select><br />
                 <Button name="Top10" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myTop10Modal">Click here to view top 10 users list</Button><br/>
 
               {/*Modal for customer list*/}
@@ -138,12 +195,10 @@ class UserDetails extends Component{
                       <div class="modal-body">
                       <label> User name:</label><input className="form-control" name="type" readonly="readonly" placeholder="ABC"/><br/>
                       <label> Subscription:</label><input className="form-control" name="type" readonly="readonly" placeholder="Free"/><br/>
-                      <label> Enrolled since:</label><input className="form-control" name="type" readonly="readonly" placeholder="11/30/18"/><br/>
-                      <p>Movie History for user:</p>
-                        <p>Movie 1</p>
-                        <p>Movie 2</p>
-                        <p>Movie 3</p>
-                        <p>Movie 4</p>
+                      <label> Renewal Date:</label><input className="form-control" name="type" readonly="readonly" placeholder="11/30/18"/><br/>
+                      <table>
+                      {movieHistory}
+                      </table>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -163,19 +218,15 @@ class UserDetails extends Component{
         <h4 class="modal-title">Current top 10 user list</h4>
       </div>
       <div class="modal-body">
-      <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
+      {/*<select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
         <option value="Select">Select duration</option>
         <option value="day">Last 24 hours</option>
         <option value="week">Last week</option>
         <option value="month">Last month</option>
-      </select><br />
-        <p>User 1</p>
-        <p>User 2</p>
-        <p>User 3</p>
-        <p>User 4</p>
-        <p> .</p>
-        <p> .</p>
-        <p>User 10</p>
+      </select><br />*/}
+        <table>
+        {topTenUsers}
+        </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

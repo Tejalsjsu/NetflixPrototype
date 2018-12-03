@@ -19,20 +19,46 @@ class MovieDetails extends Component{
     super(props);
   }
     state = {
-        userdata: {
-            username: '',
-            password: '',
-            email:'',
-            typeOfUser:''
-        },
+        moviedata: [{
+            movieTitle: '',
+            numberOfPlays: '',
+        }],
         validation_error: [],
         isLoggedIn: false,
-        message: ''
+        message: '',
+        top_ten_movies : [],
+        duration: ''
+
     };
 
 
     handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+  }
+
+  componentWillMount(){
+    this.setState({
+      moviedata: [
+        {
+        movieTitle: 'Tin Tin',
+        numberOfPlays: '23'
+      },
+      {
+        movieTitle: 'Star Trek',
+        numberOfPlays: '123'
+      },
+      {
+        movieTitle: 'Mad Max Fury Road',
+        numberOfPlays: '290'
+      },
+      {
+        movieTitle: 'Twilight',
+        numberOfPlays: '125'
+      }
+    ],
+    top_ten_movies : ["A", "B", "C", "D", "1", "2", "3", "4", "5"]
+
+    });
   }
 
     handleSubmit = () => {
@@ -89,6 +115,25 @@ class MovieDetails extends Component{
     };
 
     render(){
+
+      const movieAndPlays = this.state.moviedata.map((function(item){
+                      return(
+                          <tr>
+                              {/*changed coloumn names as per mongo db column names*/}
+
+                              <td>{item.movieTitle}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <td>{item.numberOfPlays}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          </tr>
+                      )
+                  }))
+
+      const topTenMovies = this.state.top_ten_movies.map((function(item){
+                                  return(
+                                      <tr>
+                                          <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                      </tr>
+                                  )
+                              }))
         return(
             <div>
             <div className="col-sm-4"> </div>
@@ -100,31 +145,18 @@ class MovieDetails extends Component{
                 <form style={formStyle1}>
                 <table>
                   <tr>
-                    <td>Sr. No.</td>&nbsp;&nbsp;
-                    <td>Movie Name</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Number of plays</td>
+                    <td><b><i>Movie Name</i></b></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td><b><i>Number of plays</i></b></td>
                   </tr>
-                  <tr>
-                    <td>1</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Movie A</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>
-                  </tr>
-                  <tr >
-                    <td>2</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Movie B</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Movie C</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>
-                  </tr>
-                  <tr>
-                    <td>4</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Movie D</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>
-                  </tr>
-                </table>
+                  {movieAndPlays}
+                </table><br/>
+                  Select duration for Top 10 list:
+                <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
+
+                  <option selected="true" value="day">Last 24 hours</option>
+                  <option value="week">Last week</option>
+                  <option value="month">Last month</option>
+                </select><br />
                 <Button name="Top10" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myTop10Modal">Click here to view top 10 movie list</Button><br/>
 
               {/*Modal for customer list*/}
@@ -160,22 +192,18 @@ class MovieDetails extends Component{
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Current top 10 movie list</h4>
+        <h4 class="modal-title">Current top 10 movie list </h4>
       </div>
       <div class="modal-body">
-      <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
+      {/*<select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
         <option value="Select">Select duration</option>
         <option value="day">Last 24 hours</option>
         <option value="week">Last week</option>
         <option value="month">Last month</option>
-      </select><br />
-        <p>Movie 1</p>
-        <p>Movie 2</p>
-        <p>Movie 3</p>
-        <p>Movie 4</p>
-        <p> .</p>
-        <p> .</p>
-        <p>Movie 10</p>
+      </select><br />*/}
+      <table>
+      {topTenMovies}
+      </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

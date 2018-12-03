@@ -19,18 +19,39 @@ class FinancialDetails extends Component{
     super(props);
   }
     state = {
-        userdata: {
-            username: '',
-            password: '',
-            email:'',
-            typeOfUser:''
+        financedata: {
+            month: '',
+            year: '',
+            totalFreeUsers:'',
+            totalSubscriptionUsers: '',
+            totalPayPerUsers:'',
+            totalPaidUsers:'',
+            totalIncomeFreeUsers:'',
+            totalIncomeSubscriptionUsers: '',
+            totalIncomePayPerUsers:'',
+            totalIncomePaidUsers:''
         },
         validation_error: [],
         isLoggedIn: false,
-        message: ''
+        message: '',
+        totalIncome: 0
+
     };
 
+    componentWillMount(){
+      this.setState({
+        totalFreeUsers: '0',
+        totalSubscriptionUsers: '0',
+        totalPayPerUsers:'0',
+        totalPaidUsers:'0',
+        totalIncomeFreeUsers:'10',
+        totalIncomeSubscriptionUsers: '10',
+        totalIncomePayPerUsers:'20',
+        totalIncomePaidUsers:'30',
+        totalIncome: parseInt(this.totalIncomeFreeUsers+this.totalIncomeSubscriptionUsers+this.totalIncomePayPerUsers+this.totalIncomePaidUsers)
 
+      });
+    }
     handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
@@ -132,29 +153,29 @@ class FinancialDetails extends Component{
                   <tr>
                     <td>1</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>Free</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>
+                    <td>{this.state.totalFreeUsers}</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>{this.state.totalIncomeFreeUsers}</td>
                   </tr>
                   <tr>
                     <td>2</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>Subscribed</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>
+                    <td>{this.state.totalSubscriptionUsers}</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>{this.state.totalIncomeSubscriptionUsers}</td>
                   </tr>
                   <tr>
                     <td>3</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>PayPerView</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>
+                    <td>{this.state.totalPayPerUsers}</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>{this.state.totalIncomePayPerUsers}</td>
                   </tr>
                   <tr >
                     <td>4</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>Paid</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>-</td>
+                    <td>{this.state.totalPaidUsers}</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>{this.state.totalIncomePaidUsers}</td>
                   </tr>
                 </table>
-            <label>Total income for selected month:</label><input className="form-control" placeholder="$111" readonly="readonly"/>
+            <label>Total income for selected month:</label><input className="form-control" placeholder="$111" value={this.state.totalIncome} />
                 </form>
                 </div>
             </div>
