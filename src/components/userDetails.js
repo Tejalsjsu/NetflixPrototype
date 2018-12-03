@@ -37,8 +37,8 @@ class UserDetails extends Component{
                 profileName: 'Aparna',
                 subscriptionType: 'Free',
                 renewalDate: '12/20',
-                viewed_movie_list: ["12", "23", "34","45"],
-              top_ten_movies : ["B", "C", "D", "A", "B", "C", "D"],
+                viewed_movie_list: ["Movie 12", "Movie 23", "Movie 34","Movie 45"],
+              top_ten_users : ["User top1 B", "User top9", "User D", "User A", "User B", "User C", "User D"],
               currentCustomers: ["Amy","Bob", "John", "Tom"]
         });
 }
@@ -134,6 +134,20 @@ class UserDetails extends Component{
                           </tr>
                       )
                   }))
+      const topTenUsers = this.state.top_ten_users.map((function(item){
+                                              return(
+                                                  <tr>
+                                                      <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                  </tr>
+                                              )
+                                          }))
+      const movieHistory = this.state.viewed_movie_list.map((function(item){
+                                                                                  return(
+                                                                                      <tr>
+                                                                                          <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                                      </tr>
+                                                                                  )
+                                                                              }))
 
         return(
 
@@ -182,11 +196,9 @@ class UserDetails extends Component{
                       <label> User name:</label><input className="form-control" name="type" readonly="readonly" placeholder="ABC"/><br/>
                       <label> Subscription:</label><input className="form-control" name="type" readonly="readonly" placeholder="Free"/><br/>
                       <label> Renewal Date:</label><input className="form-control" name="type" readonly="readonly" placeholder="11/30/18"/><br/>
-                      <p>Movie History for user:</p>
-                        <p>Movie 1</p>
-                        <p>Movie 2</p>
-                        <p>Movie 3</p>
-                        <p>Movie 4</p>
+                      <table>
+                      {movieHistory}
+                      </table>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -212,13 +224,9 @@ class UserDetails extends Component{
         <option value="week">Last week</option>
         <option value="month">Last month</option>
       </select><br />*/}
-        <p>User 1</p>
-        <p>User 2</p>
-        <p>User 3</p>
-        <p>User 4</p>
-        <p> .</p>
-        <p> .</p>
-        <p>User 10</p>
+        <table>
+        {topTenUsers}
+        </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
