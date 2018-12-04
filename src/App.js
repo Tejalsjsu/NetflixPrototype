@@ -23,6 +23,7 @@ import AdminAddMovie from './components/adminAddMovie'
 import AdminFinancials from './components/adminFinancials'
 import UserActivity from './components/userActivity'
 import MovieActivity from './components/movieActivity'
+import AdminUpdateMovie from './components/adminUpdateMovie'
 
 class App extends Component {
   render() {
@@ -54,6 +55,7 @@ class App extends Component {
                   <Route path="/adminFinancials" component={AdminFinancials}/>
                   <Route path="/userActivity" component={UserActivity}/>
                   <Route path="/movieActivity" component={MovieActivity}/>
+                  <Route path="/AdminUpdateMovie" component={AdminUpdateMovie}/>
               </div>
           </BrowserRouter>
 
