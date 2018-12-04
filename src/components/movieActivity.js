@@ -13,7 +13,7 @@ import UpdateMovie from '../components/updateMovie';
 import DeleteMovie from '../components/deleteMovie';
 import AdminFinancials from '../components/adminFinancials';
 import UserDetails from '../components/userDetails';
-import MovieDetails from '../components/movieDetails';
+import AdminMovieDetails from '../components/adminmovieDetails';
 // import Signup from '../components/signup';
 
 import queryString from 'query-string';
@@ -26,7 +26,7 @@ var Carousel = require('react-bootstrap').Carousel;
 let imgStyle = {width: '100%', height: '400px'};
 let footerText = {color: '#5DADE2'}
 var img1 = require('../image/netflixBG.jpg');
-
+var data = [];
 
 class MovieActivity extends Component{
     constructor(props){
@@ -53,7 +53,10 @@ class MovieActivity extends Component{
             message: '',
             showAddMovieComponent : false,
             showUpdateMovieComponent : false,
-            showDeleteMovieComponent : false
+            showDeleteMovieComponent : false,
+            allMovies : [],
+            noOfPlays : ''
+
         };
           this._onAddClick = this._onAddClick.bind(this);
           this._onUpdateClick = this._onUpdateClick.bind(this);
@@ -81,32 +84,64 @@ class MovieActivity extends Component{
             });
           }
     componentWillMount(){
-        var temPid = this.state.userdata.projectId;
-        console.log("Before fetch " +this.state.userdata.projectId);
-        API.fetchProjectDetails(this.state.userdata)
-            .then((res) => {
-                console.log("status " +res.details);
-                if (res.status === '201') {
-                    console.log("In success" +res.details[0].budgetRange);
-                    this.setState({
-                        isLoggedIn: true,
-                        userdata: {
-                            projectId: temPid,
-                            projectName:res.details[0].projectName,
-                            projectDescription:res.details[0].projectDescription,
-                            projectBudget:res.details[0].budgetRange,
-                            projectSkills:res.details[0].skills,
-                        }
-                    });
-                } else if (res.status === '401') {
-                    this.setState({
-                        isLoggedIn: false,
-                        message: "No projects found..!!",
-                    });
-                    this.props.history.push('/projectdetails');
-                }
-            });
+
+      this.setState({
+        // searchMovie: '',
+        // movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"],
+        allMovies: []
+      });
+
+
+      API.getMovieList()
+          .then((res) => {
+              console.log("response ", res);
+              if (res.status === '200') {
+                  // console.log("In success" +res.details[0].budgetRange);
+                  this.setState({
+                      isLoggedIn: true,
+                      allMovies: res
+                  });
+                  console.log("All Movies : ", this.allMovies);
+              } else if (res.status === '401') {
+                  this.setState({
+                      isLoggedIn: false,
+                      message: "Not able to fetch admin financials!!",
+                  });
+                  this.props.history.push('/login');
+              }
+          });
+
+
+
+      // API.getMovies()
+      //           .then((res) => {
+      //               //console.log("status " +[res]);
+      //               if (res) {
+      //                   console.log(' Success')
+      //                   this.setState({
+      //                       isLoggedIn: true,
+      //                       fetchedMovies: res
+      //                   });
+      //                   data = res;
+      //                   // console.log("Movie list from getMovies() : " +data)
+      //                   this.props.history.push('/movieActivity');
+      //               } else if (res.status === '401') {
+      //                   console.log("No records");
+      //                   this.setState({
+      //                       isLoggedIn: true,
+      //                       message: "No Movies to fetch!!",
+      //                   });
+      //               } else if (res.status === '402') {
+      //                   this.setState({
+      //                       isLoggedIn: false,
+      //                       message: "Session Expired..!!",
+      //                   });
+      //                   this.props.history.push('/login');
+      //               }
+      //           });
+
     }
+
     handleSubmit = () => {
         // API.postBid(this.state.userdata)
         //     .then((res) => {
@@ -126,9 +161,28 @@ class MovieActivity extends Component{
 
     };
 
-
+handleClick=(movieID) =>
+{
+  console.log(movieID);
+}
     render(){
+      // let withKeys = "";
+      // if(!this.state.fetchedMovies){
+      //  withKeys = this.state.fetchedMovies.map((function(item){
+      //                 return(
+      //                     <tr>
+      //                         {/*changed coloumn names as per mongo db column names*/}
+      //                         // <td><input type="radio" checked={false}/></td>&nbsp;&nbsp;&nbsp;&nbsp;
+      //                         <td>{item._id}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      //                         <td><Button name="Update Movie" bsStyle="info" class="btn btn-primary onClick={this.handleClick(item._id)} ">More Details</Button></td>&nbsp;&nbsp;&nbsp;&nbsp;
+      //                         // <td><Button name="Delete Movie" bsStyle="info" class="btn btn-primary ">Delete</Button></td>
+      //                     </tr>
+      //                 )
+      //             }))
+      //           };
         return(
+
+
 
             <div style={divStyle3}>
                 <AdminNavBar/>
@@ -158,7 +212,7 @@ class MovieActivity extends Component{
 
                     <div className="container">
                     <div  className="col-sm-8">
-                        <MovieDetails />
+                        <AdminMovieDetails />
                         <br/>
                     </div>
                     </div>

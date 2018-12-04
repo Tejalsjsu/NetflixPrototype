@@ -51,7 +51,8 @@ class AdminAddMovie extends Component{
             message: '',
             showAddMovieComponent : false,
             showUpdateMovieComponent : false,
-            showDeleteMovieComponent : false
+            showDeleteMovieComponent : false,
+            adminFinances : []
         };
           this._onAddClick = this._onAddClick.bind(this);
           this._onUpdateClick = this._onUpdateClick.bind(this);
@@ -79,29 +80,29 @@ class AdminAddMovie extends Component{
             });
           }
     componentWillMount(){
-        var temPid = this.state.userdata.projectId;
-        console.log("Before fetch " +this.state.userdata.projectId);
-        API.fetchProjectDetails(this.state.userdata)
+        // var temPid = this.state.userdata.projectId;
+        this.setState({
+          adminFinances: []
+        });
+        console.log("Admin financials will be fetched!! ");
+
+
+        API.getFinancials()
             .then((res) => {
-                console.log("status " +res.details);
-                if (res.status === '201') {
-                    console.log("In success" +res.details[0].budgetRange);
+                console.log("response ", res);
+                if (res.status === '200') {
+                    // console.log("In success" +res.details[0].budgetRange);
                     this.setState({
                         isLoggedIn: true,
-                        userdata: {
-                            projectId: temPid,
-                            projectName:res.details[0].projectName,
-                            projectDescription:res.details[0].projectDescription,
-                            projectBudget:res.details[0].budgetRange,
-                            projectSkills:res.details[0].skills,
-                        }
+                        adminFinances: res
                     });
+                    console.log("Financial details : ", this.adminFinances);
                 } else if (res.status === '401') {
                     this.setState({
                         isLoggedIn: false,
-                        message: "No projects found..!!",
+                        message: "Not able to fetch admin financials!!",
                     });
-                    this.props.history.push('/projectdetails');
+                    this.props.history.push('/login');
                 }
             });
     }

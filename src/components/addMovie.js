@@ -31,7 +31,7 @@ class AddMovie extends Component{
             rating: '',
             subscription: '',
             price: '',
-            jwtToken: ''
+            jwtToken: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk4MTE1NCwicm9sZSI6IkFETUlOIn0.ELV6EYtKuHBE3ANhYOOSNbf7kQ2z07pO0nXaV_fskRdXRfHh-XwBOYDrlLV8AhK9fbaTO2M4gBuABXECOIymog'
 
         },
         loginDetails:
@@ -40,7 +40,7 @@ class AddMovie extends Component{
                   password: ''
         },
         validation_error: [],
-        isLoggedIn: false,
+        isLoggedIn: true,
         message: '',
         isSubmitted: false,
 
@@ -70,24 +70,24 @@ class AddMovie extends Component{
       }
     );
 
-    API.getJWTToken(this.loginDetails)
-    .then((res) => {
-      // console.log("Response from getJWTToken(): ", res);
-      console.log("JWTToken: ", res.JWTToken);
-      if(res){
-        this.setState({
-          jwtToken : res.JWTToken,
-          isLoggedIn: true,
-          message: "User not validated. Wrong username or password."
-
-        });
-        this.props.history.push("/adminAddMovie");
-        console.log("Recieved JWTtoken from Login: ", this.state.jwtToken);
-      } else if (res.status === 401 || res.status === 403 || res.status === 500){
-        console.log("Error while receiving JWT token.");
-
-      }
-    });
+    // API.doLogin(this.loginDetails)
+    // .then((res) => {
+    //   // console.log("Response from getJWTToken(): ", res);
+    //   console.log("JWTToken: ", res.JWTToken);
+    //   if(res){
+    //     this.setState({
+    //       jwtToken : res.JWTToken,
+    //       isLoggedIn: true,
+    //       message: "User not validated. Wrong username or password."
+    //
+    //     });
+    //     this.props.history.push("/adminAddMovie");
+    //     console.log("Recieved JWTtoken from Login: ", this.state.jwtToken);
+    //   } else if (res.status === 401 || res.status === 403 || res.status === 500){
+    //     console.log("Error while receiving JWT token.");
+    //
+    //   }
+    // });
   }
 
   //   handleChange(event) {
@@ -103,7 +103,7 @@ class AddMovie extends Component{
       console.log("Title : " +this.state.addmoviedata.title);
       console.log("length : " +this.state.addmoviedata.title.length);
       console.log(this.isEnabled);
-    
+
 
 
           API.addMovie(this.state.addmoviedata)

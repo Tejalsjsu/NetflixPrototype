@@ -50,6 +50,7 @@ class FinancialDetails extends Component{
         totalIncomePaidUsers:'30',
         totalIncome: parseInt(this.totalIncomeFreeUsers+this.totalIncomeSubscriptionUsers+this.totalIncomePayPerUsers+this.totalIncomePaidUsers)
 
+
       });
     }
     handleChange(event) {

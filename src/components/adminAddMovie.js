@@ -79,31 +79,31 @@ class AdminAddMovie extends Component{
             });
           }
     componentWillMount(){
-        var temPid = this.state.userdata.projectId;
-        console.log("Before fetch " +this.state.userdata.projectId);
-        API.fetchProjectDetails(this.state.userdata)
-            .then((res) => {
-                console.log("status " +res.details);
-                if (res.status === '201') {
-                    console.log("In success" +res.details[0].budgetRange);
-                    this.setState({
-                        isLoggedIn: true,
-                        userdata: {
-                            projectId: temPid,
-                            projectName:res.details[0].projectName,
-                            projectDescription:res.details[0].projectDescription,
-                            projectBudget:res.details[0].budgetRange,
-                            projectSkills:res.details[0].skills,
-                        }
-                    });
-                } else if (res.status === '401') {
-                    this.setState({
-                        isLoggedIn: false,
-                        message: "No projects found..!!",
-                    });
-                    this.props.history.push('/projectdetails');
-                }
-            });
+        // var temPid = this.state.userdata.projectId;
+        // console.log("Before fetch " +this.state.userdata.projectId);
+        // API.fetchProjectDetails(this.state.userdata)
+        //     .then((res) => {
+        //         console.log("status " +res.details);
+        //         if (res.status === '201') {
+        //             console.log("In success" +res.details[0].budgetRange);
+        //             this.setState({
+        //                 isLoggedIn: true,
+        //                 userdata: {
+        //                     projectId: temPid,
+        //                     projectName:res.details[0].projectName,
+        //                     projectDescription:res.details[0].projectDescription,
+        //                     projectBudget:res.details[0].budgetRange,
+        //                     projectSkills:res.details[0].skills,
+        //                 }
+        //             });
+        //         } else if (res.status === '401') {
+        //             this.setState({
+        //                 isLoggedIn: false,
+        //                 message: "No projects found..!!",
+        //             });
+        //             this.props.history.push('/projectdetails');
+        //         }
+        //     });
     }
     handleSubmit = () => {
         // API.postBid(this.state.userdata)
@@ -138,8 +138,8 @@ class AdminAddMovie extends Component{
                         <img style={imgStyle} alt="freelance.com" src={img1} />
                         <Carousel.Caption>
                             <Button bsStyle="danger" bsSize="large" onClick={this._onAddClick}> Add Movie </Button> &nbsp;&nbsp;&nbsp;
-                            <Button bsStyle="danger" bsSize="large" onClick={this._onUpdateClick}> Update Movie </Button> &nbsp;&nbsp;&nbsp;
-                            <Button bsStyle="danger" bsSize="large" onClick={this._onDeleteClick}> Delete Movie </Button>
+                            <Button bsStyle="danger" bsSize="large" onClick={this._onUpdateClick}> Update or Delete Movie </Button> &nbsp;&nbsp;&nbsp;
+                            {/*<Button bsStyle="danger" bsSize="large" onClick={this._onDeleteClick}> Delete Movie </Button>*/}
                             <h3>MovieCentral </h3>
                             <p>Watch at your convinience.</p>
                         </Carousel.Caption>
