@@ -93,13 +93,10 @@ class DeleteMovie extends Component{
             <div style={divStyle1} className="col-sm-3">
             {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
 
-            <p style={formHead1}>Select and delete Movie details below</p>
-            <hr color="#E3E1E1"/>
-            <input type="text" className="form-control" placeholder="Search movie" value={this.state.userdata.email} /> <br/>
-            <Button name="Search Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#mySearchModal">Search Movie</Button><br/>
+            <p style={formHead1}>Update movie details below :</p>
             <hr color="#E3E1E1"/>
                 <form>
-                <input type="text" className="form-control" placeholder="Title" value={this.state.userdata.email} /> <br/>
+                <input type="text" className="form-control" placeholder="Title" value={this.state.userdata.email} readonly="readonly"/> <br/>
                 <input type="text" className="form-control" placeholder="Genre" onChange={this.handleInputChange} /><br />
                 <input type="number" className="form-control" placeholder="Year" onChange={this.handleInputChange} /><br />
                 <input type="text" className="form-control" placeholder="Studio" onChange={this.handleInputChange} /><br />
@@ -122,7 +119,7 @@ class DeleteMovie extends Component{
                 </select><br />*/}
 
                 <input type="number" className="form-control" placeholder="Price in $" onChange={this.handleInputChange} /><br />
-                <Button name="Add Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myModal">Delete</Button><br/>
+                <Button name="Add Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myModal">Update</Button><br/>
 
                   {/*Modal for delete movie*/}
                 <div class="modal fade" id="myModal" data-toggle="myModal">
@@ -130,10 +127,10 @@ class DeleteMovie extends Component{
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Movie deleted successfully!</h4>
+                        <h4 class="modal-title">Movie updated successfully!</h4>
                       </div>
                       <div class="modal-body">
-                        <p>Movie ABC permanently deleted.</p>
+                        <p>Movie was updated in the database successfully.</p>
                         <p> Please note any current ongoing activity would not be affected for any user.</p>
                       </div>
                       <div class="modal-footer">
