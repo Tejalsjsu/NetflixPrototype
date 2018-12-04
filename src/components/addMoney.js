@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {Link, withRouter, Route} from 'react-router-dom';
 import cookie from "react-cookies";
 import * as API from "../api";
+import NavBar from '../components/navbar';
+import queryString from "query-string";
 var FinancialNavBar = require('../components/financialNavBar');
 
 let icon = require('../image/logo.png')
@@ -15,48 +17,65 @@ let img_style = {width:'560px', height: '70px'}
 class addMoney extends Component {
     state = {
         userdata:{
-            userId: cookie.load('userId'),
+            userId: localStorage.getItem('userId'),
             cardNo:'',
             expiryDate:'',
             cardHolderName:'',
             ccv:'',
             billingZip:'',
-            depositAmount:30,
-            processingFee:0.99,
-            totalAmount:30.99
+            depositAmount: queryString.parse(this.props.location.search) && queryString.parse(this.props.location.search).total,
+            processingFee:'',
+            totalAmount:'',
+            year: '',
+            Type: ''
         }
 
     }
 
     handleSubmit = () => {
         console.log(this.state);
-        // API.addMoney(this.state.userdata)
-        //     .then((res) => {
-        //         console.log(res.status);
-        //         if (res.status === '201') {
-        //             this.setState({
-        //                 isLoggedIn: true,
-        //                 message: "Money added Successfully..!!"
-        //             });
-        //         } else if (res.status === '401') {
-        //             this.setState({
-        //                 isLoggedIn: true,
-        //                 message: "Payment Failed. Try again..!!",
-        //             });
-        //         }else if (res.status === '402') {
-        //             this.setState({
-        //                 isLoggedIn: false,
-        //                 message: "Session Expired..!!",
-        //             });
-        //             this.props.history.push('/login');
-        //         }
-        //     });
+        let payment = {
+            "userId":this.state.userdata.userId,
+            "quantity": 2,
+            "paymentDetail": {
+            "xref": this.state.userdata.cardNo,
+                "cvv": this.state.userdata.ccv,
+                "expMonth": this.state.userdata.expiryDate,
+                "expYear": this.state.userdata.expiryDate,
+                "cardName": this.state.userdata.cardHolderName,
+                "cardType": this.state.userdata.cardHolderName,
+                "zipCode": this.state.userdata.billingZip,
+                "customerId": this.state.userdata.userId
+        },
+            "typeOfPayment": "renewal"
+        }
+         API.addMoney(payment)
+             .then((res) => {
+                 console.log(res.status);
+                 if (res.status === 201) {
+                     this.setState({
+                         isLoggedIn: true,
+                         message: "Money added Successfully..!!"
+                     });
+                 } else if (res.status === '401') {
+                     this.setState({
+                         isLoggedIn: true,
+                         message: "Payment Failed. Try again..!!",
+                     });
+                 }else if (res.status === '402') {
+                     this.setState({
+                         isLoggedIn: false,
+                         message: "Session Expired..!!",
+                     });
+                     this.props.history.push('/login');
+                 }
+             });
     };
 
     render() {
         return(
             <div className="main-content">
-                <FinancialNavBar/>
+                <NavBar/>
 
                 <div className="container"> <br/>
                     <div className="text-left">
@@ -70,7 +89,7 @@ class addMoney extends Component {
                             {/*</div>*/}
                         </div>
                     </div>
-                    <h1 align="left"> <strong> Select Payment Method </strong> <img src={icon} alt="logo"/></h1>  <br/>
+                    <h1 align="left"> <strong> Select Payment Method for Pay Per View </strong></h1>  <br/>
                     <div className="Grid col-sm-16">
                         <div className="col-sm-5">
                             <img src={header} alt="header" style={img_style}/>
@@ -91,13 +110,25 @@ class addMoney extends Component {
                                     </div>
 
                                     <div className="PaymentMethod-form-column--small">
-                                        <div className="Payment-label">Expiry Date:</div>
+                                        <div className="Payment-label">Expiry Month:</div>
                                         <input className="form-control large-input" placeholder="MM/YY" value={this.state.userdata.expiryDate}
                                                onChange={(event) => {
                                                    this.setState({
                                                        userdata: {
                                                            ...this.state.userdata,
                                                            expiryDate: event.target.value
+                                                       }
+                                                   });
+                                               }}/>
+                                    </div>
+                                    <div className="PaymentMethod-form-column--small">
+                                        <div className="Payment-label">Expiry Year:</div>
+                                        <input className="form-control large-input" placeholder="MM/YY" value={this.state.userdata.year}
+                                               onChange={(event) => {
+                                                   this.setState({
+                                                       userdata: {
+                                                           ...this.state.userdata,
+                                                           year: event.target.value
                                                        }
                                                    });
                                                }}/>
@@ -145,7 +176,22 @@ class addMoney extends Component {
                                                        }
                                                    });
                                                }}/>
+                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+                                    <div className="PaymentMethod-form-column--medium">
+                                        <div className="Payment-label">Card Type</div>
+                                        <input className="form-control large-input" value={this.state.userdata.Type}
+                                               onChange={(event) => {
+                                                   this.setState({
+                                                       userdata: {
+                                                           ...this.state.userdata,
+                                                           Type: event.target.value
+                                                       }
+                                                   });
+                                               }}/>
                                     </div>
+
                                 </div> <br/>
 
                                 <div className="PaymentMethod-form-group">
@@ -190,14 +236,14 @@ class addMoney extends Component {
                                             /> </td>
                                         <td className="PagePayments-summary-column"> USD </td>
                                     </tr>
-                                    <tr>
-                                        <td className="PagePayments-summary-column Payment-label"> Processing Fee </td>
-                                        <td className="PagePayments-summary-column"> {this.state.userdata.processingFee} </td>
-                                        <td className="PagePayments-summary-column"> USD </td>
-                                    </tr>
+                                    {/*<tr>*/}
+                                        {/*<td className="PagePayments-summary-column Payment-label"> Processing Fee </td>*/}
+                                        {/*<td className="PagePayments-summary-column"> {this.state.userdata.processingFee} </td>*/}
+                                        {/*<td className="PagePayments-summary-column"> USD </td>*/}
+                                    {/*</tr>*/}
                                     <tr className="PagePayments-summary-group padding-t10">
                                         <td className="PagePayments-summary-column Payment-label"> Total </td>
-                                        <td className="PagePayments-summary-column">{this.state.userdata.totalAmount}</td>
+                                        <td className="PagePayments-summary-column">{this.state.userdata.depositAmount}</td>
                                         <td className="PagePayments-summary-column"> USD </td>
                                     </tr>
                                     </tbody>

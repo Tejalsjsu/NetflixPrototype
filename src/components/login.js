@@ -5,8 +5,10 @@ import {Button} from 'react-bootstrap';
 import  logo from '../image/netflix-logo.jpg';
 import * as API from '../api/index';
 import Dashboard from './dashboard';
+import AdminAddMovie from './adminAddMovie'
 import Signup from './signup';
 import cookie from 'react-cookies';
+import axios from 'axios'
 let imgStyle = {height: '100px', padding: '10px', width: '300px'};
 let divStyle2 = {height:'45px'};
 let divStyle3 ={backgroundColor:'#E3E1E1'};
@@ -22,8 +24,8 @@ class Login extends Component{
         userdata: {
             username: '',
             password: '',
-            email: '',
-            token:'',
+            //email: '',
+            //token:'',
             userId:''
         },
         isLoggedIn: false,
@@ -34,41 +36,48 @@ class Login extends Component{
         this.setState({
             username: '',
             password: '',
-            email:'',
-            token:'',
-            userId:''
+            //email:'',
+            //token:'',
+            userId:'',
+            profileName:'',
+            role: ''
         });
     }
 
     handleSubmit = () => {
-        this.props.history.push("/dashboard");
-        // API.doLogin(this.state.userdata)
-        //     .then((res) => {
-        //         if (res.status === '201') {
-        //             console.log("in 201"+res.email);
-        //             this.setState({
-        //                 isLoggedIn: true,
-        //                 message: "Welcome to my App..!!",
-        //                 email: res.email,
-        //                 username: this.state.userdata.name,
-        //                 token: res.token,
-        //                 userId : res.userId
-        //             });
-        //             cookie.save('userId', this.state.userId, { path: '/' });
-        //             if(res)
-        //                 this.props.history.push("/dashboard");
-        //             else {
-        //                 this.props.history.push('/adminDashboard');
-        //             }
-        //         } else if (res.status === '401') {
-        //             console.log("in fail");
-        //             this.setState({
-        //                 isLoggedIn: false,
-        //                 message: "Wrong username or password. Try again..!!"
-        //             });
-        //             this.props.history.push("/login");
-        //         }
-        //     });
+        let loginData = {
+            username: this.state.userdata.username,
+            password: this.state.userdata.password
+        }
+        API.doLogin(loginData)
+            .then((res) => {
+                console.log(res)
+                if (res.status === 200) {
+                    console.log('after login ', res.role)
+                    this.setState({
+                        isLoggedIn: true,
+                        message: "Welcome to my App..!!",
+                        token: res.data.JWTToken,
+                        profileName: res.data.profileName,
+                        role: res.role
+                    });
+                    //localStorage.setItem('JWTToken', this.state.token);
+                    //localStorage.setItem('profileName', this.state.profileName);
+                    //cookie.save('JWTToken', this.state.token, { path: '/' });
+                    if(res.data.role == 'ADMIN')
+                        this.props.history.push("/adminAddMovie");
+                    else {
+                        this.props.history.push('/Dashboard');
+                    }
+                } else {
+                    console.log("in fail");
+                    this.setState({
+                        isLoggedIn: false,
+                        message: "Wrong username or password. Try again..!!"
+                    });
+                    this.props.history.push("/login");
+                }
+            });
     };
 
     render(){
@@ -130,6 +139,12 @@ class Login extends Component{
 
                     <div>
                         <Dashboard username={this.state.userdata.username} email={this.state.userdata.username}/>
+                    </div>
+                )}/>
+                <Route exact path="/adminAddMovie" render = {() => (
+
+                    <div>
+                        <AdminAddMovie/>
                     </div>
                 )}/>
                 <Route exact path="/signup" render = {() => (

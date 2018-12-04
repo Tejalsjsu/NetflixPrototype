@@ -3,7 +3,7 @@ import {Button} from 'react-bootstrap';
 import {Link, Route, withRouter} from 'react-router-dom';
 import  logo from '../image/netflix-logo.jpg';
 import * as API from '../api/index';
-import Login from "./login";
+import registrationConfirmation from "./registrationConfirmation";
 let imgStyle = {height: '100px', padding: '10px', width: '300px'};
 let divStyle2 = {height:'45px'};
 let divStyle3 ={backgroundColor:'#E3E1E1'};
@@ -14,8 +14,9 @@ class Signup extends Component{
         userdata: {
             username: '',
             password: '',
-            email:'',
-            typeOfUser:''
+            // email:'',
+            // role:'',
+            profileName: ''
         },
         validation_error: [],
         isLoggedIn: false,
@@ -46,38 +47,42 @@ class Signup extends Component{
         //     errors.push("Invalid Password");
         // }
 
-        if(this.state.userdata.email.length === 0){
+        if(this.state.userdata.username.length === 0){
             errors.push("Kindly enter email");
-        } else if (!email_regex.test(this.state.userdata.email)){
+        } else if (!email_regex.test(this.state.userdata.username)){
             errors.push("Invalid email");
         }
 
         if(errors.length === 0) {
-            this.props.history.push('/dashboard');
-        //     API.saveData(this.state.userdata)
-        //         .then((res) => {
-        //             console.log(res.status);
-        //             if (res.status === '201') {
-        //                 this.setState({
-        //                     isLoggedIn: true,
-        //                     message: "Account Created! You can Login..!!"
-        //                 });
-        //                 console.log("after set", this.props);
-        //                 this.props.history.push('/signup');
-        //                 console.log("after set", this.props);
-        //                 //history.push('/login');
-        //             } else if (res.status === '401') {
-        //                 this.setState({
-        //                     isLoggedIn: false,
-        //                     message: "Signup. Try again..!!",
-        //
-        //                 });
-        //             }
-        //         });
-        // }else{
-        //     this.setState ({
-        //         validation_error: errors
-        //     })
+            let signUpData = {
+                username: this.state.userdata.username,
+                password: this.state.userdata.password,
+                profileName: this.state.userdata.profileName
+            }
+             API.saveData(signUpData)
+                 .then((res) => {
+                     console.log(res.status);
+                     if (res.status === 200) {
+                         this.setState({
+                             isLoggedIn: true,
+                             message: "Account Created! An email verification link has been send. Kindly Verify your email and login!!"
+                         });
+                         //console.log("after set", this.props);
+                         this.props.history.push('/registrationConfirmation');
+                         //console.log("after set", this.props);
+                         //history.push('/login');
+                     } else  {
+                         this.setState({
+                             isLoggedIn: false,
+                             message: "Signup could not be processes. Pleae try again..!!",
+
+                         });
+                     }
+                 });
+         }else{
+             this.setState ({
+                 validation_error: errors
+             })
          }
     };
 
@@ -111,21 +116,21 @@ class Signup extends Component{
 
                             <img src={logo} style={imgStyle} alt="logo"/>
                             <hr color="#E3E1E1"/>
-                            <input type="text" className="form-control" placeholder="Email" value={this.state.userdata.email}
-                                   onChange={(event) => {
-                                       this.setState({
-                                           userdata: {
-                                               ...this.state.userdata,
-                                               email: event.target.value
-                                           }
-                                       });
-                                   }}/> <br/>
-                            <input type="text" className="form-control" placeholder="Enter User Name" value={this.state.userdata.username}
+                            <input type="text" className="form-control" placeholder="Email" value={this.state.userdata.username}
                                    onChange={(event) => {
                                        this.setState({
                                            userdata: {
                                                ...this.state.userdata,
                                                username: event.target.value
+                                           }
+                                       });
+                                   }}/> <br/>
+                            <input type="text" className="form-control" placeholder="Enter User Name" value={this.state.userdata.profileName}
+                                   onChange={(event) => {
+                                       this.setState({
+                                           userdata: {
+                                               ...this.state.userdata,
+                                               profileName: event.target.value
                                            }
                                        });
                                    }}/> <br/>
@@ -138,6 +143,36 @@ class Signup extends Component{
                                            }
                                        });
                                    }}/><br/>
+
+                            {/*<input type="text" className="form-control" placeholder="Enter profile Name" value={this.state.userdata.profileName}*/}
+                                   {/*onChange={(event) => {*/}
+                                       {/*this.setState({*/}
+                                           {/*userdata: {*/}
+                                               {/*...this.state.userdata,*/}
+                                               {/*profileName: event.target.value*/}
+                                           {/*}*/}
+                                       {/*});*/}
+                                   {/*}}/><br/>*/}
+
+
+                            {/*<h4> Type of User</h4>*/}
+                            {/*<input type="radio" name="payment" value="Admin" checked={this.state.userdata.role === 'Admin'} onChange={(event) => {*/}
+                                {/*this.setState({*/}
+                                    {/*userdata: {*/}
+                                        {/*...this.state.userdata,*/}
+                                        {/*role: event.target.value*/}
+                                    {/*}*/}
+                                {/*});*/}
+                            {/*}} />  <span className="font-grey"> Admin </span>*/}
+                            {/*<input type="radio" name="payment" value="User" onChange={(event) => {*/}
+                                {/*this.setState({*/}
+                                    {/*userdata: {*/}
+                                        {/*...this.state.userdata,*/}
+                                        {/*role: event.target.value*/}
+                                    {/*}*/}
+                                {/*});*/}
+                            {/*}}/> <span className="font-grey"> User </span> <br/>*/}
+                            {/*<br/> <br/>*/}
 
 
                             <Button bsStyle="danger" bsSize="sm" block
@@ -158,6 +193,12 @@ class Signup extends Component{
                             </div>
                         </div>
 
+                    </div>
+                )}/>
+
+                <Route exact path="/registrationConfirmation" render = {() => (
+                    <div>
+                        <registrationConfirmation/>
                     </div>
                 )}/>
 

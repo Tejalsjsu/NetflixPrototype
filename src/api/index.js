@@ -3,7 +3,6 @@ const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:8081'
 
 const headers = {
     'Accept': 'application/json',
-
 };
 
 
@@ -18,39 +17,187 @@ export const doLogin = (payload) =>
         credentials: 'include',
         body: JSON.stringify(payload)
     }).then((res) => res.json())
-        .then((data) => {
-            const token = data.token;
-            localStorage.setItem('jwtToken', token);
-            console.log(token);
-            return data;})
+            .then((data) => {
+                let ResponseJSON = {status : 200, data: data}
+                const token = data.JWTToken;
+                localStorage.setItem('JWTToken', token);
+                localStorage.setItem('profileName', data.profileName);
+                localStorage.setItem('userId', data.userId);
+                console.log(ResponseJSON);
+                return ResponseJSON;})
         .catch(error => {
             console.log("This is error");
             return error;
         });
 
-//     .then(res => {
-//     //return res.status;
-//     return res;
-// }).catch(error => {
-//     console.log("This is error");
-//     return error;
-// });
+
+
+
+export const fetchAllMovies = (payload) =>
+    fetch(`${api}/movie/search`, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json',
+            'Authorization' : localStorage.JWTToken
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload)
+    }).then((res) => res.json())
+        .then((data) => {
+            let ResponseJSON = {status : 200, data: data}
+            console.log(ResponseJSON);
+            return ResponseJSON;})
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+
+
+export const fetchMovieById = (payload) =>
+    fetch(`${api}/movie/`+payload, {
+        method: 'GET',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json',
+            'Authorization' : localStorage.JWTToken
+        },
+        credentials: 'include',
+    }).then((res) => res.json())
+        .then((data) => {
+            let ResponseJSON = {status : 200, data: data}
+            console.log(ResponseJSON);
+            return ResponseJSON;})
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+export const fetchMovieReviewsById = (payload) =>
+    fetch(`${api}/review/retrieve`, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json',
+            'Authorization' : localStorage.JWTToken
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload)
+    }).then((res) => res.json())
+        .then((data) => {
+            let ResponseJSON = {status : 200, data: data}
+           // console.log('response from api ', data);
+            return ResponseJSON;})
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+
+
+
+export const ValidateMovieForWatch = (payload) =>
+    fetch(`${api}/movie/play`, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json',
+            'Authorization' : localStorage.JWTToken
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload)
+    }).then((res) => res.json())
+        .then((data) => {
+            let ResponseJSONM = {status : 200, data: data}
+            // console.log('response from api ', data);
+            return ResponseJSONM;})
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+
 
 export const saveData = (details) =>
-    fetch(`${api}/login/signup`, {
+    fetch(`${api}/userprofile`, {
+        method: 'POST',
+         headers: {
+             ...headers,
+             'Content-Type': 'application/json'
+         },
+        body: JSON.stringify(details)
+    }, console.log(JSON.stringify(details))
+    ).then((res) => res.json())
+        .then((data) => {
+            console.log(data)
+            let ResponseJSON = {status : 200, data: data}
+            return ResponseJSON;})
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+
+
+export const postReview = (details) =>
+    fetch(`${api}/review/`, {
+            method: 'POST',
+            headers: {
+                ...headers,
+                'Content-Type': 'application/json',
+                'Authorization' : localStorage.JWTToken
+            },
+            credentials: 'include',
+            body: JSON.stringify(details)
+        }, console.log('review post payload ', JSON.stringify(details))
+    ).then((res) => res)
+        .then((res) => {
+            let ResponseJSON = {status : 200, data: res}
+            return ResponseJSON;})
+        .catch(error => {
+            console.log("This is error", error.message);
+            return error;
+        });
+
+export const addMoney = (details) =>
+    fetch(`${api}/subcribe`, {
+            method: 'POST',
+            headers: {
+                ...headers,
+                'Content-Type': 'application/json',
+                'Authorization' : localStorage.JWTToken
+            },
+            credentials: 'include',
+            body: JSON.stringify(details)
+        }, console.log(JSON.stringify(details))
+    ).then((res) => res)
+        .then((res) => {
+            let ResponseJSON = {status : 200, data: res}
+            return ResponseJSON;})
+        .catch(error => {
+            console.log("This is error", error.message);
+            return error;
+        });
+
+export const registerConfirmation = (payload) =>
+    fetch(`${api}/regitrationConfirm/token=?`+payload.token, {
         method: 'POST',
         headers: {
             ...headers,
             'Content-Type': 'application/json'
         },
         credentials: 'include',
-        body: JSON.stringify(details)
     }).then((res) => res.json())
-        .then((data) => {return data;})
+        .then((data) => {
+            let ResponseJSON = {status : 200, data: data}
+            console.log(ResponseJSON);
+            return ResponseJSON;})
         .catch(error => {
             console.log("This is error");
             return error;
         });
+
 
 
 
@@ -291,22 +438,6 @@ export const fetchBidInfo = (projectdetails) =>
                 ;})
         .catch(error => {
             console.log("This is error in fetch Bid info");
-            return error;
-        });
-
-export const addMoney = (userdata) =>
-    fetch(`${api}/kafka/kafkaProducer/addMoney`, {
-        method: 'POST',
-        headers: {
-            ...headers,
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(userdata)
-    }).then((res) => res.json())
-        .then((data) => {return data;})
-        .catch(error => {
-            console.log("This is error");
             return error;
         });
 

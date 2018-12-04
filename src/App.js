@@ -8,10 +8,14 @@ import Dashboard from './components/dashboard'
 import Home from './components/Home';
 import Signup from './components/signup';
 import Profile from './components/profile';
-import ProjectDetails from './components/projectdetails';
+import MovieDetails from './components/movieDetails';
+import MovieScoreboard from './components/movieScoreboard';
 import EditProfile from './components/editprofile';
 import NavLogin from './components/NavLogin';
 import BrowseProjects from './components/browseProjects'
+import Subscription from './components/subscription'
+import registrationConfirmation from './components/registrationConfirmation'
+import playMovie from './components/playMovie'
 
 import CurrentWorkAsFreelancer from './components/CurrentWorkAsFreelancer';
 
@@ -41,7 +45,11 @@ class App extends Component {
                   <Route path="/signup" component={Signup}/>
                   <Route path="/dashboard" component={Dashboard}/>
                   <Route path="/profile" component={Profile}/>
-                  <Route path="/projectdetails" component={ProjectDetails}/>
+                  <Route path="/movieScoreboard" component={MovieScoreboard}/>
+                  <Route path="/movieDetails" component={MovieDetails}/>
+                  <Route path="/subscription" component={Subscription}/>
+                  <Route path="/playMovie" component={playMovie}/>
+                  <Route path="/registrationConfirmation" component={registrationConfirmation}/>
                   <Route path="/editprofile" component={EditProfile}/>
                   <Route path="/browseProjects" component={BrowseProjects}/>
 

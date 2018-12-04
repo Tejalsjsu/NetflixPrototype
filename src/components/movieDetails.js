@@ -1,224 +1,363 @@
 import React, {Component} from 'react';
+import {Link, withRouter, Route} from 'react-router-dom';
+import "../App.css"
 import {Button} from 'react-bootstrap';
-import {Link, Route, withRouter} from 'react-router-dom';
-import  logo from '../image/netflix-logo.jpg';
+import  logo from '../image/fl-logo.png';
 import * as API from '../api/index';
-import Login from "./login";
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-
-let imgStyle = {height: '100px', padding: '10px', width: '300px'};
+import Dashboard from './dashboard';
+import Signup from './signup';
+import NavBar from '../components/navbar';
+import queryString from 'query-string';
+import playMovie from './playMovie'
+import cookie from "react-cookies";
+let imgStyle = {height: '70px', padding: '10px'};
 let divStyle2 = {height:'45px'};
 let divStyle3 ={backgroundColor:'#E3E1E1'};
-let divStyle1 = {align: 'right', backgroundColor: '#FEFDFD', padding: '12px', marginTop: '27px', width: '500px'};
-let formHead1 = {color:'blue', fontFamily : 'Open Sans', fontSize: '55', fontWeight: 'bold'};
-let formStyle1 = {align:'center', fontFamily : 'Open Sans', fontSize: '70'}
-// let tableStyle1 = {align:'center', padding: '19px 9px 9px 9px'}
+let divStyle1 = {align: 'center', backgroundColor: '#FEFDFD', padding: '28px', marginTop: '1px'};
 
-class MovieDetails extends Component{
-  constructor(props){
-    super(props);
-  }
-    state = {
-        moviedata: [{
-            movieTitle: '',
-            numberOfPlays: '',
-        }],
-        validation_error: [],
-        isLoggedIn: false,
-        message: '',
-        top_ten_movies : [],
-        duration: ''
+class movieDetails extends Component{
+    constructor(props){
+        super(props);
+        // console.log({props.param.projectName});
+        var pid = queryString.parse(this.props.location.search);
+        var temp = pid && pid.MovieId;
+        console.log('here ' +temp)
 
+        this.state =  {
+            userdata: {
+                username: '',
+                password: '',
+                email: '',
+                userId: localStorage.getItem('userId'),
+                movieId: temp,
+                movieTitle:'',
+                Synopsis:'',
+                actors:'',
+                genre:'',
+                year:'',
+                duration:'',
+                Image:'',
+                studio:'',
+                director:'',
+                country:'',
+                rating:'',
+                availability:'',
+                price:''
+            },
+            reviewText:'',
+            postStars:'',
+            reviews: '',
+            isLoggedIn: true,
+            message: ''
+        };
+
+    }
+
+    componentWillMount(){
+        var pid = queryString.parse(this.props.location.search);
+        var temp = pid && pid.MovieId;
+
+        var temPid = this.state.userdata.movieId;
+
+
+
+        API.fetchMovieById(this.state.userdata.movieId)
+            .then((res) => {
+                //console.log("status " +res.data.title);
+                if (res.status === 200) {
+                    console.log("In success");
+                    this.setState({
+                        isLoggedIn: true,
+                        userdata: {
+                            projectId: temPid,
+                            movieTitle:res.data.title,
+                            Synopsis:res.data.synopsis,
+                            price:res.data.price,
+                            actors:res.data.actors,
+                            genre: res.data.genre,
+                            studio:res.data.studio,
+                            director:res.data.director,
+                            country:res.data.country,
+                            rating:res.data.rating,
+                            availability:res.data.availability,
+                            year: res.data.year,
+                            movieId: temp
+                        }
+                    });
+                } else if (res.status === '401') {
+                    this.setState({
+                        isLoggedIn: false,
+                        message: "No projects found..!!",
+                    });
+                    this.props.history.push('/movieDetails');
+                }
+            });
+
+        //Fetch Review
+        let moviepayload = {
+            "movieId" :this.state.userdata.movieId,
+            "page":0,
+            "size" :2
+        }
+
+        //console.log('movie payload ', moviepayload)
+        API.fetchMovieReviewsById(moviepayload)
+            .then((res) => {
+                console.log("status reviews " +res);
+                if (res.status === 200) {
+                    console.log("In success");
+                    this.setState({
+                        isLoggedIn: true,
+                        reviews: res.data.content
+                    });
+                    console.log('reviews ', this.state.reviews)
+                } else if (res.status === '401') {
+                    this.setState({
+                        isLoggedIn: false,
+                        message: "No projects found..!!",
+                    });
+                    this.props.history.push('/movieDetails');
+                }
+            });
+
+
+
+
+    }
+
+    postReview = () => {
+        //this.props.history.push('/playMovie');
+        let reviewDetails = {
+            "customerId": localStorage.getItem('userId'),
+            "movieId": this.state.userdata.movieId,
+            "reviewRate": this.state.postStars,
+            "reviewText": this.state.reviewText
+        }
+        console.log('payload ', reviewDetails)
+        API.postReview(reviewDetails)
+            .then((res) => {
+                console.log(res.status);
+                if (res.status === 200) {
+                    console.log('after watch ', res)
+                    this.setState({
+                        isLoggedIn: true,
+                        message: "Review Posted Successfully..!!"
+                    });
+                    this.props.history.push('/movieDetails?MovieId='+this.state.userdata.movieId);
+                } else {
+                    this.setState({
+                        message: "post Failed. Try again..!!",
+                    });
+                }
+            });
     };
 
+    handleWatch = () => {
+        //this.props.history.push('/playMovie');
+        let watchDetails = {
+            movieId: this.state.userdata.movieId,
+            customerId: localStorage.getItem('userId')
+        }
+        console.log('payload ', watchDetails)
+         API.ValidateMovieForWatch(watchDetails)
+             .then((res) => {
+                 console.log(res.status);
+                 if (res.status === 200) {
+                     if(res.data.allowed == true){
+                         this.props.history.push('/playMovie');
+                     }
+                     else if(res.data.typeOfMovie == 'PayPerView' || res.data.typeOfMovie == 'PPV' ){
+                         this.props.history.push('/addMoney?total='+res.data.total);
+                     }else{
+                         console.log('what is res ', res.data)
+                         this.props.history.push('/subscription')
+                     }
+                     this.setState({
+                         isLoggedIn: true,
+                         message: "Bid Posted Successfully..!!"
+                     });
 
-    handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
-  componentWillMount(){
-    this.setState({
-      moviedata: [
-        {
-        movieTitle: 'Tin Tin',
-        numberOfPlays: '23'
-      },
-      {
-        movieTitle: 'Star Trek',
-        numberOfPlays: '123'
-      },
-      {
-        movieTitle: 'Mad Max Fury Road',
-        numberOfPlays: '290'
-      },
-      {
-        movieTitle: 'Twilight',
-        numberOfPlays: '125'
-      }
-    ],
-    top_ten_movies : ["A", "B", "C", "D", "1", "2", "3", "4", "5"]
-
-    });
-  }
-
-    handleSubmit = () => {
-        //validations
-
-
-        // if(this.state.userdata.username.length === 0){
-        //     errors.push("Kindly enter user Name");
-        //  }
-         //else if(!noAlphabets.test(this.state.userdata.username)) {
-        //     errors.push("Invalid Username");
-        // }
-
-        // if(this.state.userdata.password.length === 0){
-        //     errors.push("Kindly enter a password");
-        // }
-        // else if(!noAlphabets.test(this.state.userdata.password)) {
-        //     errors.push("Invalid Password");
-        // }
-
-        // if(this.state.userdata.email.length === 0){
-        //     errors.push("Kindly enter email");
-        // } else if (!email_regex.test(this.state.userdata.email)){
-        //     errors.push("Invalid email");
-        // }
-        //
-        // if(errors.length === 0) {
-        //     this.props.history.push('/dashboard');
-        //     API.saveData(this.state.userdata)
-        //         .then((res) => {
-        //             console.log(res.status);
-        //             if (res.status === '201') {
-        //                 this.setState({
-        //                     isLoggedIn: true,
-        //                     message: "Account Created! You can Login..!!"
-        //                 });
-        //                 console.log("after set", this.props);
-        //                 this.props.history.push('/signup');
-        //                 console.log("after set", this.props);
-        //                 //history.push('/login');
-        //             } else if (res.status === '401') {
-        //                 this.setState({
-        //                     isLoggedIn: false,
-        //                     message: "Signup. Try again..!!",
-        //
-        //                 });
-        //             }
-        //         });
-        // }else{
-        //     this.setState ({
-        //         validation_error: errors
-        //     })
-         //}
+                 } else {
+                     let total = '25'
+                     this.props.history.push('/addMoney?total='+total);
+                     this.setState({
+                         message: "post Failed. Try again..!!",
+                     });
+                 }
+             });
     };
+
 
     render(){
 
-      const movieAndPlays = this.state.moviedata.map((function(item){
-                      return(
-                          <tr>
-                              {/*changed coloumn names as per mongo db column names*/}
+        var self = this;
+        const reviews = (this.state.reviews && (Object.keys(this.state.reviews)).map((pd) =>{
+            return(
+                <tr key={this.state.reviews[pd]._id} onClick={self.handleClick} className="odd ProjectTable-row project-details">
+                    <td className='ProjectTable-cell' key={this.state.reviews[pd]._id}> {this.state.reviews[pd].reviewText}</td>
+                    <td className='ProjectTable-cell' key={this.state.reviews[pd]._id}> {this.state.reviews[pd].reviewRate}</td>
+                    <td className='ProjectTable-cell' key={this.state.reviews[pd]._id}> {this.state.reviews[pd].customerId}</td>
+                </tr>
+            )
+        }))
 
-                              <td>{item.movieTitle}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              <td>{item.numberOfPlays}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          </tr>
-                      )
-                  }))
-
-      const topTenMovies = this.state.top_ten_movies.map((function(item){
-                                  return(
-                                      <tr>
-                                          <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                      </tr>
-                                  )
-                              }))
         return(
-            <div>
-            <div className="col-sm-4"> </div>
-            <div style={divStyle1} className="col-sm-3">
-            {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
 
-            <p style={formHead1}>Movie details in MovieCentral</p>
-            <hr color="#E3E1E1"/>
-                <form style={formStyle1}>
-                <table>
-                  <tr>
-                    <td><b><i>Movie Name</i></b></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td><b><i>Number of plays</i></b></td>
-                  </tr>
-                  {movieAndPlays}
-                </table><br/>
-                  Select duration for Top 10 list:
-                <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
+            <div style={divStyle3}>
+                <NavBar/>
+                <Route exact path="/movieDetails" render={() =>(
+                    <div className="container">
+                        <div >
+                            {/*<div className="col-md-3">*/}
+                            {this.state.message && (
+                                <div className="alert alert-warning" role="alert">
+                                    {this.state.message}
+                                </div>
+                            )}
+                        </div>
 
-                  <option selected="true" value="day">Last 24 hours</option>
-                  <option value="week">Last week</option>
-                  <option value="month">Last month</option>
-                </select><br />
-                <Button name="Top10" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myTop10Modal">Click here to view top 10 movie list</Button><br/>
+                        <h2 className="project_name padding-b20"> &nbsp; &nbsp;{this.state.userdata.movieTitle} </h2>
+                        <div className="col-sm-12">
+                            <div className="panel panel-default text-center">
+                                <div className="panel-body text-left">
+                                    <div className="block align-c">
+                                        <p className="project-p padding-l10 padding-r10">Year</p>
+                                        <div className="text-blue padding-l10 padding-r10">
+                                            {this.state.userdata.year}
+                                        </div>
+                                    </div>
+                                    <div className="block align-c border-l border-r">
+                                        <p className="project-p padding-l10 padding-r10">Price</p>
+                                        <div className="text-blue  padding-l10 padding-r10">
+                                            ${this.state.userdata.price}
+                                        </div>
+                                    </div>
+                                    <div className="block align-c border-r">
+                                        <p className="project-p padding-l10 padding-r10"> Rating </p>
+                                        <div className="text-blue  padding-l10 padding-r10">
+                                            {this.state.userdata.rating}
+                                        </div>
+                                    </div>
 
-              {/*Modal for customer list*/}
-                <div class="modal fade" id="myModal" data-toggle="myModal">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">User details and movie history of user ABC</h4>
-                      </div>
-                      <div class="modal-body">
-                      <label> User name:</label><input className="form-control" name="type" readonly="readonly" placeholder="ABC"/><br/>
-                      <label> Subscription:</label><input className="form-control" name="type" readonly="readonly" placeholder="Free"/><br/>
-                      <label> Enrolled since:</label><input className="form-control" name="type" readonly="readonly" placeholder="11/30/18"/><br/>
-                      <p>Movie History for user:</p>
-                        <p>Movie 1</p>
-                        <p>Movie 2</p>
-                        <p>Movie 3</p>
-                        <p>Movie 4</p>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                      </div>
+                                    <div className="block align-c right">
+                                        <div className="text-green bold larger margin-b5 padding-r10"> OPEN </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        {this.state.userdata.movieTitle!= undefined &&
+
+                        <div className="col-sm-12">
+                            <div className="panel panel-default text-center">
+                                {/*<div className="panel-heading">*/}
+                                {/*<h4>{this.state.userdata.projectName}</h4>*/}
+                                {/*</div>*/}
+                                <div className="panel-body text-left projectBrief-inner">
+                                    <div className="project-brief margin-b5 col-sm-8">
+                                        <h2 className="project-brief-subheading bold"> Movie Synopsis </h2>
+                                        <p className="project-p">{this.state.userdata.Synopsis}</p>
+
+                                        <h2 className="project-brief-subheading bold"> Studio </h2>
+                                        <p className="project-p">{this.state.userdata.studio}</p>
+
+                                        <h2 className="project-brief-subheading bold"> Start Cast </h2>
+                                        <p className="project-p">{this.state.userdata.actors}</p>
+
+
+                                    </div>
+                                    <div className="project-sidebar col-sm-4 padding-r10">
+                                        <div className="padding-r10 padding-l10 padding-t20">
+                                                <Button bsStyle="success" bsSize="sm" onClick={() => this.handleWatch()}>Watch Movie </Button><br/>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div className="panel-body text-left projectBrief-inner">
+                                    <div className="project-brief margin-b5 col-sm-10">
+
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" className="btn-large btn-primary-green">Post Review</a>
+                                    </div>
+                                    <div className="block align-right padding-r10 right">
+                                        <div className="ProjectReport">
+                                            <span>Movie ID:</span>
+                                            <span> {this.state.userdata.movieId}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+
+                                </div>
+                                <div className="panel-footer">
+                                    <div id="collapse1" className="panel-collapse collapse">
+                                        <div className="panel-body">
+                                            <span>Review :</span> &nbsp; &nbsp;
+                                            <input type="text"  defaultValue={this.state.reviewText}
+                                                   onChange={(event) => {
+                                                       this.setState({
+                                                           reviewText: event.target.value
+                                                       });
+                                                   }}/>
+
+                                            <span> &nbsp;&nbsp; Stars:</span> &nbsp; &nbsp;
+                                            <select id="ddlCurrency" className="input-lg" defaultValue={this.state.postStars}
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            postStars: event.target.value
+                                                        });
+                                                    }} >
+                                                <option value="1" >1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                            </select>
+                                            {/*<input type="number" placeholder="15" value={this.state.userdata.projectId}*/}
+                                            {/*maxLength={8}/>*/}
+                                            <br/> <br/>
+                                            <Button bsStyle="success" bsSize="sm" onClick={() => this.postReview()}>Post Review </Button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <table className='ProjectTable'>
+                                    <thead className='ProjectTable-head'>
+                                    <tr>
+                                        <th className='ProjectTable-header'>Review Text</th>
+                                        <th className='ProjectTable-header'>Rating</th>
+                                        <th className='ProjectTable-header'>Reviewd By</th>
+                                    </tr>
+
+                                    </thead>
+                                    <tbody>
+                                    {/*{nameslist}*/}
+                                    {reviews}
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                        }
+
                     </div>
+                    //here
+                )}/>
 
-                    {/*<!-- /.modal-content -->*/}
-                  </div>{/*<!-- /.modal-dialog -->*/}
-                </div>{/*<!-- /.modal -->*/}
+                <Route exact path="/dashboard" render = {() => (
 
-{/*Modal for customer list*/}
-<div class="modal fade" id="myTop10Modal" data-toggle="myTop10Modal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Current top 10 movie list </h4>
-      </div>
-      <div class="modal-body">
-      {/*<select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
-        <option value="Select">Select duration</option>
-        <option value="day">Last 24 hours</option>
-        <option value="week">Last week</option>
-        <option value="month">Last month</option>
-      </select><br />*/}
-      <table>
-      {topTenMovies}
-      </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-
-      </div>
-    </div>
-    {/*<!-- /.modal-content -->*/}
-  </div>{/*<!-- /.modal-dialog -->*/}
-</div>{/*<!-- /.modal -->*/}
-
-                </form>
-                </div>
+                    <div>
+                        <Dashboard username={this.state.userdata.username} email={this.state.userdata.username}/>
+                    </div>
+                )}/>
+                <Route exact path="/playMovie" render = {() => (
+                    <div>
+                        <playMovie />
+                    </div>
+                )}/>
             </div>
         );
     }
-  }
+}
 
-export default withRouter(MovieDetails);
+export default withRouter(movieDetails);

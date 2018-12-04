@@ -1,232 +1,268 @@
 import React, {Component} from 'react';
 import {Link, withRouter, Route} from 'react-router-dom';
-import PropTypes from 'prop-types';
+import cookie from "react-cookies";
 import * as API from "../api";
-import cookie from 'react-cookies';
 import NavBar from '../components/navbar';
-import Post from '../components/postproject';
-import Project from './projectdetails'
-import {Button} from 'react-bootstrap'
-import {logout} from "../api";
-let icon = {fontSize:'50px', color: 'white'}
-let cmpicon = require('../image/laptop.png')
-let iconstyle = {width: '30px', height:'30px'}
+import queryString from "query-string";
+var FinancialNavBar = require('../components/financialNavBar');
 
-var data = [];
+let icon = require('../image/logo.png')
+let header = require('../image/cardHeader.png')
+let visa = require('../image/visa-card.png')
+let flag = require('../image/united-states.png')
+let visa_verified = require('../image/visa-verified.png')
+let img_style = {width:'560px', height: '70px'}
 
-class Subscription extends Component {
-    constructor(props){
-        super(props);
-    }
 
-    //
+class subscription extends Component {
     state = {
-        username: '',
-        isLoggedIn:'',
-        userId: cookie.load('userId'),
-        projectData:'',
-        message:''
-    };
+        userdata:{
+            userId: localStorage.getItem('userId'),
+            cardNo:'',
+            expiryDate:'',
+            cardHolderName:'',
+            ccv:'',
+            billingZip:'',
+            depositAmount: queryString.parse(this.props.location.search) && queryString.parse(this.props.location.search).total,
+            processingFee:'',
+            totalAmount:'',
+            year: '',
+            Type: ''
+        }
 
-    componentWillMount(){
-        console.log("Cookie when load "+cookie.load('userId'));
-        if(cookie.load('userId') != undefined){
-            // this.props.history.push('/dashboard');
-            // Fetch all projects
-            // API.fetchAllProjects(this.state.userId)
-            //     .then((res) => {
-            //         console.log("status " +[res.details.json]);
-            //         if (res.status === '201') {
-            //             this.setState({
-            //                 isLoggedIn: true,
-            //                 //projectData: res
-            //                 projectData: res
-            //             });
-            //             data = res.details;
-            //             console.log(this.state.projectData);
-            //             this.props.history.push('/dashboard');
-            //         } else if (res.status === '401') {
-            //             this.setState({
-            //                 isLoggedIn: false,
-            //                 message: "No projects found..!!",
-            //             });
-            //         }
-            //     });
-            // fetch all project ends here
-        }
-        else{
-            console.log("in else "+cookie.load('userId'));
-            //     API.checkSession()
-            //         .then((res) => {
-            //             console.log("status " +res.status);
-            //             if (res.status === '201') {
-            //                 this.setState({
-            //                     isLoggedIn: true,
-            //                 });
-            //                 this.props.history.push('/dashboard');
-            //             } else if (res.status === '401') {
-            //                 this.setState({
-            //                     isLoggedIn: false,
-            //                     message: "Signup. Try again..!!",
-            //                 });
-            this.props.history.push('/login');
-        }
-        //         });
-        // }
-        this.setState({
-            username : this.props.username,
-            email : this.props.email,
-            userId: cookie.load('userId'),
-            projectData:''
-        });
     }
 
-    handleLogout = () => {
-        console.log("in logout");
-        API.logout(this.state.username)
+    handleSubmit = () => {
+        console.log(this.state);
+        let payment = {
+            "userId":this.state.userdata.userId,
+            "quantity": this.state.userdata.depositAmount,
+            "paymentDetail": {
+                "xref": this.state.userdata.cardNo,
+                "cvv": this.state.userdata.ccv,
+                "expMonth": this.state.userdata.expiryDate,
+                "expYear": this.state.userdata.expiryDate,
+                "cardName": this.state.userdata.cardHolderName,
+                "cardType": this.state.userdata.cardHolderName,
+                "zipCode": this.state.userdata.billingZip,
+                "customerId": this.state.userdata.userId
+            },
+            "typeOfPayment": "renewal"
+        }
+        API.addMoney(payment)
             .then((res) => {
-                if (res.status === '201') {
-                    console.log("in 201");
+                console.log(res.status);
+                if (res.status === 200) {
                     this.setState({
-                        isLoggedIn: false
+                        isLoggedIn: true,
+                        message: "Subscribed Successfully..!!"
                     });
-                    this.props.history.push("/login");
+                    this.props.history.push('/Dashboard');
                 } else if (res.status === '401') {
                     this.setState({
-                        isLoggedIn: true
+                        isLoggedIn: true,
+                        message: "Payment Failed. Try again..!!",
                     });
-                    // this.props.history.push("/login");
+                }else if (res.status === '402') {
+                    this.setState({
+                        isLoggedIn: false,
+                        message: "Session Expired..!!",
+                    });
+                    this.props.history.push('/login');
                 }
             });
     };
 
-
     render() {
-        var self = this;
-        // const withKeys = data.map((function(item, key){
-        //     return(
-        //         <tr key={item._id} onClick={self.handleClick}>
-        //             <td><a href={`/projectdetails?projectid=${item._id}`}>{item.projectName}</a> </td>
-        //             <td>{item.count}</td><td>{item.Bids}</td><td>{(new Date(item.postProjectDate)).toLocaleDateString()}</td>
-        //             <td>{item.budgetRange}</td>
-        //         </tr>
-        //     )
-        // }))
-        //         <tr key={item.idtblProject} onClick={self.handleClick}>
-        // <td><a href={`/projectdetails?projectid=${item.idtblProject}`}> {item.ProjectName}</a> </td>
-        //     <td>{item.count}</td><td>{item.Bids}</td> <td>{(new Date(item.EndDate)).toLocaleDateString()}</td>
-        //     <td>{item.budgetRange}</td>
-        //
-        // </tr>
+        return(
+            <div className="main-content">
+                <NavBar/>
 
-        const withfilter = (this.state.projectData.details && (Object.keys(this.state.projectData.details)).map((pd) =>{
-            return(
-                <tr key={this.state.projectData.details[pd]._id} onClick={self.handleClick} className="odd ProjectTable-row project-details">
-                    <td key={this.state.projectData.details[pd].projectName} className='ProjectTable-cell ProjectTable-summaryColumn' >
-                        <div className="col-sm-1"><img src={cmpicon} style={iconstyle}/> </div>
-                        <div  className="col-sm-10">
-                        <span className="ProjectTable-title">
-                            <a href="#" className='ProjectTable-title'>{this.state.projectData.details[pd]._id.projectName}</a></span><br/>
-                            ...{this.state.projectData.details[pd]._id.projectDescription && this.state.projectData.details[pd]._id.projectDescription.substr(0,100)}... <br/>
-                            {this.state.projectData.details[pd]._id.skills && this.state.projectData.details[pd]._id.skills.split(',').map((skill) => <a href="#" className='a-skills'>{skill},</a>)}
-                        </div>
-                    </td>
-                    <td className='ProjectTable-cell' key={this.state.projectData.details[pd].count+pd}> {this.state.projectData.details[pd].count}</td>
-                    <td className='ProjectTable-cell' key={this.state.projectData.details[pd].average+pd}> {this.state.projectData.details[pd].average}</td>
-                    <td className='ProjectTable-cell' key={this.state.projectData.details[pd]._id.postProjectDate+pd}> {(new Date(this.state.projectData.details[pd]._id.postProjectDate).toLocaleDateString())}</td>
-                    <td className='ProjectTable-cell' key={this.state.projectData.details[pd]._id.budgetRange+pd}> {this.state.projectData.details[pd]._id.budgetRange}</td>
-                </tr>
-            )
-        }))
-
-        return (
-            <div>
-
-
-                <Route exact path="/subscription" render={() => (
-                    <div>
-                        <NavBar/>
+                <div className="container"> <br/>
+                    <div className="text-left">
                         <div >
-                            <div className="container">
-                                {/*start from here*/}
-                                {/*<div className="container-fluid">*/}
-                                {/*<div className="align-right">*/}
-                                {/*<ul className="pager">*/}
-                                {/*<li><a href="#" className="active">Employer</a></li>*/}
-                                {/*<li><a href="#">Freelancer</a></li>*/}
-                                {/*</ul>*/}
-                                {/*</div>*/}
-                                {/*</div>*/}
+                            {/*<div className="col-md-3">*/}
+                            {this.state.message && (
+                                <div className="alert alert-warning" role="alert">
+                                    {this.state.message}
+                                </div>
+                            )}
+                            {/*</div>*/}
+                        </div>
+                    </div>
+                    <h1 align="left"> <strong> Select Payment Method for Subscription </strong></h1>  <br/>
+                    <div className="Grid col-sm-16">
+                        <div className="col-sm-5">
+                            <img src={header} alt="header" style={img_style}/>
+                            <div className="PaymentMethod-content-inner">
+                                <div className="PaymentMethod-form-group">
 
-                                <div className="text-left">
-                                    <h1> Subscription   </h1> <br/> <br/>
-
-                                    {/*<h4> Choose a plan that's right for you.   </h4>*/}
-
-
-                                    <div>
-                                        <table className='planTable'>
-                                            <tr className="planTable columnHeader row">
-                                                <td >
-                                                  <span>   Monthly price after free month ends on same day next month or last day of next month </span>
-                                                </td>
-                                                <td>
-                                                    $10    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                </td>
-
-                                                <td> <span>
-                                                    <a href='/addMoney'><Button bsStyle="success" bsSize="sm"> Make Payment </Button></a> </span>
-                                                </td>
-                                            </tr>
-
-                                        </table>
+                                    <div className="PaymentMethod-form-column--medium">
+                                        <div className="Payment-label">Card Number:</div>
+                                        <input type="Number" className="form-control large-input" id="cardNo" value={this.state.userdata.cardNo}
+                                               onChange={(event) => {
+                                                   this.setState({
+                                                       userdata: {
+                                                           ...this.state.userdata,
+                                                           cardNo: event.target.value
+                                                       }
+                                                   });
+                                               }}/>
                                     </div>
 
-                                                <br/><br/>
-                                    <table className='ProjectTable'>
-                                        <thead className='ProjectTable-head'>
-                                        <tr>
-                                            <th className='ProjectTable-header'>Payment Type</th>
-                                            <th className='ProjectTable-header'>Expired/Expires on</th>
-                                            <th className='ProjectTable-header'>Details</th>
-                                            <th className='ProjectTable-header'>Amount Paid</th>
-                                        </tr>
+                                    <div className="PaymentMethod-form-column--small">
+                                        <div className="Payment-label">Expiry Month:</div>
+                                        <input className="form-control large-input" placeholder="MM" value={this.state.userdata.expiryDate}
+                                               onChange={(event) => {
+                                                   this.setState({
+                                                       userdata: {
+                                                           ...this.state.userdata,
+                                                           expiryDate: event.target.value
+                                                       }
+                                                   });
+                                               }}/>
+                                    </div>
+                                    <div className="PaymentMethod-form-column--small">
+                                        <div className="Payment-label">Expiry Year:</div>
+                                        <input className="form-control large-input" placeholder="YYYY" value={this.state.userdata.year}
+                                               onChange={(event) => {
+                                                   this.setState({
+                                                       userdata: {
+                                                           ...this.state.userdata,
+                                                           year: event.target.value
+                                                       }
+                                                   });
+                                               }}/>
+                                    </div>
+                                </div><br/>
+                                <div className="PaymentMethod-form-group">
 
-                                        </thead>
-                                        <tbody>
+                                    <div className="PaymentMethod-form-column--medium">
+                                        <div className="Payment-label">Card Holder Name:</div>
+                                        <input className="form-control large-input" id="cardName" value={this.state.userdata.cardHolderName}
+                                               onChange={(event) => {
+                                                   this.setState({
+                                                       userdata: {
+                                                           ...this.state.userdata,
+                                                           cardHolderName: event.target.value
+                                                       }
+                                                   });
+                                               }}/>
+                                    </div>
 
-                                        {withfilter}
+                                    <div className="PaymentMethod-form-column--small">
+                                        <div className="Payment-label">CCV/CVV:</div>
+                                        <input className="form-control large-input" placeholder="234" value={this.state.userdata.ccv}
+                                               onChange={(event) => {
+                                                   this.setState({
+                                                       userdata: {
+                                                           ...this.state.userdata,
+                                                           ccv: event.target.value
+                                                       }
+                                                   });
+                                               }}/>
+                                    </div>
+                                </div><br/>
 
-                                        </tbody>
-                                    </table>
+                                <div className="PaymentMethod-form-group">
 
-                                    {/*Container ends here */}
+                                    <div className="PaymentMethod-form-column--medium">
+                                        <div className="Payment-label">Billing Zip Code:</div>
+                                        <input className="form-control large-input" value={this.state.userdata.billingZip}
+                                               onChange={(event) => {
+                                                   this.setState({
+                                                       userdata: {
+                                                           ...this.state.userdata,
+                                                           billingZip: event.target.value
+                                                       }
+                                                   });
+                                               }}/>
+                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+                                    <div className="PaymentMethod-form-column--medium">
+                                        <div className="Payment-label">Card Type</div>
+                                        <input className="form-control large-input" value={this.state.userdata.Type}
+                                               onChange={(event) => {
+                                                   this.setState({
+                                                       userdata: {
+                                                           ...this.state.userdata,
+                                                           Type: event.target.value
+                                                       }
+                                                   });
+                                               }}/>
+                                    </div>
+
+                                </div> <br/>
+
+                                <div className="PaymentMethod-form-group">
+                                    <div className="PaymentMethod-form-column--medium">
+                                        <img src={visa} alt="visa"/>
+                                    </div>
                                 </div>
-
-                                {/*add code here*/}
-                                {/*Welcome to my App..!! This is dashboard <br/>*/}
-                                {/*UserName:  {this.props.username ? this.props.username: '' }  <br/>*/}
-                                {/*Email : {this.props.email}*/}
                             </div>
                         </div>
+
+                        <div className="col-sm-6 padding-l30">
+                            <div className="PagePayments-summary">
+                                <div className="PagePayments-summary-header">
+                                    <div className="Payment-label padding-t10">Deposit Currency:</div>
+                                    <div className="PagePayments-currency"><select name="currency" id="currency" className="form-control large-input">
+                                        <option value="USD"><span className="PagePayments-currency-flag"><img src={flag} alt="flag"/></span> USD </option>
+                                    </select></div>
+                                </div>
+
+
+                                <table className="PagePayments-summary-table">
+                                    <tbody>
+                                    <tr>
+                                        <th className="PagePayments-summary-title"></th>
+                                        <th className="PagePayments-summary-amount"> Months</th>
+                                        <th className="PagePayments-summary-amount"> Rate</th>
+                                    </tr>
+                                    <tr className="PagePayments-summary-group padding-t10">
+                                        <td className="PagePayments-summary-column Payment-label"> Months </td>
+                                        <td className="PagePayments-summary-column">
+                                            <input type="text" className="form-control large-input" placeholder="30" value={this.state.userdata.depositAmount}
+                                                   onChange={(event) => {
+                                                       this.setState({
+                                                           userdata: {
+                                                               ...this.state.userdata,
+                                                               depositAmount : event.target.value,
+                                                               totalAmount: Number(event.target.value) * 10
+                                                           }
+                                                       });
+                                                   }}
+                                            /> </td>
+                                        <td className="PagePayments-summary-column"> 10 </td>
+                                    </tr>
+                                    {/*<tr>*/}
+                                    {/*<td className="PagePayments-summary-column Payment-label"> Processing Fee </td>*/}
+                                    {/*<td className="PagePayments-summary-column"> {this.state.userdata.processingFee} </td>*/}
+                                    {/*<td className="PagePayments-summary-column"> USD </td>*/}
+                                    {/*</tr>*/}
+                                    <tr className="PagePayments-summary-group padding-t10">
+                                        <td className="PagePayments-summary-column Payment-label"> Total </td>
+                                        <td className="PagePayments-summary-column">{this.state.userdata.totalAmount}</td>
+                                        <td className="PagePayments-summary-column"> USD </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <button className="PagePayments-summary-btn btn btn-xlarge btn-info btn-block"
+                                        onClick={() => this.handleSubmit()}> Confirm Payment</button>
+                                <div className="PagePayments-summary-footer">You agree to authorize the use of your card for this deposit and future payments</div>
+
+                            </div>
+
+                        </div>
+                        <img src={visa_verified} alt="visa"/>
+                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                     </div>
-                )}/>
-
-                <Route path="/postproject" render={() => (
-                    <div>
-                        <Post/>
-                    </div>
-                )}/>
-
-                <Route exact path="/project" render={() => (
-                    <Project/>
-                )}/>
-
-
+                </div>
             </div>
         );
     }
-
 }
 
-export default withRouter(Subscription);
+export default withRouter(subscription);

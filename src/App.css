@@ -994,3 +994,27 @@ label.ProjectFilters-dd {
 .transaction-table-amount{
     width: 20%;
 }
+
+.planTable {
+    display: table;
+    width: 70%;
+    margin: 0;
+    border-collapse: collapse;
+    color: #333;
+    font-size: 16px
+}
+
+.columnHeader {
+  display: table-cell;
+  padding: 12px 15px;
+  height: 60px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.row {
+  display: table-row;
+  border-bottom: 1px solid #ccc;
+}

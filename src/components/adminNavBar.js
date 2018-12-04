@@ -15,20 +15,20 @@ function AdminNavBar() {
     }
 
     this.logout = () =>{
-        var userId = cookie.load('userId');
-        cookie.remove('userId');
-        API.logout(userId)
-            .then((res) => {
-            console.log("status logout client" +[res.status]);
-            if (res.status === '201') {
-                console.log("successfull Log out");
-                cookie.remove('userId');
-                this.props.history.push('/login');
-            } else {
-                cookie.remove('userId');
-                this.props.history.push('/login');
-            }
-        });
+        // var userId = cookie.load('userId');
+        // cookie.remove('userId');
+        // API.logout(userId)
+        //     .then((res) => {
+        //     console.log("status logout client" +[res.status]);
+        //     if (res.status === '201') {
+        //         console.log("successfull Log out");
+        //         cookie.remove('userId');
+        //         this.props.history.push('/login');
+        //     } else {
+        //         cookie.remove('userId');
+        //         this.props.history.push('/login');
+        //     }
+        // });
     }
 
         return (

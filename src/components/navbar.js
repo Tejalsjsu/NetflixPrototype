@@ -15,20 +15,21 @@ function NavBar() {
     }
 
     this.logout = () =>{
-        var userId = cookie.load('userId');
-        cookie.remove('userId');
-        API.logout(userId)
-            .then((res) => {
-            console.log("status logout client" +[res.status]);
-            if (res.status === '201') {
-                console.log("success full Log out");
-                cookie.remove('userId');
-                this.props.history.push('/login');
-            } else {
-                cookie.remove('userId');
-                this.props.history.push('/login');
-            }
-        });
+        //var userId = cookie.load('userId');
+        //cookie.remove('userId');
+       // this.props.history.push('/login');
+        // API.logout(userId)
+        //     .then((res) => {
+        //     console.log("status logout client" +[res.status]);
+        //     if (res.status === '201') {
+        //         console.log("success full Log out");
+        //         cookie.remove('userId');
+        //         this.props.history.push('/login');
+        //     } else {
+        //         cookie.remove('userId');
+        //         this.props.history.push('/login');
+        //     }
+        // });
     }
 
         return (
@@ -44,10 +45,9 @@ function NavBar() {
                         </div>
                         <div className="collapse navbar-collapse bar-item" id="myNavbar">
                             <ul className="nav navbar-nav">
-                                <li onClick={this.activateClass} ><NavLink exact to="/dashboard">Dashboard</NavLink></li>
-                                <li onClick={this.activateClass} ><NavLink to="/myprojects">My Movies</NavLink></li>
-                                <li onClick={this.activateClass} ><NavLink to="/addMoney">Billing</NavLink></li>
-
+                                <li onClick={this.activateClass}  className='active is-active'><NavLink exact to="/dashboard">Dashboard</NavLink></li>
+                                <li onClick={this.activateClass}  className='active is-active'><NavLink to="/movieScoreboard">Movie Scoreboard</NavLink></li>
+                                <li onClick={this.activateClass}  className='active is-active'><NavLink to="/subscription">Subscription</NavLink></li>
                                 <li onClick={this.activateClass}  className='active is-active'><a href="/editprofile">Edit Profile</a></li>
                             </ul>
 
