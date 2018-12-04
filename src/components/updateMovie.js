@@ -11,6 +11,7 @@ let divStyle2 = {height:'45px'};
 let divStyle3 ={backgroundColor:'#E3E1E1'};
 let divStyle1 = {align: 'right', backgroundColor: '#FEFDFD', padding: '12px', marginTop: '27px', width: '700px'};
 let formHead1 = {color:'blue', fontFamily : 'Open Sans', fontSize: '55', fontWeight: 'bold'};
+var data = [];
 
 class UpdateMovie extends Component{
   constructor(props){
@@ -18,50 +19,75 @@ class UpdateMovie extends Component{
   }
     state = {
         moviedata: {
-            searchMovie: '',
-            movieList: []
+            search: '',
+            page: 0,
+            size: 0
         },
         validation_error: [],
         isLoggedIn: false,
-        message: ''
+        message: '',
+        movieList: [],
+
+
     };
 
 
     componentWillMount() {
       this.setState({
-        searchMovie: '',
-        movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"]
+
+        // movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"]
+        movieList: [],
+        search: '',
+        page: 0,
+        size: 0
       });
-    //             API.fetchMovieData()
-    //                 .then((res) => {
-    //                     //console.log("status " +[res]);
-    //                     if (res) {
-    //                         console.log(' Success')
-    //                         this.setState({
-    //                             isLoggedIn: true,
-    //                             sensorData: res
-    //                         });
-    //                         data = res;
-    //                         //console.log("state " +data[0].sensor_make);
-    //                         this.props.history.push('/icons');
-    //                     } else if (res.status === '401') {
-    //                         console.log("No records");
-    //                         this.setState({
-    //                             isLoggedIn: true,
-    //                             message: "No Senosrs found..!!",
-    //                         });
-    //                     } else if (res.status === '402') {
-    //                         this.setState({
-    //                             isLoggedIn: false,
-    //                             message: "Session Expired..!!",
-    //                         });
-    //                         this.props.history.push('/login');
-    //                     }
-    //                 });
             }
 
     handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+  }
+
+  handleSearch(movieData){
+    console.log("Searching for movie : ", movieData);
+          // console.log("Searching for : ", this.state.moviedata.search);
+                    API.searchMovie(movieData)
+                        .then((res) => {
+                            // console.log("response:  " , res);
+                            if (res) {
+                                console.log(' Success')
+                                this.setState({
+                                    isLoggedIn: true,
+                                    moviedata: res,
+                                    movieList: []
+                                });
+                                data = res;
+                                let i = 0;
+                                console.log("Movie names before is: ", this.state.movieList);
+                                console.log("Suceesfully found movie with details as: ", data);
+                                console.log("Content is as: ", data.content);
+                                console.log("Content length is : ", data.content.length);
+                                for(i =0; i<=data.content.length -1; i++){
+                                  console.log("Movie name : ",  data.content[i].title)
+                                  this.state.movieList.push(data.content[i].title);
+                                }
+                                console.log("Movie names after are: ", this.state.movieList);
+                                this.props.history.push('/adminAddMovie');
+                            } else if (res.status === '401') {
+                                console.log("No records");
+                                this.setState({
+                                    isLoggedIn: true,
+                                    message: "No records found..!!",
+                                });
+                            } else if (res.status === '402') {
+                                this.setState({
+                                    isLoggedIn: false,
+                                    message: "Session Expired..!!",
+                                });
+                                this.props.history.push('/login');
+                            }
+                        });
+
+
   }
 
     handleSubmit = () => {
@@ -122,12 +148,12 @@ class UpdateMovie extends Component{
 
 const withKeys = this.state.movieList.map((function(item){
                 return(
-                    <tr>
-                        {/*changed coloumn names as per mongo db column names*/}
-                        <td><input type="radio" checked={false}/></td>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <tr >
+                        {/*changed coloumn names as per mongo db column names
+                        <td><input type="radio" checked={false}/></td>&nbsp;&nbsp;&nbsp;&nbsp;*/}
+                        <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <td><Button name="Update Movie" bsStyle="info" class="btn btn-primary ">Update</Button></td>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <td><Button name="Delete Movie" bsStyle="info" class="btn btn-primary ">Delete</Button></td>
+                        <td><Button name="Delete Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myDeleteModal">Delete</Button></td>
                     </tr>
                 )
             }))
@@ -141,18 +167,43 @@ const withKeys = this.state.movieList.map((function(item){
 
             <p style={formHead1}>Search and update Movie details below</p>
             <hr color="#E3E1E1"/>
-            <input type="text" className="form-control" placeholder="Search movie"/> <br/>
-            <Button name="Search Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#mySearchModal">Search Movie</Button><br/>
+            <input type="text" className="form-control" placeholder="Search movie"
+            onChange={(event) => {
+                this.setState({
+                    moviedata: {
+                        ...this.state.moviedata,
+                        search: event.target.value,
+                        page: 0,
+                        size : 10
+                    }
+                });
+            }}    />
+
+          {/*<input type="text" className="form-control" placeholder="Node ID" value={this.state.updatenodedata.unodeID}
+                                                  onChange={(event) => {
+                                                      this.setState({
+                                                          updatenodedata: {
+                                                              ...this.state.updatenodedata,
+                                                              unodeID: event.target.value
+                                                          }
+                                                      });
+                                                  }}/>
+                                                  <br/>*/}
+            <Button name="Search Movie" bsStyle="info" class="btn btn-primary "
+            onClick={() => this.handleSearch(this.state.moviedata)}>Search Movie</Button><br/>
             <hr color="#E3E1E1"/>
                 <form>
+                <p>Below are the movie results from search:</p>
+                <hr/>
                 <table>
+                <tbody>
                   <tr>
-                    <td>Sr. No.</td>&nbsp;&nbsp;
-                    <td>Movie Title</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Update</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>Delete</td>
+                    <td><b>Movie Title</b></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td><b>Update</b></td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td><b>Delete</b></td>
                   </tr>
                   {withKeys}
+                  </tbody>
                 </table>
 {/*
                 <input type="text" className="form-control" placeholder="Title" value={this.state.userdata.email} readonly="readonly"/> <br/>
@@ -180,7 +231,7 @@ const withKeys = this.state.movieList.map((function(item){
                 <input type="number" className="form-control" placeholder="Price in $" onChange={this.handleInputChange} /><br />
                 <Button name="Add Movie" bsStyle="success" class="btn btn-primary " data-toggle="modal" data-target="#myModal">Update Movie</Button><br/>*/}
                     {/*Modal for update movie*/}
-                <div class="modal fade" id="myModal" data-toggle="myModal">
+                <div class="modal fade" id="myUPdateModal" data-toggle="myUpdateModal">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -200,20 +251,20 @@ const withKeys = this.state.movieList.map((function(item){
                   </div>{/*<!-- /.modal-dialog -->*/}
                 </div>{/*<!-- /.modal -->*/}
 
-                  {/*Modal for search movie*/}
-                  <div class="modal fade" id="mySearchModal" data-toggle="mySearchModal">
+                  {/*Modal for delete movie*/}
+                  <div class="modal fade" id="myDeleteModal" data-toggle="myDeleteModal">
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                          <h4 class="modal-title">Movie search was successful/unsuccessful message.</h4>
+                          <h4 class="modal-title">Below movie will be deleted</h4>
                         </div>
                         <div class="modal-body">
-                          <p>You can now update the movie features populated.</p>
+                          <p>More movie details: </p>
                         </div>
                         <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
                           <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-
                         </div>
                       </div>
                       {/*<!-- /.modal-content -->*/}
