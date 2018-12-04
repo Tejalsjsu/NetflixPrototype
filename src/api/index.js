@@ -9,7 +9,7 @@ const headers = {
 
 export const doLogin = (payload) =>
     //fetch(`${api}/mongoCalls/login`, {
-    fetch(`${api}/users/doLogin`, {
+    fetch(`${api}/login`, {
         method: 'POST',
         headers: {
             ...headers,
@@ -388,8 +388,8 @@ export const addMovie = (details) =>
                 headers: {
                     ...headers,
                     'Content-Type': 'application/json',
-                    'Authorization': details.jwtToken
-                    // 'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk1MjE5Miwicm9sZSI6IkFETUlOIn0.54VDqcfMyNmPTPG4JMvxksGPZzW142Pd--7NUl8ULp--GQvixVRH2t9TBZdku9Urbwwlqq7CFaWQkmEau1iBUw'
+                    // 'Authorization': details.jwtToken
+                    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk2MjY3MCwicm9sZSI6IkFETUlOIn0.JlKnDwIy0EdccsAejox1LRvX3Y-CzdopnZJBVUhVSprWKgFRH49TmvU7iOLZ4UXI__EHlpx57Cm2kQOAiI-0YQ'
                 },
                 credentials: 'include',
                 body: JSON.stringify(details)
@@ -399,3 +399,85 @@ export const addMovie = (details) =>
                     console.log("This is error");
                     return error;
                 });
+
+export const getMovies = () =>
+                            fetch(`${api}/admin/movie`, {
+                                method: 'POST',
+                                headers: {
+                                    ...headers,
+                                    'Content-Type': 'application/json',
+                                    // 'Authorization': details.jwtToken
+                                    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk1NDA0NCwicm9sZSI6IkFETUlOIn0.2ryuVasfDOe2CNxPi7UXJ1Y0sfAS-Lr6rWgUC8TgUYNpuTUKSh7xPhQOs5jGDUbfMUMrMrdyqeRQsyJG9cvXww'
+                                },
+                                credentials: 'include',
+                                // body: JSON.stringify(details)
+                            }).then((res) => res.json())
+                                .then((data) => {
+                                  console.log('All Movies : '+data);
+                                  return data;
+                                })
+                                .catch(error => {
+                                    console.log("This is error");
+                                    return error;
+                                });
+
+
+export const getFinancials= () =>
+                              fetch(`${api}/admin/finance/yearly`, {
+                                                                method: 'GET',
+                                                                headers: {
+                                                                    ...headers,
+                                                                    'Content-Type': 'application/json',
+                                                                    // 'Authorization': details.jwtToken
+                                                                    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk1NDA0NCwicm9sZSI6IkFETUlOIn0.2ryuVasfDOe2CNxPi7UXJ1Y0sfAS-Lr6rWgUC8TgUYNpuTUKSh7xPhQOs5jGDUbfMUMrMrdyqeRQsyJG9cvXww'
+                                                                },
+                                                                credentials: 'include',
+                                                                // body: JSON.stringify(details)
+                                                            }).then((res) => res.json())
+                                                                .then((data) => {
+                                                                  console.log('All Finances : '+data);
+                                                                  return data;
+                                                                })
+                                                                .catch(error => {
+                                                                    console.log("This is error");
+                                                                    return error;
+                                                                });
+
+  export const getMovieList= () =>
+                  fetch(`${api}/movie/play/stats/1000`, {
+                          method: 'GET',
+                          headers: {
+                              ...headers,
+                              'Content-Type': 'application/json',
+                              // 'Authorization': details.jwtToken
+                              'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk4MjcwNiwicm9sZSI6IkFETUlOIn0.uBAomO-Nyua6kQ3qNYPp0Ig14yn1wJw7sGKGIeZ9P7u3L4GF7k5EMmG9keQpm8aex6zjpkRuz_dockFV89SyXg'
+                          },
+                          credentials: 'include',
+                          // body: JSON.stringify(details)
+                      }).then((res) => res.json())
+                          .then((data) => {
+                            console.log('All Movies : '+data);
+                            return data;
+                          })
+                          .catch(error => {
+                              console.log("This is error");
+                              return error;
+                          });
+
+// export const fetchSensorData = () =>
+//                                     fetch(`${api}/sensorsimulation`, {
+//                                         method: 'POST',
+//                                         headers: {
+//                                             ...headers,
+//                                             'Content-Type': 'application/json'
+//                                         },
+//                                         credentials: 'include',
+//                                     }).then((res) => res.json())
+//                                         .then((data) => {
+//                                             console.log('API '+data);
+//                                             return data
+//                                                 ;})
+//                                         .catch(error => {
+//                                             console.log("This is error in fetch sensors");
+//                                             return error;
+//                                         });
