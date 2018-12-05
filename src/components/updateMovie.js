@@ -454,7 +454,7 @@ const withfilter = this.state.movieData &&
 
             <p style={formHead1}>Update movie details below :</p>
             <hr color="#E3E1E1"/>
-                <form><p>{this.state.updateMovieData.title}  {this.state.updateMovieData.updateMovieID}</p>
+                <form>
                 <input type="text" className="form-control" placeholder="Title" readOnly="readonly" value={this.state.title}
                 /> <br/>
                 <input type="text" className="form-control" placeholder="Genre" value={this.state.updateMovieData.genre}
