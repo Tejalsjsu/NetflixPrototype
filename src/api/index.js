@@ -609,13 +609,13 @@ export const getMovies = () =>
                       });
 
   export const getUsers = (searchUser) =>
-                      fetch(`${api}/userprofile/admin/search`, {
+                      fetch(`${api}/admin/search`, {
                           method: 'POST',
                           headers: {
                               ...headers,
                               'Content-Type': 'application/json',
-                              // 'Authorization': details.jwtToken
-                              'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0NDA4NTk2NSwicm9sZSI6IkFETUlOIn0.JM6P91PMMYGtdIi8KDJRLrgrZgL-_JLmhFC-a43YlYVRsidZq499Zku8WVGkHKGGNRplqgR6_xNartjifAdnJQ'
+                              Authorization: localStorage.JWTToken
+                              //'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0NDA4NTk2NSwicm9sZSI6IkFETUlOIn0.JM6P91PMMYGtdIi8KDJRLrgrZgL-_JLmhFC-a43YlYVRsidZq499Zku8WVGkHKGGNRplqgR6_xNartjifAdnJQ'
                           },
                           credentials: 'include',
                           body: JSON.stringify(searchUser)
