@@ -25,7 +25,10 @@ class DeleteMovie extends Component{
         },
         validation_error: [],
         isLoggedIn: false,
-        message: ''
+        message: '',
+        movieIDRcvd: 0,
+        title: "",
+
     };
 
 
@@ -33,58 +36,11 @@ class DeleteMovie extends Component{
     this.setState({ [event.target.name]: event.target.value });
   }
 
-    handleSubmit = () => {
-        //validations
-
-
-        // if(this.state.userdata.username.length === 0){
-        //     errors.push("Kindly enter user Name");
-        //  }
-         //else if(!noAlphabets.test(this.state.userdata.username)) {
-        //     errors.push("Invalid Username");
-        // }
-
-        // if(this.state.userdata.password.length === 0){
-        //     errors.push("Kindly enter a password");
-        // }
-        // else if(!noAlphabets.test(this.state.userdata.password)) {
-        //     errors.push("Invalid Password");
-        // }
-
-        // if(this.state.userdata.email.length === 0){
-        //     errors.push("Kindly enter email");
-        // } else if (!email_regex.test(this.state.userdata.email)){
-        //     errors.push("Invalid email");
-        // }
-        //
-        // if(errors.length === 0) {
-        //     this.props.history.push('/dashboard');
-        //     API.saveData(this.state.userdata)
-        //         .then((res) => {
-        //             console.log(res.status);
-        //             if (res.status === '201') {
-        //                 this.setState({
-        //                     isLoggedIn: true,
-        //                     message: "Account Created! You can Login..!!"
-        //                 });
-        //                 console.log("after set", this.props);
-        //                 this.props.history.push('/signup');
-        //                 console.log("after set", this.props);
-        //                 //history.push('/login');
-        //             } else if (res.status === '401') {
-        //                 this.setState({
-        //                     isLoggedIn: false,
-        //                     message: "Signup. Try again..!!",
-        //
-        //                 });
-        //             }
-        //         });
-        // }else{
-        //     this.setState ({
-        //         validation_error: errors
-        //     })
-         //}
-    };
+// componentWillMount(){
+//
+//   this.setState({title: {this.props.movieToUpdate}});
+//   console.log("****Delete movie for updating ID is: ");
+// }
 
     render(){
         return(
@@ -96,7 +52,7 @@ class DeleteMovie extends Component{
             <p style={formHead1}>Update movie details below :</p>
             <hr color="#E3E1E1"/>
                 <form>
-                <input type="text" className="form-control" placeholder="Title" value={this.state.userdata.email} readonly="readonly"/> <br/>
+                <input type="text" className="form-control" placeholder="Title" readonly="readonly"/> <br/>
                 <input type="text" className="form-control" placeholder="Genre" onChange={this.handleInputChange} /><br />
                 <input type="number" className="form-control" placeholder="Year" onChange={this.handleInputChange} /><br />
                 <input type="text" className="form-control" placeholder="Studio" onChange={this.handleInputChange} /><br />
@@ -130,7 +86,7 @@ class DeleteMovie extends Component{
                         <h4 class="modal-title">Movie updated successfully!</h4>
                       </div>
                       <div class="modal-body">
-                        <p>Movie was updated in the database successfully.</p>
+                        <p>Movie was updated - in the database successfully.</p>
                         <p> Please note any current ongoing activity would not be affected for any user.</p>
                       </div>
                       <div class="modal-footer">
@@ -142,25 +98,7 @@ class DeleteMovie extends Component{
                   </div>{/*<!-- /.modal-dialog -->*/}
                 </div>{/*<!-- /.modal -->*/}
 
-                {/*Modal for search movie*/}
-                <div class="modal fade" id="mySearchModal" data-toggle="mySearchModal">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Movie search was successful/unsuccessful message.</h4>
-                      </div>
-                      <div class="modal-body">
-                        <p>You can now update the movie features populated.</p>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 
-                      </div>
-                    </div>
-                    {/*<!-- /.modal-content -->*/}
-                  </div>{/*<!-- /.modal-dialog -->*/}
-                </div>{/*<!-- /.modal -->*/}
 
                 </form>
                 </div>
