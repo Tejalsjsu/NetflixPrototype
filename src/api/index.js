@@ -577,7 +577,7 @@ export const addMovie = (details) =>
                     ...headers,
                     'Content-Type': 'application/json',
                     // 'Authorization': details.jwtToken
-                    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk2MjY3MCwicm9sZSI6IkFETUlOIn0.JlKnDwIy0EdccsAejox1LRvX3Y-CzdopnZJBVUhVSprWKgFRH49TmvU7iOLZ4UXI__EHlpx57Cm2kQOAiI-0YQ'
+                    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0NDA4NTk2NSwicm9sZSI6IkFETUlOIn0.JM6P91PMMYGtdIi8KDJRLrgrZgL-_JLmhFC-a43YlYVRsidZq499Zku8WVGkHKGGNRplqgR6_xNartjifAdnJQ'
                 },
                 credentials: 'include',
                 body: JSON.stringify(details)
@@ -695,6 +695,25 @@ export const searchMovie= (movieDetails) =>
                             console.log("This is error");
                             return error;
                         });
+
+
+  export const deleteMovie = (movieID) =>
+              fetch(`${api}/admin/movie/${movieID}`, {
+                  method: 'DELETE',
+                  headers: {
+                      ...headers,
+                      'Content-Type': 'application/json',
+                      // 'Authorization': details.jwtToken
+                      'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0NDA4NTk2NSwicm9sZSI6IkFETUlOIn0.JM6P91PMMYGtdIi8KDJRLrgrZgL-_JLmhFC-a43YlYVRsidZq499Zku8WVGkHKGGNRplqgR6_xNartjifAdnJQ'
+                  },
+                  credentials: 'include',
+                  body: JSON.stringify(movieID)
+              }).then((res) => res.json())
+                  .then((data) => {return data;})
+                  .catch(error => {
+                      console.log("This is error");
+                      return error;
+                  });
 // export const fetchSensorData = () =>
 //                                     fetch(`${api}/sensorsimulation`, {
 //                                         method: 'POST',

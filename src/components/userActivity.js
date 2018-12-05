@@ -35,85 +35,27 @@ class UserActivity extends Component{
          var temp = pid && pid.projectid;
 
         this.state =  {
-            userdata: {
-                username: '',
-                password: '',
-                email: '',
-                userId: cookie.load('userId'),
-                projectId: temp,
-                projectName:'',
-                projectDescription:'',
-                projectBudget:'',
-                projectSkills:'',
-                bidamount:'',
-                duration:''
-            },
-            searchUser:{
+        serchUser:{
               search:'',
               page: 0,
               size: 10
             },
             isLoggedIn: false,
             message: '',
-            showAddMovieComponent : false,
-            showUpdateMovieComponent : false,
-            showDeleteMovieComponent : false
+            // currentCustomers: [],
         };
-          this._onAddClick = this._onAddClick.bind(this);
-          this._onUpdateClick = this._onUpdateClick.bind(this);
-          this._onDeleteClick = this._onDeleteClick.bind(this);
-    }
-    _onAddClick() {
-        this.setState({
-          showAddMovieComponent: true,
-          showUpdateMovieComponent : false,
-          showDeleteMovieComponent : false
-        });
-      }
-      _onUpdateClick() {
-          this.setState({
-            showAddMovieComponent: false,
-            showUpdateMovieComponent: true,
-            showDeleteMovieComponent : false
-          });
-        }
-      _onDeleteClick() {
-            this.setState({
-              showAddMovieComponent: false,
-              showUpdateMovieComponent : false,
-              showDeleteMovieComponent: true,
-            });
-          }
 
+    }
     componentWillMount(){
         console.log("In ComponentWillMount()");
         this.setState({
           search:'',
           page: 0,
-          size: 10
+          size: 10,
+          // currentCustomers: []
         });
     }
-    handleSubmit = () => {
-        // API.postBid(this.state.userdata)
-        //     .then((res) => {
-        //         console.log(res.status);
-        //         if (res.status === '201') {
-        //             this.setState({
-        //                 isLoggedIn: true,
-        //                 message: "Bid Posted Successfully..!!"
-        //             });
-        //             this.props.history.push('/projectdetails');
-        //         } else if (res.status === '401') {
-        //             this.setState({
-        //                 message: "post Failed. Try again..!!",
-        //             });
-        //         }
-        //     });
-
-    };
-
-
-    render(){
+      render(){
         return(
 
             <div style={divStyle3}>

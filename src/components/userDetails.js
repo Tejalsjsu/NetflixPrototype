@@ -32,10 +32,14 @@ class UserDetails extends Component{
           size: 10
         },
         currentCustomers: [],
+        top_ten_users: [],
+
         validation_error: [],
         isLoggedIn: false,
         message: '',
         top_ten_movies : []
+
+        // currentCustomersHC: []
     };
 
     componentWillMount() {
@@ -46,15 +50,14 @@ class UserDetails extends Component{
                 subscriptionType: 'Free',
                 renewalDate: '12/20',
                 viewed_movie_list: ["Movie 12", "Movie 23", "Movie 34","Movie 45"],
-              top_ten_users : ["User top1 B", "User top9", "User D", "User A", "User B", "User C", "User D"],
-              // currentCustomers: ["Amy","Bob", "John", "Tom", "Tim"],
+              // top_ten_users : ["User top1 B", "User top9", "User D", "User A", "User B", "User C", "User D"],
+              // currentCustomers: ["Cust1 ", "CUst2, ", "Cust1 ", "CUst2, "],
               search: '',
               page: 0,
               size: 10,
-              currentCustomers: []
+              // currentCustomers: [],
+              // top_ten_users: []
         });
-
-
       console.log("Search this: ", this.state.searchUser);
       console.log("Search page: ", this.state.searchUser.page);
       console.log("Search size: ", this.state.searchUser.size);
@@ -68,19 +71,17 @@ class UserDetails extends Component{
                     let i = 0;
                     let len = 0;
                     len = res.length;
-                    // console.log("Movie names before is: ", this.state.movieList);
                     console.log("Succesfully found user list as: ", res);
-                    // console.log("Content is as: ", data.content);
                     console.log("User data array length is : ",len);
                     for(i =0; i<= data.length -1; i++){
                       if(data[i].role === "USER"){
-                        this.state.currentCustomers.push(data[i].profileName);
+                        let tempUser = "";
+                        tempUser = data[i].profileName;
+                        this.state.top_ten_users.push(tempUser);
+                        this.state.currentCustomers.push(tempUser);
                       }
-                      console.log("CURRENT customer list : ",  this.state.currentCustomers)
-                      // this.state.movieList.push(data.content[i].title);
                     }
-                    // console.log("Movie names after are: ", this.state.movieList);
-                     // this.props.history.push('/userActivity');
+                    console.log("CURRENT customer list here: ",  this.state.currentCustomers)
                 } else if (res.status === '401') {
                     console.log("No records");
                     this.setState({
@@ -95,63 +96,24 @@ class UserDetails extends Component{
                     this.props.history.push('/login');
                 }
             });
+
 }
 
-    handleSubmit = () => {
-        //validations
+handleUserSubmit = () => {
+        console.log("Inside handleUserSubmit");
+        console.log("CURRENT customer list -> ",  this.state.currentCustomers);
 
+        // this.setState({
+        //   top_ten_users : ["User top1 B", "User top9", "User D", "User A", "User B", "User C", "User D"],
+        //   currentCustomers: ["Cust1 ", "CUst2, ", "Cust1 ", "CUst2, "]
+        // });
 
-        // if(this.state.userdata.username.length === 0){
-        //     errors.push("Kindly enter user Name");
-        //  }
-         //else if(!noAlphabets.test(this.state.userdata.username)) {
-        //     errors.push("Invalid Username");
-        // }
+      };
 
-        // if(this.state.userdata.password.length === 0){
-        //     errors.push("Kindly enter a password");
-        // }
-        // else if(!noAlphabets.test(this.state.userdata.password)) {
-        //     errors.push("Invalid Password");
-        // }
-
-        // if(this.state.userdata.email.length === 0){
-        //     errors.push("Kindly enter email");
-        // } else if (!email_regex.test(this.state.userdata.email)){
-        //     errors.push("Invalid email");
-        // }
-        //
-        // if(errors.length === 0) {
-        //     this.props.history.push('/dashboard');
-        //     API.saveData(this.state.userdata)
-        //         .then((res) => {
-        //             console.log(res.status);
-        //             if (res.status === '201') {
-        //                 this.setState({
-        //                     isLoggedIn: true,
-        //                     message: "Account Created! You can Login..!!"
-        //                 });
-        //                 console.log("after set", this.props);
-        //                 this.props.history.push('/signup');
-        //                 console.log("after set", this.props);
-        //                 //history.push('/login');
-        //             } else if (res.status === '401') {
-        //                 this.setState({
-        //                     isLoggedIn: false,
-        //                     message: "Signup. Try again..!!",
-        //
-        //                 });
-        //             }
-        //         });
-        // }else{
-        //     this.setState ({
-        //         validation_error: errors
-        //     })
-         //}
-    };
 
     render(){
-      const customers = this.state.currentCustomers.map((function(item){
+      console.log("Inside render !!!")
+      const CurrentUsers = this.state.currentCustomers.map((function(item){
                       return(
                           <tr>
                               {/*changed coloumn names as per mongo db column names*/}
@@ -159,6 +121,7 @@ class UserDetails extends Component{
                           </tr>
                       )
                   }))
+
       const topTenUsers = this.state.top_ten_users.map((function(item){
                                               return(
                                                   <tr>
@@ -166,13 +129,14 @@ class UserDetails extends Component{
                                                   </tr>
                                               )
                                           }))
+
       const movieHistory = this.state.viewed_movie_list.map((function(item){
-                                                                                  return(
-                                                                                      <tr>
-                                                                                          <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                                      </tr>
-                                                                                  )
-                                                                              }))
+                                              return(
+                                                  <tr>
+                                                      <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                  </tr>
+                                              )
+                                          }))
 
         return(
 
@@ -183,13 +147,14 @@ class UserDetails extends Component{
 
             <p style={formHead1}>Current active users in MovieCentral</p>
             <hr color="#E3E1E1"/>
+            <Button name="UserList" bsStyle="info" class="btn btn-primary"   onClick={() => this.handleUserSubmit()}>Click here to view current customers</Button><br/>
                 <form style={formStyle1}>
                 <table>
                 <tbody>
                   <tr>
                     <td><b><i>Current Customers Using Movie Central </i></b></td>&nbsp;&nbsp;&nbsp;&nbsp;
                   </tr>
-                  {customers}
+                  {CurrentUsers}
                   </tbody>
 
                   {/*<tr data-toggle="modal" data-target="#myModal">
@@ -204,13 +169,15 @@ class UserDetails extends Component{
                   <tr data-toggle="modal" data-target="#myModal" >
                     <td>D</td>&nbsp;&nbsp;&nbsp;&nbsp;
                   </tr>*/}
+
                 </table><br/>
+
                 <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
                   <option value="day">Last 24 hours</option>
                   <option value="week">Last week</option>
                   <option value="month">Last month</option>
                 </select><br />
-                <Button name="Top10" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myTop10Modal">Click here to view top 10 users list</Button><br/>
+                <Button name="Top10" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myTop10Modal" onClick={() => this.handleUserSubmit()}>Click here to view top 10 users list</Button><br/>
 
               {/*Modal for customer list*/}
                 <div class="modal fade" id="myModal" data-toggle="myModal">
@@ -225,7 +192,9 @@ class UserDetails extends Component{
                       <label> Subscription:</label><input className="form-control" name="type" readonly="readonly" placeholder="Free"/><br/>
                       <label> Renewal Date:</label><input className="form-control" name="type" readonly="readonly" placeholder="11/30/18"/><br/>
                       <table>
+                      <tbody>
                       {movieHistory}
+                        </tbody>
                       </table>
                       </div>
                       <div class="modal-footer">
@@ -253,7 +222,9 @@ class UserDetails extends Component{
         <option value="month">Last month</option>
       </select><br />*/}
         <table>
+        <tbody>
         {topTenUsers}
+        </tbody>
         </table>
       </div>
       <div class="modal-footer">

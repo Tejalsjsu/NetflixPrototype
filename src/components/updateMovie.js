@@ -30,10 +30,10 @@ class UpdateMovie extends Component{
         movieList: [],
         delMovieName : '',
         movieDict : [],
-        isUpdateRequested: false
-
-
-
+        isUpdateRequested: false,
+        movieData: [],
+        movieID: "",
+        delmessage: ""
     };
 
 
@@ -46,7 +46,9 @@ class UpdateMovie extends Component{
         page: 0,
         size: 0,
         delMovieName: '',
-        isUpdateRequested: false
+        isUpdateRequested: false,
+        movieID: "",
+        delmessage: ""
       });
       this.state.movieDict.push({
         key:"1",
@@ -83,8 +85,12 @@ class UpdateMovie extends Component{
                                 this.setState({
                                     isLoggedIn: true,
                                     moviedata: res,
-                                    movieList: []
+                                    movieList: [],
+                                    movieData: res
                                 });
+                                // data = res.data.content;
+                                console.log("MovieData : ", this.state.movieData);
+                                // this.props.history.push("/updateMovie");
                                 data = res;
                                 let i = 0;
                                 let len = 0;
@@ -117,61 +123,41 @@ class UpdateMovie extends Component{
 
   }
 
-    handleSubmit = () => {
-        //validations
+handleDelete = (movieID) => {
+  console.log("Handling delete movie with pid",movieID);
 
+  API.deleteMovie(movieID)
+    .then((res) => {
+        if (res.status === 200) {
+            this.setState({
+                delmessage: "Movie Deleted successfully!!",
+            });
 
-        // if(this.state.userdata.username.length === 0){
-        //     errors.push("Kindly enter user Name");
-        //  }
-         //else if(!noAlphabets.test(this.state.userdata.username)) {
-        //     errors.push("Invalid Username");
-        // }
+            console.log("In delete movie call.");
+            alert("Movie was deleted successfully!!");
+            this.props.history.push("/adminAddMovie");
+        } else if (!res.status === 200) {
+            console.log("in fail");
+            this.setState({
+                isLoggedIn: false,
+                message: "Wrong username or password. Try again..!!"
+            });
 
-        // if(this.state.userdata.password.length === 0){
-        //     errors.push("Kindly enter a password");
-        // }
-        // else if(!noAlphabets.test(this.state.userdata.password)) {
-        //     errors.push("Invalid Password");
-        // }
+        }
+    });
 
-        // if(this.state.userdata.email.length === 0){
-        //     errors.push("Kindly enter email");
-        // } else if (!email_regex.test(this.state.userdata.email)){
-        //     errors.push("Invalid email");
-        // }
-        //
-        // if(errors.length === 0) {
-        //     this.props.history.push('/dashboard');
-        //     API.saveData(this.state.userdata)
-        //         .then((res) => {
-        //             console.log(res.status);
-        //             if (res.status === '201') {
-        //                 this.setState({
-        //                     isLoggedIn: true,
-        //                     message: "Account Created! You can Login..!!"
-        //                 });
-        //                 console.log("after set", this.props);
-        //                 this.props.history.push('/signup');
-        //                 console.log("after set", this.props);
-        //                 //history.push('/login');
-        //             } else if (res.status === '401') {
-        //                 this.setState({
-        //                     isLoggedIn: false,
-        //                     message: "Signup. Try again..!!",
-        //
-        //                 });
-        //             }
-        //         });
-        // }else{
-        //     this.setState ({
-        //         validation_error: errors
-        //     })
-         //}
-    };
+}
 
     render(){
+      var self = this;
 {/*return component for withKeys*/}
+
+Object.keys(this.state.movieData).map(pd => {
+  console.log(
+    "data is here after search " + this.state.movieData[pd].title
+  );
+});
+
 
 const withKeys = this.state.movieList.map((function(item){
                 return(
@@ -185,6 +171,26 @@ const withKeys = this.state.movieList.map((function(item){
                     </tr>
                 )
             }))
+
+
+const withfilter = this.state.movieData &&
+              Object.keys(this.state.movieData).map(pd => {
+                return (
+                  <tr
+                    key={this.state.movieData[pd]._id}>
+                  <td key={this.state.movieData[pd]._id} >{this.state.movieData[pd].title}</td>
+
+                    <td><Button name="Update Movie" bsStyle="info" key={this.state.movieData[pd]._id} class="btn btn-primary ">Update</Button></td>
+                    <td><Button name="Delete Movie" bsStyle="info" key={this.state.movieData[pd]._id} class="btn btn-primary "
+                    onClick={() => this.handleDelete(this.state.movieData[pd]._id)} data-toggle="modal" data-target="#myDeleteModal">Delete</Button></td>
+                    {/*<td className='ProjectTable-cell' key={this.state.projectData[pd]._id}>*/}
+                    {/*<Button bsStyle="danger" bsSize="sm" block*/}
+                    {/*onClick={() => this.handleWatch(this.state.projectData[pd]._id)}> Watch </Button>*/}
+                    {/*</td>*/}
+                  </tr>
+                );
+              });
+
 
 
         return(
@@ -230,7 +236,8 @@ const withKeys = this.state.movieList.map((function(item){
                     <td><b>Update</b></td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td><b>Delete</b></td>
                   </tr>
-                  {withKeys}
+                  {withfilter}
+
                   </tbody>
                 </table>
 {/*
@@ -285,13 +292,13 @@ const withKeys = this.state.movieList.map((function(item){
                       <div class="modal-content">
                         <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                          <h4 class="modal-title">{this.state.delMovieName} movie will be deleted</h4>
+                          <h4 class="modal-title"> Movie deleted succussfully</h4>
                         </div>
                         <div class="modal-body">
-                          <p>{this.state.delMovieName} deleted permanently!!</p>
+                          <p> Selected movie removed from the database!</p>
                         </div>
                         <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
+
                           <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                         </div>
                       </div>
