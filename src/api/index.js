@@ -551,141 +551,150 @@ export const hireFreelancer = projectdetails =>
       return error;
     });
 
-export const getJWTToken = loginDetails =>
-  fetch(`${api}/login`, {
-    method: "POST",
-    headers: {
-      ...headers,
-      "Content-Type": "application/json"
-    },
-    credentials: "include",
-    body: JSON.stringify(loginDetails)
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log("Sending JWT token and other details in response : ", data);
-      return data;
-    })
-    .catch(error => {
-      console.log("This is error");
-      return error;
-    });
+ export const getJWTToken = (loginDetails) =>
+            fetch(`${api}/login`, {
+                method: 'POST',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify(loginDetails)
+            }).then((res) => res.json())
+                .then((data) => {
+                  console.log("Sending JWT token and other details in response : ", data);
+                  return data;
+                })
+                .catch(error => {
+                    console.log("This is error");
+                    return error;
+                });
 
-export const addMovie = details =>
-  fetch(`${api}/admin/movie`, {
-    method: "POST",
-    headers: {
-      ...headers,
-      "Content-Type": "application/json",
-      // 'Authorization': details.jwtToken
-      Authorization:
-        "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk2MjY3MCwicm9sZSI6IkFETUlOIn0.JlKnDwIy0EdccsAejox1LRvX3Y-CzdopnZJBVUhVSprWKgFRH49TmvU7iOLZ4UXI__EHlpx57Cm2kQOAiI-0YQ"
-    },
-    credentials: "include",
-    body: JSON.stringify(details)
-  })
-    .then(res => res.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log("This is error");
-      return error;
-    });
+export const addMovie = (details) =>
+            fetch(`${api}/admin/movie`, {
+                method: 'POST',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json',
+                    // 'Authorization': details.jwtToken
+                    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk2MjY3MCwicm9sZSI6IkFETUlOIn0.JlKnDwIy0EdccsAejox1LRvX3Y-CzdopnZJBVUhVSprWKgFRH49TmvU7iOLZ4UXI__EHlpx57Cm2kQOAiI-0YQ'
+                },
+                credentials: 'include',
+                body: JSON.stringify(details)
+            }).then((res) => res.json())
+                .then((data) => {return data;})
+                .catch(error => {
+                    console.log("This is error");
+                    return error;
+                });
 
 export const getMovies = () =>
-  fetch(`${api}/admin/movie`, {
-    method: "POST",
-    headers: {
-      ...headers,
-      "Content-Type": "application/json",
-      // 'Authorization': details.jwtToken
-      Authorization:
-        "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk1NDA0NCwicm9sZSI6IkFETUlOIn0.2ryuVasfDOe2CNxPi7UXJ1Y0sfAS-Lr6rWgUC8TgUYNpuTUKSh7xPhQOs5jGDUbfMUMrMrdyqeRQsyJG9cvXww"
-    },
-    credentials: "include"
-    // body: JSON.stringify(details)
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log("All Movies : " + data);
-      return data;
-    })
-    .catch(error => {
-      console.log("This is error");
-      return error;
-    });
+                  fetch(`${api}/admin/movie`, {
+                      method: 'POST',
+                      headers: {
+                          ...headers,
+                          'Content-Type': 'application/json',
+                          // 'Authorization': details.jwtToken
+                          'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk1NDA0NCwicm9sZSI6IkFETUlOIn0.2ryuVasfDOe2CNxPi7UXJ1Y0sfAS-Lr6rWgUC8TgUYNpuTUKSh7xPhQOs5jGDUbfMUMrMrdyqeRQsyJG9cvXww'
+                      },
+                      credentials: 'include',
+                      // body: JSON.stringify(details)
+                  }).then((res) => res.json())
+                      .then((data) => {
+                        console.log('All Movies : '+data);
+                        return data;
+                      })
+                      .catch(error => {
+                          console.log("This is error");
+                          return error;
+                      });
 
-export const getFinancials = () =>
-  fetch(`${api}/admin/finance/yearly`, {
-    method: "GET",
-    headers: {
-      ...headers,
-      "Content-Type": "application/json",
-      // 'Authorization': details.jwtToken
-      Authorization:
-        "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk1NDA0NCwicm9sZSI6IkFETUlOIn0.2ryuVasfDOe2CNxPi7UXJ1Y0sfAS-Lr6rWgUC8TgUYNpuTUKSh7xPhQOs5jGDUbfMUMrMrdyqeRQsyJG9cvXww"
-    },
-    credentials: "include"
-    // body: JSON.stringify(details)
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log("All Finances : " + data);
-      return data;
-    })
-    .catch(error => {
-      console.log("This is error");
-      return error;
-    });
+  export const getUsers = (searchUser) =>
+                      fetch(`${api}/userprofile/admin/search`, {
+                          method: 'POST',
+                          headers: {
+                              ...headers,
+                              'Content-Type': 'application/json',
+                              // 'Authorization': details.jwtToken
+                              'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk4MjcwNiwicm9sZSI6IkFETUlOIn0.uBAomO-Nyua6kQ3qNYPp0Ig14yn1wJw7sGKGIeZ9P7u3L4GF7k5EMmG9keQpm8aex6zjpkRuz_dockFV89SyXg'
+                          },
+                          credentials: 'include',
+                          body: JSON.stringify(searchUser)
+                      }).then((res) => res.json())
+                          .then((data) => {
+                            console.log('All User info : '+data);
+                            console.log('All content  : '+data.content);
+                            return data;
+                          })
+                          .catch(error => {
+                              console.log("This is error");
+                              return error;
+                          });
 
-export const getMovieList = () =>
-  fetch(`${api}/movie/play/stats/1000`, {
-    method: "GET",
-    headers: {
-      ...headers,
-      "Content-Type": "application/json",
-      // 'Authorization': details.jwtToken
-      Authorization:
-        "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk4MjcwNiwicm9sZSI6IkFETUlOIn0.uBAomO-Nyua6kQ3qNYPp0Ig14yn1wJw7sGKGIeZ9P7u3L4GF7k5EMmG9keQpm8aex6zjpkRuz_dockFV89SyXg"
-    },
-    credentials: "include"
-    // body: JSON.stringify(details)
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log("All Movies : " + data);
-      return data;
-    })
-    .catch(error => {
-      console.log("This is error");
-      return error;
-    });
+export const getFinancials= () =>
+      fetch(`${api}/admin/finance/yearly`, {
+                                        method: 'GET',
+                                        headers: {
+                                            ...headers,
+                                            'Content-Type': 'application/json',
+                                            // 'Authorization': details.jwtToken
+                                            'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk1NDA0NCwicm9sZSI6IkFETUlOIn0.2ryuVasfDOe2CNxPi7UXJ1Y0sfAS-Lr6rWgUC8TgUYNpuTUKSh7xPhQOs5jGDUbfMUMrMrdyqeRQsyJG9cvXww'
+                                        },
+                                        credentials: 'include',
+                                        // body: JSON.stringify(details)
+                                    }).then((res) => res.json())
+                                        .then((data) => {
+                                          console.log('All Finances : '+data);
+                                          return data;
+                                        })
+                                        .catch(error => {
+                                            console.log("This is error");
+                                            return error;
+                                        });
 
-export const searchMovie = movieDetails =>
-  fetch(`${api}/movie/search`, {
-    method: "POST",
-    headers: {
-      ...headers,
-      "Content-Type": "application/json",
-      // 'Authorization': details.jwtToken
-      Authorization:
-        "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk4MjcwNiwicm9sZSI6IkFETUlOIn0.uBAomO-Nyua6kQ3qNYPp0Ig14yn1wJw7sGKGIeZ9P7u3L4GF7k5EMmG9keQpm8aex6zjpkRuz_dockFV89SyXg"
-    },
-    credentials: "include",
-    // body: JSON.stringify(details)
-    body: JSON.stringify(movieDetails)
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log("Search movies return : ", data);
-      // console.log("Values : ", data.content[0].title);
-      return data;
-    })
-    .catch(error => {
-      console.log("This is error");
-      return error;
-    });
+  export const getMovieList= () =>
+                  fetch(`${api}/movie/play/stats/1000`, {
+                          method: 'GET',
+                          headers: {
+                              ...headers,
+                              'Content-Type': 'application/json',
+                              // 'Authorization': details.jwtToken
+                              'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk4MjcwNiwicm9sZSI6IkFETUlOIn0.uBAomO-Nyua6kQ3qNYPp0Ig14yn1wJw7sGKGIeZ9P7u3L4GF7k5EMmG9keQpm8aex6zjpkRuz_dockFV89SyXg'
+                          },
+                          credentials: 'include',
+                          // body: JSON.stringify(details)
+                      }).then((res) => res.json())
+                          .then((data) => {
+                            console.log('All Movies : '+data);
+                            return data;
+                          })
+                          .catch(error => {
+                              console.log("This is error");
+                              return error;
+                          });
+
+export const searchMovie= (movieDetails) =>
+                fetch(`${api}/movie/search`, {
+                        method: 'POST',
+                        headers: {
+                            ...headers,
+                            'Content-Type': 'application/json',
+                            // 'Authorization': details.jwtToken
+                            'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0NDA4NTk2NSwicm9sZSI6IkFETUlOIn0.JM6P91PMMYGtdIi8KDJRLrgrZgL-_JLmhFC-a43YlYVRsidZq499Zku8WVGkHKGGNRplqgR6_xNartjifAdnJQ'
+                        },
+                        credentials: 'include',
+                        // body: JSON.stringify(details)
+                        body: JSON.stringify(movieDetails)
+                    }).then((res) => res.json())
+                        .then((data) => {
+                          console.log('Search movies return : ', data);
+                          console.log("Values : ", data.content);
+                          return data.content;
+                        })
+                        .catch(error => {
+                            console.log("This is error");
+                            return error;
+                        });
 // export const fetchSensorData = () =>
 //                                     fetch(`${api}/sensorsimulation`, {
 //                                         method: 'POST',
