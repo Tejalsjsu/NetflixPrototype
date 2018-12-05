@@ -159,14 +159,13 @@ export const postReview = details =>
   )
     .then(res => res.json())
     .then(data => {
-      console.log("fadfa ", data);
-      let ResponseJSON = { status: 200, data: data };
-      return ResponseJSON;
-    })
-    .catch(error => {
-      console.log("This is error", error);
-      let ResponseJSON = { status: 400, data: error };
-      return ResponseJSON;
+      if (data.status && data.status !== 200) {
+        let ResponseJSON = { status: 400, data: data };
+        return ResponseJSON;
+      } else {
+        let ResponseJSON = { status: 200, data: data };
+        return ResponseJSON;
+      }
     });
 
 export const addMoney = details =>
@@ -194,32 +193,32 @@ export const addMoney = details =>
       return error;
     });
 
-
 export const addMoneyPPV = details =>
-    fetch(
-        `${api}/moviepay`,
-        {
-            method: "POST",
-            headers: {
-                ...headers,
-                "Content-Type": "application/json",
-                Authorization: localStorage.JWTToken
-            },
-            credentials: "include",
-            body: JSON.stringify(details)
-        },
-        console.log(JSON.stringify(details))
-    )
-        .then(res => res)
-        .then(res => {
-            let ResponseJSON = { status: 200, data: res };
-            return ResponseJSON;
-        })
-        .catch(error => {
-            console.log("This is error", error.message);
-            return error;
-        });
+  fetch(
+    `${api}/moviepay`,
+    {
+      method: "POST",
+      headers: {
+        ...headers,
+        "Content-Type": "application/json",
+        Authorization: localStorage.JWTToken
+      },
+      credentials: "include",
+      body: JSON.stringify(details)
+    },
+    console.log(JSON.stringify(details))
+  )
+    .then(res => res.json())
 
+    .then(data => {
+      if (data.status && data.status !== 200) {
+        let ResponseJSON = { status: 400, data: data };
+        return ResponseJSON;
+      } else {
+        let ResponseJSON = { status: 200, data: data };
+        return ResponseJSON;
+      }
+    });
 
 export const registerConfirmation = token =>
   fetch(`${api}/userprofile/regitrationConfirm?token=` + token, {

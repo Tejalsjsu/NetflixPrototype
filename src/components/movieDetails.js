@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
-import {Link, withRouter, Route} from 'react-router-dom';
-import "../App.css"
-import {Button} from 'react-bootstrap';
-import  logo from '../image/fl-logo.png';
-import * as API from '../api/index';
-import Dashboard from './dashboard';
-import Signup from './signup';
-import NavBar from '../components/navbar';
-import queryString from 'query-string';
-import playMovie from './playMovie'
+import React, { Component } from "react";
+import { Link, withRouter, Route } from "react-router-dom";
+import "../App.css";
+import { Button } from "react-bootstrap";
+import logo from "../image/fl-logo.png";
+import * as API from "../api/index";
+import Dashboard from "./dashboard";
+import Signup from "./signup";
+import NavBar from "../components/navbar";
+import queryString from "query-string";
+import playMovie from "./playMovie";
 import cookie from "react-cookies";
 let imgStyle = { height: "70px", padding: "10px" };
 let divStyle2 = { height: "45px" };
@@ -134,7 +134,6 @@ class movieDetails extends Component {
     }
     console.log("payload ", reviewDetails);
     API.postReview(reviewDetails).then(res => {
-      console.log("Fadfdsfdsf", res.status);
       if (res.status === 200) {
         console.log("after watch ", res);
         const reviewsList = this.state.reviews;
@@ -162,6 +161,13 @@ class movieDetails extends Component {
       movieId: this.state.userdata.movieId,
       customerId: localStorage.getItem("userId")
     };
+    console.log(this.props.location);
+    if (this.props.location.state !== undefined) {
+      if (this.props.location.state.detail !== undefined) {
+        watchDetails.orderId = this.props.location.state.detail;
+      }
+    }
+
     console.log("payload ", watchDetails);
     API.ValidateMovieForWatch(watchDetails).then(res => {
       console.log(res.status);
@@ -172,7 +178,12 @@ class movieDetails extends Component {
           res.data.typeOfMovie == "PayPerView" ||
           res.data.typeOfMovie == "PPV"
         ) {
-          this.props.history.push("/addMoney?total=" + res.data.total+"&&MovieId="+this.state.userdata.movieId);
+          this.props.history.push(
+            "/addMoney?total=" +
+              res.data.total +
+              "&&MovieId=" +
+              this.state.userdata.movieId
+          );
         } else {
           console.log("what is res ", res.data);
           this.props.history.push("/subscription");
