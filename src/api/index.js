@@ -747,6 +747,25 @@ export const deleteMovie = movieID =>
       console.log("This is error");
       return error;
     });
+
+export const updateMovie = (movieID, movieDetails) =>
+            fetch(`${api}/admin/movie/${movieID}`, {
+                method: 'PUT',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.JWTToken
+                },
+                credentials: 'include',
+                body: JSON.stringify(movieDetails)
+            }).then((res) => res.json())
+                .then((data) => {return data;})
+                .catch(error => {
+                    console.log("This is error");
+                    return error;
+                });
+
+
 // export const fetchSensorData = () =>
 //                                     fetch(`${api}/sensorsimulation`, {
 //                                         method: 'POST',
