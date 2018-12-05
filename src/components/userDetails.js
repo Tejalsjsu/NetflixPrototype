@@ -26,12 +26,16 @@ class UserDetails extends Component{
             renewalDate: '',
             viewed_movie_list: []
         },
+        userlist:'',
         searchUser:{
           search:'',
           page: 0,
           size: 10
         },
         currentCustomers: [],
+        currentCustObject :{
+            profileName:''
+        },
         top_ten_users: [],
 
         validation_error: [],
@@ -46,7 +50,7 @@ class UserDetails extends Component{
 
       console.log("CompWillMount");
         this.setState({
-                profileName: 'Aparna',
+                profileName: localStorage.getItem("profileName"),
                 subscriptionType: 'Free',
                 renewalDate: '12/20',
                 viewed_movie_list: ["Movie 12", "Movie 23", "Movie 34","Movie 45"],
@@ -64,15 +68,19 @@ class UserDetails extends Component{
 
       API.getUsers(this.state.searchUser)
             .then((res) => {
-                // console.log("response:  " , res);
+                 console.log("response:  " , res);
                 if (res.length > 0) {
                     console.log(' Success')
+                    this.setState ({
+                        userlist: res
+                    })
+                    console.log('user list ', this.state.userlist)
                     data = res;
                     let i = 0;
                     let len = 0;
                     len = res.length;
-                    console.log("Succesfully found user list as: ", res);
-                    console.log("User data array length is : ",len);
+                    //console.log("Succesfully found user list as: ", res);
+                    //console.log("User data array length is : ",len);
                     for(i =0; i<= data.length -1; i++){
                       if(data[i].role === "USER"){
                         let tempUser = "";
@@ -81,7 +89,10 @@ class UserDetails extends Component{
                         this.state.currentCustomers.push(tempUser);
                       }
                     }
-                    console.log("CURRENT customer list here: ",  this.state.currentCustomers)
+                    this.setState({
+                        profileName: JSON.stringify(this.state.currentCustomers)
+                })
+                    console.log("CURRENT customer list here: ",  this.state.userdata.profileName)
                 } else if (res.status === '401') {
                     console.log("No records");
                     this.setState({
@@ -102,7 +113,6 @@ class UserDetails extends Component{
 handleUserSubmit = () => {
         console.log("Inside handleUserSubmit");
         console.log("CURRENT customer list -> ",  this.state.currentCustomers);
-
         // this.setState({
         //   top_ten_users : ["User top1 B", "User top9", "User D", "User A", "User B", "User C", "User D"],
         //   currentCustomers: ["Cust1 ", "CUst2, ", "Cust1 ", "CUst2, "]
@@ -113,7 +123,28 @@ handleUserSubmit = () => {
 
     render(){
       console.log("Inside render !!!")
-      const CurrentUsers = this.state.currentCustomers.map((function(item){
+        var self = this;
+        const userFromList =
+            this.state.userlist &&
+            Object.keys(this.state.userlist)
+                .filter(pd => this.state.userlist[pd].role == 'USER')
+                .map(pd => {
+                return (
+                    <tr
+                        key={this.state.userlist[pd]._id}
+                        onClick={self.handleClick}
+                        className=""
+                    >
+                        <td className="" key={this.state.userlist[pd]._id}>
+                            {" "}
+                            {this.state.userlist[pd].profileName}
+                        </td>
+                    </tr>
+                );
+            });
+
+
+        const CurrentUsers = this.state.currentCustomers.map((function(item){
                       return(
                           <tr>
                               {/*changed coloumn names as per mongo db column names*/}
@@ -121,6 +152,8 @@ handleUserSubmit = () => {
                           </tr>
                       )
                   }))
+
+        console.log('Current users const ', CurrentUsers)
 
       const topTenUsers = this.state.top_ten_users.map((function(item){
                                               return(
@@ -142,19 +175,20 @@ handleUserSubmit = () => {
 
             <div>
             <div className="col-sm-4"> </div>
-            <div style={divStyle1} className="col-sm-3">
+            <div style={divStyle1} className="col-sm-6">
             {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
+
 
             <p style={formHead1}>Current active users in MovieCentral</p>
             <hr color="#E3E1E1"/>
-            <Button name="UserList" bsStyle="info" class="btn btn-primary"   onClick={() => this.handleUserSubmit()}>Click here to view current customers</Button><br/>
+            {/*<Button name="UserList" bsStyle="info" class="btn btn-primary"   onClick={() => this.handleUserSubmit()}>Click here to view current customers</Button><br/>*/}
                 <form style={formStyle1}>
                 <table>
                 <tbody>
                   <tr>
                     <td><b><i>Current Customers Using Movie Central </i></b></td>&nbsp;&nbsp;&nbsp;&nbsp;
                   </tr>
-                  {CurrentUsers}
+                  {userFromList}
                   </tbody>
 
                   {/*<tr data-toggle="modal" data-target="#myModal">

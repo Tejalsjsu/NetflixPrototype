@@ -615,29 +615,6 @@ export const getMovies = () =>
       return error;
     });
 
-export const getUsers = searchUser =>
-  fetch(`${api}/userprofile/admin/search`, {
-    method: "POST",
-    headers: {
-      ...headers,
-      "Content-Type": "application/json",
-      // 'Authorization': details.jwtToken
-      Authorization: localStorage.getItem("JWTToken")
-    },
-    credentials: "include",
-    body: JSON.stringify(searchUser)
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log("All User info -: ", data);
-      console.log("All content  : ", data.content);
-      return data.content;
-    })
-    .catch(error => {
-      console.log("This is error");
-      return error;
-    });
-
 export const getFinancialsByMonthly = (year, month) =>
   fetch(`${api}/admin/finance/monthly?year=${year}&month=${month}`, {
     method: "GET",
@@ -654,6 +631,28 @@ export const getFinancialsByMonthly = (year, month) =>
     .then(data => {
       console.log("All Finances : " + data);
       return data;
+    })
+    .catch(error => {
+      console.log("This is error");
+      return error;
+    });
+
+export const getUsers = searchUser =>
+  fetch(`${api}/admin/search`, {
+    method: "POST",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json",
+      Authorization: localStorage.JWTToken
+    },
+    credentials: "include",
+    body: JSON.stringify(searchUser)
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log("All User info -: ", data);
+      console.log("All content  : ", data.content);
+      return data.content;
     })
     .catch(error => {
       console.log("This is error");
