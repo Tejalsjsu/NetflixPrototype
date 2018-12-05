@@ -23,13 +23,13 @@ class AddMovie extends Component{
             year:'',
             studio:'',
             synopsis: '',
-            image: '',
-            url: '',
-            actor: '',
-            director: '',
+            imgURL: '',
+            movieURL: '',
+            actors: [],
+            directors:[],
             country: '',
             rating: '',
-            subscription: '',
+            availability: '',
             price: '',
             jwtToken: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk4MTE1NCwicm9sZSI6IkFETUlOIn0.ELV6EYtKuHBE3ANhYOOSNbf7kQ2z07pO0nXaV_fskRdXRfHh-XwBOYDrlLV8AhK9fbaTO2M4gBuABXECOIymog'
 
@@ -56,14 +56,14 @@ class AddMovie extends Component{
         year:'',
         studio:'',
         synopsis: '',
-        image: '',
-        url: '',
-        actor: '',
-        director: '',
+        imgURL: '',
+        movieURL: '',
+        actors: [],
+        directors: [],
         country: '',
         rating: '',
-        subscription: '',
-        price: '',
+        availability: '',
+        price: 0,
         jwtToken: '',
         username: 'tuan.ung@sjsu.edu',
         password: 'user'
@@ -145,24 +145,25 @@ class AddMovie extends Component{
                 onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,studio: event.target.value}});}}/><br />
                 <textarea name="synopsis" type="text" className="form-control" placeholder="Short movie synopsis"  value={this.state.addmoviedata.synopsis}
                 onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,synopsis: event.target.value}});}}/><br />
-                <input name="image" type="text" className="form-control" placeholder="Image URL" value={this.state.addmoviedata.image}
-                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,image: event.target.value}});}}/><br />
-                <input name="url" type="text" className="form-control" placeholder="Movie URL" value={this.state.addmoviedata.url}
-                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,url: event.target.value}});}}/><br />
-                <input name="actor" type="text" className="form-control" placeholder="Actor" value={this.state.addmoviedata.actor}
-                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,actor: event.target.value}});}}/><br />
-                <input name="director" type="text" className="form-control" placeholder="Director" value={this.state.addmoviedata.director}
-                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,director: event.target.value}});}}/><br />
+                <input name="image" type="text" className="form-control" placeholder="Image URL" value={this.state.addmoviedata.imgURL}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,imgURL: event.target.value}});}}/><br />
+                <input name="url" type="text" className="form-control" placeholder="Movie URL" value={this.state.addmoviedata.movieURL}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,movieURL: event.target.value}});}}/><br />
+                <input name="actor" type="text" className="form-control" placeholder="Actor" value={this.state.addmoviedata.actors}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,actors: event.target.value}});}}/><br />
+                <input name="director" type="text" className="form-control" placeholder="Director" value={this.state.addmoviedata.directors}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,directors: event.target.value}});}}/><br />
                 <input name="country" type="text" className="form-control" placeholder="Country" value={this.state.addmoviedata.country}
                 onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,country: event.target.value}});}}/><br />
                 <input name="rating" type="text" className="form-control" placeholder="Rating"  value={this.state.addmoviedata.rating}
                 onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,rating: event.target.value}});}}/><br />
 
-                <select className="form-control" name="subscription" value={this.state.addmoviedata.subscription}>
+                <select className="form-control" name="subscription" value={this.state.addmoviedata.availability}
+                onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,availability: event.target.value}});}}>
                   <option value="Select">Select subscription type</option>
                   <option value="Free">Free</option>
-                  <option value="Subscription">Subscription only</option>
-                  <option value="Pay-per-view">Pay-per-view</option>
+                  <option value="SubscriptionOnly">Subscription only</option>
+                  <option value="PayPerView">Pay per view</option>
                   {/*<option value="Paid">Paid</option>*/}
                 </select><br />
                 <input name="price" type="number" className="form-control" placeholder="Price in $" value={this.state.addmoviedata.price}
