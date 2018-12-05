@@ -30,10 +30,29 @@ class UpdateMovie extends Component{
         movieList: [],
         delMovieName : '',
         movieDict : [],
-        isUpdateRequested: false
+        isUpdateRequested: false,
+        movieData: [],
+        movieID: "",
+        delmessage: "",
+        movieToUpdate: "",
+        movieToUpdateTitle: "",
+        updateMovieData:{
+          title: '',
+          genre: '',
+          year:'',
+          studio:'',
+          synopsis: '',
+          image: '',
+          url: '',
+          actor: [],
+          director: [],
+          country: '',
+          rating: '',
+          subscription: '',
+          price: 0,
+          updateMovieID: 0
 
-
-
+        }
     };
 
 
@@ -46,7 +65,24 @@ class UpdateMovie extends Component{
         page: 0,
         size: 0,
         delMovieName: '',
-        isUpdateRequested: false
+        isUpdateRequested: false,
+        movieID: "",
+        delmessage: "",
+        movieToUpdateTitle: "",
+        title: '',
+        genre: '',
+        year:'',
+        studio:'',
+        synopsis: '',
+        image: '',
+        url: '',
+        actor: [],
+        director: [],
+        country: '',
+        rating: '',
+        subscription: '',
+        price: 0,
+        updateMovieID: 0
       });
       this.state.movieDict.push({
         key:"1",
@@ -63,14 +99,14 @@ class UpdateMovie extends Component{
     // console.log("Movie Dict: ", this.state.movieDict)
   }
 
-  handleUpdateMovie(event){
-    console.log("Update movie: ");
-    this.setState({
-      isUpdateRequested: true
-    });
-
-    // console.log("Movie Dict: ", this.state.movieDict)
-  }
+  // handleUpdateMovie(event){
+  //   console.log("Update movie: ");
+  //   this.setState({
+  //     isUpdateRequested: true
+  //   });
+  //
+  //   // console.log("Movie Dict: ", this.state.movieDict)
+  // }
 
   handleSearch(movieData){
     console.log("Searching for movie : ", movieData);
@@ -83,8 +119,12 @@ class UpdateMovie extends Component{
                                 this.setState({
                                     isLoggedIn: true,
                                     moviedata: res,
-                                    movieList: []
+                                    movieList: [],
+                                    movieData: res
                                 });
+                                // data = res.data.content;
+                                console.log("MovieData : ", this.state.movieData);
+                                // this.props.history.push("/updateMovie");
                                 data = res;
                                 let i = 0;
                                 let len = 0;
@@ -117,61 +157,140 @@ class UpdateMovie extends Component{
 
   }
 
-    handleSubmit = () => {
-        //validations
+  handleUpdateNav = (movieID, movieTitle) => {
+    console.log("Render update movie section", movieTitle);
+    this.setState({
+      isUpdateRequested: true,
+      movieToUpdate: "movieID",
+      movieToUpdateTitle: movieTitle,
+      title: movieTitle
+    });
+    console.log("Movie title params --->: ", movieTitle);
+    console.log("Movie name to be updated --->: ", this.state.updateMovieData.title);
+
+    Object.keys(this.state.movieData).map(pd => {
+      if(this.state.movieData[pd].title == movieTitle){
+        console.log("MovieID --> " + this.state.movieData[pd]._id);
+      console.log("Title " + this.state.movieData[pd].title);
+      console.log("Genre " + this.state.movieData[pd].genre);
+      console.log("Year " + this.state.movieData[pd].year);
+      console.log("Synopsis" + this.state.movieData[pd].synopsis);
+      console.log("Actors " + this.state.movieData[pd].actors);
+      console.log("Director"  + this.state.movieData[pd].directors);
+      console.log("Country " + this.state.movieData[pd].country);
+      console.log("Rating " + this.state.movieData[pd].rating);
+      console.log("Subscription " + this.state.movieData[pd].availability);
+      console.log("Price  " + this.state.movieData[pd].price);
+
+      this.setState({
+        updateMovieData:{
+        title: movieTitle,
+        genre: this.state.movieData[pd].genre,
+        year: this.state.movieData[pd].year,
+        studio: this.state.movieData[pd].studio,
+        synopsis: this.state.movieData[pd].synopsis,
+        imgURL: this.state.movieData[pd].imgURL,
+        movieURL: this.state.movieData[pd].movieURL,
+        actors: this.state.movieData[pd].actors,
+        directors: this.state.movieData[pd].directors,
+        country: this.state.movieData[pd].country,
+        rating: this.state.movieData[pd].rating,
+        availability: this.state.movieData[pd].availability,
+        price: this.state.movieData[pd].price,
+        updateMovieID : this.state.movieData[pd]._id
+      }
+      });
+      let i = 0;
+      for(i=0; i<this.state.movieData[pd].actor-1; i++){
+        this.state.actors.push(this.state.movieData[pd].actor);
+      }
+      let j = 0;
+      for(j=0; j<this.state.movieData[pd].actor-1; i++){
+        this.state.directors.push(this.state.movieData[pd].director);
+      }
 
 
-        // if(this.state.userdata.username.length === 0){
-        //     errors.push("Kindly enter user Name");
-        //  }
-         //else if(!noAlphabets.test(this.state.userdata.username)) {
-        //     errors.push("Invalid Username");
-        // }
+      // console.log("TITLE RECIEVEDDDDDDDDDDDDDDDDDDDD : ", this.state.title);
+}
 
-        // if(this.state.userdata.password.length === 0){
-        //     errors.push("Kindly enter a password");
-        // }
-        // else if(!noAlphabets.test(this.state.userdata.password)) {
-        //     errors.push("Invalid Password");
-        // }
+    });
 
-        // if(this.state.userdata.email.length === 0){
-        //     errors.push("Kindly enter email");
-        // } else if (!email_regex.test(this.state.userdata.email)){
-        //     errors.push("Invalid email");
-        // }
-        //
-        // if(errors.length === 0) {
-        //     this.props.history.push('/dashboard');
-        //     API.saveData(this.state.userdata)
-        //         .then((res) => {
-        //             console.log(res.status);
-        //             if (res.status === '201') {
-        //                 this.setState({
-        //                     isLoggedIn: true,
-        //                     message: "Account Created! You can Login..!!"
-        //                 });
-        //                 console.log("after set", this.props);
-        //                 this.props.history.push('/signup');
-        //                 console.log("after set", this.props);
-        //                 //history.push('/login');
-        //             } else if (res.status === '401') {
-        //                 this.setState({
-        //                     isLoggedIn: false,
-        //                     message: "Signup. Try again..!!",
-        //
-        //                 });
-        //             }
-        //         });
-        // }else{
-        //     this.setState ({
-        //         validation_error: errors
-        //     })
-         //}
-    };
+    }
+
+handleUpdate = (movieID, movieData) => {
+  console.log("Handling update movie with pid", movieID);
+
+  API.updateMovie(movieID, movieData)
+    .then((res) => {
+        if (res.status === 200) {
+            this.setState({
+                message: "Movie updated successfully!!",
+            });
+
+            console.log("In update movie call.");
+            alert("Movie was updated successfully!!");
+            this.props.history.push("/adminAddMovie");
+        } else if (!res.status === 200) {
+            console.log("in fail");
+            this.setState({
+                isLoggedIn: false,
+                message: "Wrong username or password. Try again..!!"
+            });
+
+
+        }
+    });
+}
+
+handleInputChange(){
+  console.log("Handling input change !!");
+}
+
+handleDelete = (movieID) => {
+  console.log("Handling delete movie with pid",movieID);
+
+  API.deleteMovie(movieID)
+    .then((res) => {
+        if (res.status === 200) {
+            this.setState({
+                delmessage: "Movie Deleted successfully!!",
+            });
+
+            console.log("In delete movie call.");
+            alert("Movie was deleted successfully!!");
+            this.props.history.push("/adminAddMovie");
+        } else if (!res.status === 200) {
+            console.log("in fail");
+            this.setState({
+                isLoggedIn: false,
+                message: "Wrong username or password. Try again..!!"
+            });
+
+        }
+    });
+
+}
+
 
     render(){
+      var self = this;
 {/*return component for withKeys*/}
+
+Object.keys(this.state.movieData).map(pd => {
+  // console.log("Title " + this.state.movieData[pd].title);
+  // console.log("Genre " + this.state.movieData[pd].genre);
+  // console.log("Year " + this.state.movieData[pd].year);
+  // console.log("Synopsis" + this.state.movieData[pd].synopsis);
+  // console.log("Cast " + this.state.movieData[pd].cast);
+  // console.log("data is here after search " + this.state.movieData[pd].title);
+  // console.log("data is here after search " + this.state.movieData[pd].title);
+  // console.log("data is here after search " + this.state.movieData[pd].title);
+  // console.log("data is here after search " + this.state.movieData[pd].title);
+  // console.log("data is here after search " + this.state.movieData[pd].title);
+  // console.log("data is here after search " + this.state.movieData[pd].title);
+
+});
+
 
 const withKeys = this.state.movieList.map((function(item){
                 return(
@@ -187,7 +306,31 @@ const withKeys = this.state.movieList.map((function(item){
             }))
 
 
+const withfilter = this.state.movieData &&
+              Object.keys(this.state.movieData).map(pd => {
+                return (
+                  <tr
+                    key={this.state.movieData[pd]._id}>
+                  <td key={this.state.movieData[pd]._id} >{this.state.movieData[pd].title}</td>
+
+                    <td><Button name="Update Movie" bsStyle="info" key={this.state.movieData[pd]._id} class="btn btn-primary "
+                    onClick={() => this.handleUpdateNav(this.state.movieData[pd]._id, this.state.movieData[pd].title)}
+                     >Update</Button></td>
+                    <td><Button name="Delete Movie" bsStyle="info" key={this.state.movieData[pd]._id} class="btn btn-primary "
+                    onClick={() => this.handleDelete(this.state.movieData[pd]._id)} data-toggle="modal" data-target="#myDeleteModal">Delete</Button></td>
+                    {/*<td className='ProjectTable-cell' key={this.state.projectData[pd]._id}>*/}
+                    {/*<Button bsStyle="danger" bsSize="sm" block*/}
+                    {/*onClick={() => this.handleWatch(this.state.projectData[pd]._id)}> Watch </Button>*/}
+                    {/*</td>*/}
+                  </tr>
+                );
+              });
+
+
+
         return(
+          <div>
+
             <div>
             <div className="col-sm-4"> </div>
             <div style={divStyle1} className="col-sm-3">
@@ -230,7 +373,8 @@ const withKeys = this.state.movieList.map((function(item){
                     <td><b>Update</b></td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td><b>Delete</b></td>
                   </tr>
-                  {withKeys}
+                  {withfilter}
+
                   </tbody>
                 </table>
 {/*
@@ -259,16 +403,16 @@ const withKeys = this.state.movieList.map((function(item){
                 <input type="number" className="form-control" placeholder="Price in $" onChange={this.handleInputChange} /><br />
                 <Button name="Add Movie" bsStyle="success" class="btn btn-primary " data-toggle="modal" data-target="#myModal">Update Movie</Button><br/>*/}
                     {/*Modal for update movie*/}
-                <div class="modal fade" id="myUPdateModal" data-toggle="myUpdateModal">
+                <div class="modal fade" id="myUpdateModal" data-toggle="myUpdateModal">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Movie features updated successfully!</h4>
+                        <h4 class="modal-title">Movie features updated with id : {this.state.movieToUpdate} successfully!</h4>
                       </div>
                       <div class="modal-body">
                         <p>Users will now be able to view updated features for movie ABC!!</p>
-                        <p>Following features updated: </p>
+                        <p>Following features updated: {this.state.movieToUpdate}</p>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -285,13 +429,13 @@ const withKeys = this.state.movieList.map((function(item){
                       <div class="modal-content">
                         <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                          <h4 class="modal-title">{this.state.delMovieName} movie will be deleted</h4>
+                          <h4 class="modal-title"> Movie deleted succussfully</h4>
                         </div>
                         <div class="modal-body">
-                          <p>{this.state.delMovieName} deleted permanently!!</p>
+                          <p> Selected movie removed from the database!</p>
                         </div>
                         <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
+
                           <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                         </div>
                       </div>
@@ -302,6 +446,83 @@ const withKeys = this.state.movieList.map((function(item){
                 </form>
                 </div>
             </div>
+          {this.state.isUpdateRequested ?
+            <div>
+            <div className="col-sm-4"> </div>
+            <div style={divStyle1} className="col-sm-3">
+            {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
+
+            <p style={formHead1}>Update movie details below :</p>
+            <hr color="#E3E1E1"/>
+                <form><p>{this.state.updateMovieData.title}  {this.state.updateMovieData.updateMovieID}</p>
+                <input type="text" className="form-control" placeholder="Title" readOnly="readonly" value={this.state.title}
+                /> <br/>
+                <input type="text" className="form-control" placeholder="Genre" value={this.state.updateMovieData.genre}
+                onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,genre: event.target.value}});}} /><br />
+                <input type="number" className="form-control" placeholder="Year" value={this.state.updateMovieData.year}
+                onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,year: event.target.value}});}} /><br />
+                <input type="text" className="form-control" placeholder="Studio" value={this.state.updateMovieData.studio}
+                onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,studio: event.target.value}});}} /><br />
+                <textarea type="text" className="form-control" placeholder="Short movie synopsis" value={this.state.updateMovieData.synopsis}
+              onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,synopsis: event.target.value}});}} /><br />
+                <input type="text" className="form-control" placeholder="image.jpg" value={this.state.updateMovieData.imgURL}
+                onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,imgURL: event.target.value}});}}/><br />
+                <input type="text" className="form-control" placeholder="Movie URL" value={this.state.updateMovieData.movieURL}
+                onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,movieURL: event.target.value}});}}
+                 /><br />
+                <input type="text" className="form-control" placeholder="Actor" value={this.state.updateMovieData.actors}
+                onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,actors: event.target.value}});}}
+                  /><br />
+                <input type="text" className="form-control" placeholder="Director" value={this.state.updateMovieData.directors}
+                 onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,directors: event.target.value}});}} /><br />
+                <input type="text" className="form-control" placeholder="Country" value={this.state.updateMovieData.country}
+                 onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,country: event.target.value}});}}/><br />
+                <input type="text" className="form-control" placeholder="Rating" value={this.state.updateMovieData.rating}
+                onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,rating: event.target.value}});}} /><br />
+              { /* <input type="text" className="form-control" placeholder="Subscription type" value={this.state.updateMovieData.availability}
+                 onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,availability: event.target.value}});}} /><br />*/}
+                 <select className="form-control" name="subscription" value={this.state.updateMovieData.availability}
+                  onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,availability: event.target.value}});}}>
+                   <option value="Select">Select subscription type</option>
+                   <option value="SubscriptionOnly">Subscription only</option>
+                   <option value="PayPerView">Pay-per-view</option>
+                   {/*<option value="Paid">Paid</option>*/}
+                 </select><br />
+
+                <input type="number" className="form-control" placeholder="Price in $" value={this.state.updateMovieData.price}
+                onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,price: event.target.value}});}}/><br />
+                <Button name="update Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myModal" value={this.state.updateMovieID}
+                onClick={() => this.handleUpdate(this.state.updateMovieData.updateMovieID, this.state.updateMovieData)}>Update</Button><br/>
+
+                  {/*Modal for delete movie*/}
+                <div class="modal fade" id="myModal" data-toggle="myModal">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Movie updated successfully!</h4>
+                      </div>
+                      <div class="modal-body">
+                        <p>Movie was updated - in the database successfully.</p>
+                        <p> Please note any current ongoing activity would not be affected for any user.</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+
+                      </div>
+                    </div>
+                    {/*<!-- /.modal-content -->*/}
+                  </div>{/*<!-- /.modal-dialog -->*/}
+                </div>{/*<!-- /.modal -->*/}
+
+
+
+                </form>
+                </div>
+            </div>
+
+            : null}
+          </div>
 
 
         );
