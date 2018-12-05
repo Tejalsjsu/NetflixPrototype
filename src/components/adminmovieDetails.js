@@ -47,7 +47,7 @@ class MovieDetails extends Component{
 
     API.getMovieList()
         .then((res) => {
-            console.log("response is here : ", res);
+            console.log("response in getMovie List : ", res);
             console.log("response length : ", res.length);
             // console.log("Title & Plays-->", res);
             // console.log("response is here-->", res);
@@ -75,7 +75,8 @@ class MovieDetails extends Component{
                   console.log("Movie with plays array : ", this.state.movieWithPlays);
                   // this.state.movieList.push(data.content[i].title);
                 }
-                console.log("All Movies : ", this.state.allMovies);
+                this.setState({allMovies : this.state.movieWithPlays});
+                console.log("All Movies-> : ", this.state.allMovies);
             } else if (res.status === '401') {
                 this.setState({
                     isLoggedIn: false,
@@ -167,7 +168,7 @@ class MovieDetails extends Component{
     const movieAndPlays = this.state.movieWithPlays.map((function(item){
                                                           return(
                                                               <tr>
-                                                                  <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                  <td><h4>{item}</h4></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                               </tr>
                                                           )
                                                       }))
@@ -185,17 +186,17 @@ class MovieDetails extends Component{
             <div style={divStyle1} className="col-sm-3">
             {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
 
-            <p style={formHead1}>Movie details in MovieCentral</p>
+            <p style={formHead1}><h3>Movie details in MovieCentral</h3></p>
             <hr color="#E3E1E1"/>
                 <form style={formStyle1}>
-                <table>
+                <table align="center">
                   <tr>
-                    <td><b><i>Movie Name</i></b></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td><b><i>Number of plays</i></b></td>
+                    <td><h4><b>Movie Name - Number of plays</b></h4></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   </tr>
                   {movieAndPlays}
                 </table><br/>
-                  Select duration for Top 10 list:
+                <hr/>
+                  <h4><b>Select duration for Top 10 list:</b></h4>
                 <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
 
                   <option selected="true" value="day">Last 24 hours</option>
