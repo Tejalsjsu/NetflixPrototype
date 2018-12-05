@@ -52,7 +52,7 @@ function AdminNavBar() {
                             </ul>
 
                             <ul className="nav navbar-nav navbar-right">
-                                <li><NavLink to="/profile">< span className="glyphicon glyphicon-log-in"></span> Admin Profile </NavLink></li>
+                            { /* <li><NavLink to="/profile">< span className="glyphicon glyphicon-log-in"></span> Admin Profile </NavLink></li>*/}
                                 <li onClick={this.logout}><NavLink to="/login">< span className="glyphicon glyphicon-log-in"></span> Logout </NavLink></li>
                             </ul>
                         </div>
