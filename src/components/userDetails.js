@@ -13,6 +13,7 @@ let divStyle1 = {align: 'right', backgroundColor: '#FEFDFD', padding: '12px', ma
 let formHead1 = {color:'blue', fontFamily : 'Open Sans', fontSize: '55', fontWeight: 'bold'};
 let formStyle1 = {align:'center', fontFamily : 'Open Sans', fontSize: '70'}
 // let tableStyle1 = {align:'center', padding: '19px 9px 9px 9px'}
+var data = [];
 
 class UserDetails extends Component{
   constructor(props){
@@ -25,6 +26,11 @@ class UserDetails extends Component{
             renewalDate: '',
             viewed_movie_list: []
         },
+        searchUser:{
+          search:'',
+          page: 0,
+          size: 10
+        },
         currentCustomers: [],
         validation_error: [],
         isLoggedIn: false,
@@ -33,44 +39,59 @@ class UserDetails extends Component{
     };
 
     componentWillMount() {
+
+      console.log("CompWillMount");
         this.setState({
                 profileName: 'Aparna',
                 subscriptionType: 'Free',
                 renewalDate: '12/20',
                 viewed_movie_list: ["Movie 12", "Movie 23", "Movie 34","Movie 45"],
               top_ten_users : ["User top1 B", "User top9", "User D", "User A", "User B", "User C", "User D"],
-              currentCustomers: ["Amy","Bob", "John", "Tom"]
+              currentCustomers: ["Amy","Bob", "John", "Tom", "Tim"],
+              search: '',
+              page: 0,
+              size: 10
         });
+
+
+      console.log("Search this: ", this.state.searchUser);
+      console.log("Search page: ", this.state.searchUser.page);
+      console.log("Search size: ", this.state.searchUser.size);
+
+      API.getUsers(this.state.searchUser)
+            .then((res) => {
+                // console.log("response:  " , res);
+                if (res.status === 200) {
+                    console.log(' Success')
+                    data = res;
+                    let i = 0;
+                    let len = 0;
+                    len = data.content.length;
+                    // console.log("Movie names before is: ", this.state.movieList);
+                    console.log("Succesfully found user list as: ", data);
+                    console.log("Content is as: ", data.content);
+                    console.log("Content length is : ",len);
+                    for(i =0; i<= data.content.length -1; i++){
+                      console.log("Roles : ",  data.content[i].role)
+                      // this.state.movieList.push(data.content[i].title);
+                    }
+                    // console.log("Movie names after are: ", this.state.movieList);
+                     // this.props.history.push('/userActivity');
+                } else if (res.status === '401') {
+                    console.log("No records");
+                    this.setState({
+                        isLoggedIn: true,
+                        message: "No records found..!!",
+                    });
+                } else if (res.status === '402') {
+                    this.setState({
+                        isLoggedIn: false,
+                        message: "Session Expired..!!",
+                    });
+                    this.props.history.push('/login');
+                }
+            });
 }
-        // API.fetchSensorData()
-        //     .then((res) => {
-        //         //console.log("status " +[res]);
-        //         if (res) {
-        //             console.log(' Success')
-        //             this.setState({
-        //                 isLoggedIn: true,
-        //                 sensordata: res
-        //             });
-        //             data = res;
-        //             console.log('ID: ', this.state.sensordata.sensorID)
-        //             console.log('map', data)
-        //             this.props.history.push('/addSensor');
-        //         } else if (res.status === '401') {
-        //             console.log("No records");
-        //             this.setState({
-        //                 isLoggedIn: true,
-        //                 message: "No Senosrs found..!!",
-        //             });
-        //         } else if (res.status === '402') {
-        //             this.setState({
-        //                 isLoggedIn: false,
-        //                 message: "Session Expired..!!",
-        //             });
-        //             this.props.history.push('/login');
-        //         }
-        //     });
-
-
 
     handleSubmit = () => {
         //validations
@@ -160,9 +181,11 @@ class UserDetails extends Component{
             <hr color="#E3E1E1"/>
                 <form style={formStyle1}>
                 <table>
+                <tbody>
                   <tr>
                     <td><b><i>Current Customers Using Movie Central </i></b></td>&nbsp;&nbsp;&nbsp;&nbsp;
                   </tr>
+                  </tbody>
                   {customers}
                   {/*<tr data-toggle="modal" data-target="#myModal">
                     <td>A</td>&nbsp;&nbsp;&nbsp;&nbsp;

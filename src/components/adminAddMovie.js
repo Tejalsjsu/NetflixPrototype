@@ -51,7 +51,10 @@ class AdminAddMovie extends Component{
             message: '',
             showAddMovieComponent : false,
             showUpdateMovieComponent : false,
-            showDeleteMovieComponent : false
+            showDeleteMovieComponent : false,
+            movieWithPlays : [],
+            allMovies : [],
+            noOfPlays : '',
         };
           this._onAddClick = this._onAddClick.bind(this);
           this._onUpdateClick = this._onUpdateClick.bind(this);
@@ -79,31 +82,53 @@ class AdminAddMovie extends Component{
             });
           }
     componentWillMount(){
-        // var temPid = this.state.userdata.projectId;
-        // console.log("Before fetch " +this.state.userdata.projectId);
-        // API.fetchProjectDetails(this.state.userdata)
-        //     .then((res) => {
-        //         console.log("status " +res.details);
-        //         if (res.status === '201') {
-        //             console.log("In success" +res.details[0].budgetRange);
-        //             this.setState({
-        //                 isLoggedIn: true,
-        //                 userdata: {
-        //                     projectId: temPid,
-        //                     projectName:res.details[0].projectName,
-        //                     projectDescription:res.details[0].projectDescription,
-        //                     projectBudget:res.details[0].budgetRange,
-        //                     projectSkills:res.details[0].skills,
-        //                 }
-        //             });
-        //         } else if (res.status === '401') {
-        //             this.setState({
-        //                 isLoggedIn: false,
-        //                 message: "No projects found..!!",
-        //             });
-        //             this.props.history.push('/projectdetails');
-        //         }
-        //     });
+      this.setState({
+        // searchMovie: '',
+        // movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"],
+        allMovies: [],
+        movieWithPlays: []
+      });
+
+
+      API.getMovieList()
+          .then((res) => {
+              console.log("response is here : ", res);
+              console.log("response length : ", res.length);
+              // console.log("Title & Plays-->", res);
+              // console.log("response is here-->", res);
+              if (res.length > 0) {
+                  // console.log("In success" +res.details[0].budgetRange);
+                  this.setState({
+                      isLoggedIn: true,
+                      allMovies: res
+                  });
+                  let i = 0;
+                  let len = 0;
+                  len = res.length;
+
+                  // console.log("Movie names before is: ", this.state.movieList);
+                  // console.log("Succesfully found user list as: ", data);
+                  // console.log("Content is as: ", data.content);
+                  console.log("Content length is : ",len);
+                  for(i =0; i<= res.length -1; i++){
+                    console.log("Titles ",  res[i].title)
+                    console.log("Plays ",  res[i].numberOfPlays)
+                    let tempMovie = "";
+                    tempMovie = res[i].title+" - "+ res[i].numberOfPlays;
+                    this.state.movieWithPlays.push(tempMovie);
+                    console.log("All Movies : ", tempMovie);
+                    console.log("Movie with plays array : ", this.state.movieWithPlays);
+                    // this.state.movieList.push(data.content[i].title);
+                  }
+                  console.log("All Movies : ", this.state.allMovies);
+              } else if (res.status === '401') {
+                  this.setState({
+                      isLoggedIn: false,
+                      message: "Not able to fetch admin financials!!",
+                  });
+                  this.props.history.push('/login');
+              }
+          });
     }
     handleSubmit = () => {
         // API.postBid(this.state.userdata)

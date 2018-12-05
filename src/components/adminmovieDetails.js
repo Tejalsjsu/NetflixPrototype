@@ -38,39 +38,44 @@ class MovieDetails extends Component{
 
   componentWillMount(){
     this.setState({
-      moviedata: [
-        {
-        movieTitle: 'Tin Tin',
-        numberOfPlays: '23'
-      },
-      {
-        movieTitle: 'Star Trek',
-        numberOfPlays: '123'
-      },
-      {
-        movieTitle: 'Mad Max Fury Road',
-        numberOfPlays: '290'
-      },
-      {
-        movieTitle: 'Twilight',
-        numberOfPlays: '125'
-      }
-    ],
-    // top_ten_movies : ["A", "B", "C", "D", "1", "2", "3", "4", "5"]
-
+      // searchMovie: '',
+      // movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"],
+      allMovies: [],
+      movieWithPlays: []
     });
+
 
     API.getMovieList()
         .then((res) => {
-            console.log("response ", res);
-            if (res.status === '200') {
+            console.log("response is here : ", res);
+            console.log("response length : ", res.length);
+            // console.log("Title & Plays-->", res);
+            // console.log("response is here-->", res);
+            if (res.length > 0) {
                 // console.log("In success" +res.details[0].budgetRange);
                 this.setState({
                     isLoggedIn: true,
-                    top_ten_movies: res
+                    allMovies: res
                 });
-                console.log("All Movies are here : ", this.top_ten_movies);
-                console.log("Title : ",  this.top_ten_movies.title);
+                let i = 0;
+                let len = 0;
+                len = res.length;
+
+                // console.log("Movie names before is: ", this.state.movieList);
+                // console.log("Succesfully found user list as: ", data);
+                // console.log("Content is as: ", data.content);
+                console.log("Content length is : ",len);
+                for(i =0; i<= res.length -1; i++){
+                  console.log("Titles ",  res[i].title)
+                  console.log("Plays ",  res[i].numberOfPlays)
+                  let tempMovie = "";
+                  tempMovie = res[i].title+" - "+ res[i].numberOfPlays;
+                  this.state.movieWithPlays.push(tempMovie);
+                  console.log("All Movies : ", tempMovie);
+                  console.log("Movie with plays array : ", this.state.movieWithPlays);
+                  // this.state.movieList.push(data.content[i].title);
+                }
+                console.log("All Movies : ", this.state.allMovies);
             } else if (res.status === '401') {
                 this.setState({
                     isLoggedIn: false,
@@ -79,6 +84,26 @@ class MovieDetails extends Component{
                 this.props.history.push('/login');
             }
         });
+
+    // API.getMovieList()
+    //     .then((res) => {
+    //         console.log("response ", res);
+    //         if (res.status === '200') {
+    //             // console.log("In success" +res.details[0].budgetRange);
+    //             this.setState({
+    //                 isLoggedIn: true,
+    //                 top_ten_movies: res
+    //             });
+    //             console.log("All Movies are here : ", this.top_ten_movies);
+    //             console.log("Title : ",  this.top_ten_movies.title);
+    //         } else if (res.status === '401') {
+    //             this.setState({
+    //                 isLoggedIn: false,
+    //                 message: "Not able to fetch admin financials!!",
+    //             });
+    //             this.props.history.push('/login');
+    //         }
+    //     });
 
 
   }
@@ -138,16 +163,14 @@ class MovieDetails extends Component{
 
     render(){
 
-      const movieAndPlays = this.state.moviedata.map((function(item){
-                      return(
-                          <tr>
-                              {/*changed coloumn names as per mongo db column names*/}
 
-                              <td>{item.movieTitle}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              <td>{item.numberOfPlays}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          </tr>
-                      )
-                  }))
+    const movieAndPlays = this.state.movieWithPlays.map((function(item){
+                                                          return(
+                                                              <tr>
+                                                                  <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                              </tr>
+                                                          )
+                                                      }))
       const topTenMovies = this.state.top_ten_movies.map((function(item){
                                   console.log(item);
                                   return(
