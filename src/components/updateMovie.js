@@ -5,6 +5,7 @@ import  logo from '../image/netflix-logo.jpg';
 import * as API from '../api/index';
 import Login from "./login";
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import DeleteMovie from '../components/deleteMovie';
 
 let imgStyle = {height: '100px', padding: '10px', width: '300px'};
 let divStyle2 = {height:'45px'};
@@ -27,6 +28,10 @@ class UpdateMovie extends Component{
         isLoggedIn: false,
         message: '',
         movieList: [],
+        delMovieName : '',
+        movieDict : [],
+        isUpdateRequested: false
+
 
 
     };
@@ -39,12 +44,32 @@ class UpdateMovie extends Component{
         movieList: [],
         search: '',
         page: 0,
-        size: 0
+        size: 0,
+        delMovieName: '',
+        isUpdateRequested: false
+      });
+      this.state.movieDict.push({
+        key:"1",
+        value:"1111"
       });
             }
 
     handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+  }
+
+  handleDelMovie(event){
+    console.log("Delete movie: ", this.state.delMovieName);
+    // console.log("Movie Dict: ", this.state.movieDict)
+  }
+
+  handleUpdateMovie(event){
+    console.log("Update movie: ");
+    this.setState({
+      isUpdateRequested: true
+    });
+
+    // console.log("Movie Dict: ", this.state.movieDict)
   }
 
   handleSearch(movieData){
@@ -53,7 +78,7 @@ class UpdateMovie extends Component{
                     API.searchMovie(movieData)
                         .then((res) => {
                             // console.log("response:  " , res);
-                            if (res) {
+                            if (res.length > 0 ) {
                                 console.log(' Success')
                                 this.setState({
                                     isLoggedIn: true,
@@ -62,13 +87,15 @@ class UpdateMovie extends Component{
                                 });
                                 data = res;
                                 let i = 0;
+                                let len = 0;
+                                len = data.length;
                                 console.log("Movie names before is: ", this.state.movieList);
                                 console.log("Suceesfully found movie with details as: ", data);
-                                console.log("Content is as: ", data.content);
-                                console.log("Content length is : ", data.content.length);
-                                for(i =0; i<=data.content.length -1; i++){
-                                  console.log("Movie name : ",  data.content[i].title)
-                                  this.state.movieList.push(data.content[i].title);
+                                // console.log("Content is as: ", data.content);
+                                console.log("Content length is : ",len);
+                                for(i =0; i<=data.length -1; i++){
+                                  console.log("Movie name : ",  data[i].title)
+                                  this.state.movieList.push(data[i].title);
                                 }
                                 console.log("Movie names after are: ", this.state.movieList);
                                 this.props.history.push('/adminAddMovie');
@@ -148,12 +175,13 @@ class UpdateMovie extends Component{
 
 const withKeys = this.state.movieList.map((function(item){
                 return(
-                    <tr >
+                    <tr value={item}>
                         {/*changed coloumn names as per mongo db column names
                         <td><input type="radio" checked={false}/></td>&nbsp;&nbsp;&nbsp;&nbsp;*/}
                         <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <td><Button name="Update Movie" bsStyle="info" class="btn btn-primary ">Update</Button></td>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <td><Button name="Delete Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myDeleteModal">Delete</Button></td>
+                        <td><Button name="Delete Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myDeleteModal"
+                        >Delete</Button></td>
                     </tr>
                 )
             }))
@@ -257,10 +285,10 @@ const withKeys = this.state.movieList.map((function(item){
                       <div class="modal-content">
                         <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                          <h4 class="modal-title">Below movie will be deleted</h4>
+                          <h4 class="modal-title">{this.state.delMovieName} movie will be deleted</h4>
                         </div>
                         <div class="modal-body">
-                          <p>More movie details: </p>
+                          <p>{this.state.delMovieName} deleted permanently!!</p>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
@@ -274,6 +302,8 @@ const withKeys = this.state.movieList.map((function(item){
                 </form>
                 </div>
             </div>
+
+
         );
     }
   }
