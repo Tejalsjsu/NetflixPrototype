@@ -484,6 +484,7 @@ const withfilter = this.state.movieData &&
                  <select className="form-control" name="subscription" value={this.state.updateMovieData.availability}
                   onChange={(event) => {this.setState({updateMovieData: {...this.state.updateMovieData,availability: event.target.value}});}}>
                    <option value="Select">Select subscription type</option>
+                   <option value="Free">Free</option>
                    <option value="SubscriptionOnly">Subscription only</option>
                    <option value="PayPerView">Pay-per-view</option>
                    {/*<option value="Paid">Paid</option>*/}
