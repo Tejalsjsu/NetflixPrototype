@@ -194,6 +194,33 @@ export const addMoney = details =>
       return error;
     });
 
+
+export const addMoneyPPV = details =>
+    fetch(
+        `${api}/moviepay`,
+        {
+            method: "POST",
+            headers: {
+                ...headers,
+                "Content-Type": "application/json",
+                Authorization: localStorage.JWTToken
+            },
+            credentials: "include",
+            body: JSON.stringify(details)
+        },
+        console.log(JSON.stringify(details))
+    )
+        .then(res => res)
+        .then(res => {
+            let ResponseJSON = { status: 200, data: res };
+            return ResponseJSON;
+        })
+        .catch(error => {
+            console.log("This is error", error.message);
+            return error;
+        });
+
+
 export const registerConfirmation = token =>
   fetch(`${api}/userprofile/regitrationConfirm?token=` + token, {
     method: "POST",

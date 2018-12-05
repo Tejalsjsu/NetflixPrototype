@@ -27,7 +27,10 @@ class addMoney extends Component {
             processingFee:'',
             totalAmount:'',
             year: '',
-            Type: ''
+            Type: '',
+            movieId: queryString.parse(this.props.location.search) && queryString.parse(this.props.location.search).MovieID,
+            month:'',
+            year:''
         }
 
     }
@@ -36,20 +39,22 @@ class addMoney extends Component {
         console.log(this.state);
         let payment = {
             "userId":this.state.userdata.userId,
-            "quantity": 2,
+            "movieId": queryString.parse(this.props.location.search) && queryString.parse(this.props.location.search).MovieID,
+            "quantity": 1,
             "paymentDetail": {
             "xref": this.state.userdata.cardNo,
                 "cvv": this.state.userdata.ccv,
-                "expMonth": this.state.userdata.expiryDate,
-                "expYear": this.state.userdata.expiryDate,
+                "expMonth": this.state.userdata.month,
+                "expYear": this.state.userdata.year,
                 "cardName": this.state.userdata.cardHolderName,
                 "cardType": this.state.userdata.cardHolderName,
                 "zipCode": this.state.userdata.billingZip,
-                "customerId": this.state.userdata.userId
+                "customerId": this.state.userdata.userId,
         },
-            "typeOfPayment": "renewal"
+            "typeOfPayment": "PayPerView",
+            "total": queryString.parse(this.props.location.search) && queryString.parse(this.props.location.search).total
         }
-         API.addMoney(payment)
+         API.addMoneyPPV(payment)
              .then((res) => {
                  console.log(res.status);
                  if (res.status === 201) {
@@ -111,19 +116,19 @@ class addMoney extends Component {
 
                                     <div className="PaymentMethod-form-column--small">
                                         <div className="Payment-label">Expiry Month:</div>
-                                        <input className="form-control large-input" placeholder="MM/YY" value={this.state.userdata.expiryDate}
+                                        <input className="form-control large-input" placeholder="MM" value={this.state.userdata.month}
                                                onChange={(event) => {
                                                    this.setState({
                                                        userdata: {
                                                            ...this.state.userdata,
-                                                           expiryDate: event.target.value
+                                                           month: event.target.value
                                                        }
                                                    });
                                                }}/>
                                     </div>
                                     <div className="PaymentMethod-form-column--small">
                                         <div className="Payment-label">Expiry Year:</div>
-                                        <input className="form-control large-input" placeholder="MM/YY" value={this.state.userdata.year}
+                                        <input className="form-control large-input" placeholder="YYYY" value={this.state.userdata.year}
                                                onChange={(event) => {
                                                    this.setState({
                                                        userdata: {
