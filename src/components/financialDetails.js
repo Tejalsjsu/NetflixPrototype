@@ -26,10 +26,10 @@ class FinancialDetails extends Component{
             totalSubscriptionUsers: '',
             totalPayPerUsers:'',
             totalPaidUsers:'',
-            totalIncomeFreeUsers:'',
-            totalIncomeSubscriptionUsers: '',
-            totalIncomePayPerUsers:'',
-            totalIncomePaidUsers:''
+            totalIncomeFreeUsers: 0,
+            totalIncomeSubscriptionUsers: 0,
+            totalIncomePayPerUsers: 0,
+            totalIncomePaidUsers: 0
         },
         validation_error: [],
         isLoggedIn: false,
@@ -44,14 +44,64 @@ class FinancialDetails extends Component{
         totalSubscriptionUsers: '0',
         totalPayPerUsers:'0',
         totalPaidUsers:'0',
-        totalIncomeFreeUsers:'10',
-        totalIncomeSubscriptionUsers: '10',
-        totalIncomePayPerUsers:'20',
-        totalIncomePaidUsers:'30',
-        totalIncome: parseInt(this.totalIncomeFreeUsers+this.totalIncomeSubscriptionUsers+this.totalIncomePayPerUsers+this.totalIncomePaidUsers)
-
-
+        totalIncomeFreeUsers:0,
+        totalIncomeSubscriptionUsers: 0,
+        totalIncomePayPerUsers:0,
+        totalIncomePaidUsers:0,
+        totalIncome: 0
       });
+
+
+      API.getFinancials()
+          .then((res) => {
+              // console.log("response is here : ", res);
+              // console.log("response length : ", res.length);
+              // console.log("Title & Plays-->", res);
+              // console.log("response is here-->", res);
+              if (res.length > 0) {
+                  // console.log("In success" +res.details[0].budgetRange);
+                  this.setState({
+                      isLoggedIn: true,
+                      // allMovies: res
+                  });
+                  let i = 0;
+                  // let len = 0;
+                  // len = res.length;
+
+                  console.log("Financials recieved: ", res);
+                  // console.log("Succesfully found user list as: ", data);
+                  // console.log("Content is as: ", res.content);
+                  // console.log("Content length is : ",len);
+                  for(i =0; i<= res.length -1; i++){
+                    if(res[i].typeOfPayment === "Renewal"){
+                      this.setState({ totalIncomeSubscriptionUsers: res[i].sum});
+                      console.log("Subscription income: ", res[i].sum)
+                    }else if(res[i].typeOfPayment === "PayPerView"){
+                      this.setState({ totalIncomePayPerUsers: res[i].sum});
+                      console.log("Ppv income: ", res[i].sum)
+                    }
+                    console.log("Sum is : ", parseInt(this.state.totalIncomePayPerUsers+this.state.totalIncomeSubscriptionUsers));
+                      this.setState({totalIncome: this.state.totalIncomePayPerUsers+this.state.totalIncomeSubscriptionUsers});
+                    }
+                    // console.log("Titles ",  res[i].title)
+                    // console.log("Plays ",  res[i].numberOfPlays)
+                    // let tempMovie = "";
+                    // tempMovie = res[i].title+" - "+ res[i].numberOfPlays;
+                    // this.state.movieWithPlays.push(tempMovie);
+                    // console.log("All Movies : ", tempMovie);
+                    // console.log("Movie with plays array : ", this.state.movieWithPlays);
+                    // this.state.movieList.push(data.content[i].title);
+                  // }
+                  // console.log("All Movies : ", this.state.allMovies);
+              } else if (res.status === '401') {
+                  this.setState({
+                      isLoggedIn: false,
+                      message: "Not able to fetch admin financials!!",
+                  });
+                  this.props.history.push('/login');
+              }
+          });
+
     }
     handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
@@ -117,7 +167,7 @@ class FinancialDetails extends Component{
             <div style={divStyle1} className="col-sm-3">
             {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
 
-            <p style={formHead1}>Financial details of users in MovieCentral</p>
+            <p style={formHead1}><b><h3>Financial details of users in MovieCentral</h3></b></p>
             <hr color="#E3E1E1"/>
                 <form style={formStyle1}>
                 <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
@@ -155,7 +205,7 @@ class FinancialDetails extends Component{
                     <td>1</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>Free</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>{this.state.totalFreeUsers}</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>{this.state.totalIncomeFreeUsers}</td>
+                    <td>-</td>
                   </tr>
                   <tr>
                     <td>2</td>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -173,10 +223,10 @@ class FinancialDetails extends Component{
                     <td>4</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>Paid</td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td>{this.state.totalPaidUsers}</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td>{this.state.totalIncomePaidUsers}</td>
+                    <td>-</td>
                   </tr>
-                </table>
-            <label>Total income for selected month:</label><input className="form-control" placeholder="$111" value={this.state.totalIncome} />
+                </table><br/>
+            <label>Total income for selected month:</label><input className="form-control" placeholder="$111" readonly="readonly" value={this.state.totalIncome} />
                 </form>
                 </div>
             </div>

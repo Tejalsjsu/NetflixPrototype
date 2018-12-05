@@ -85,26 +85,24 @@ class AdminAddMovie extends Component{
           adminFinances: []
         });
         console.log("Admin financials will be fetched!! ");
-
-
-        API.getFinancials()
-            .then((res) => {
-                console.log("response ", res);
-                if (res.status === '200') {
-                    // console.log("In success" +res.details[0].budgetRange);
-                    this.setState({
-                        isLoggedIn: true,
-                        adminFinances: res
-                    });
-                    console.log("Financial details : ", this.adminFinances);
-                } else if (res.status === '401') {
-                    this.setState({
-                        isLoggedIn: false,
-                        message: "Not able to fetch admin financials!!",
-                    });
-                    this.props.history.push('/login');
-                }
-            });
+        // API.getFinancials()
+        //     .then((res) => {
+        //         console.log("response ", res);
+        //         if (res.status === '200') {
+        //             // console.log("In success" +res.details[0].budgetRange);
+        //             this.setState({
+        //                 isLoggedIn: true,
+        //                 adminFinances: res
+        //             });
+        //             console.log("Financial details : ", this.adminFinances);
+        //         } else if (res.status === '401') {
+        //             this.setState({
+        //                 isLoggedIn: false,
+        //                 message: "Not able to fetch admin financials!!",
+        //             });
+        //             this.props.history.push('/login');
+        //         }
+        //     });
     }
     handleSubmit = () => {
         // API.postBid(this.state.userdata)

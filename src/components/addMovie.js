@@ -163,7 +163,7 @@ class AddMovie extends Component{
                   <option value="Free">Free</option>
                   <option value="Subscription">Subscription only</option>
                   <option value="Pay-per-view">Pay-per-view</option>
-                  <option value="Paid">Paid</option>
+                  {/*<option value="Paid">Paid</option>*/}
                 </select><br />
                 <input name="price" type="number" className="form-control" placeholder="Price in $" value={this.state.addmoviedata.price}
                 onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,price: event.target.value}});}}/><br />

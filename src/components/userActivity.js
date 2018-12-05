@@ -25,7 +25,7 @@ var Carousel = require('react-bootstrap').Carousel;
 let imgStyle = {width: '100%', height: '400px'};
 let footerText = {color: '#5DADE2'}
 var img1 = require('../image/netflixBG.jpg');
-
+var data = [];
 
 class UserActivity extends Component{
     constructor(props){
@@ -35,98 +35,27 @@ class UserActivity extends Component{
          var temp = pid && pid.projectid;
 
         this.state =  {
-            userdata: {
-                username: '',
-                password: '',
-                email: '',
-                userId: cookie.load('userId'),
-                projectId: temp,
-                projectName:'',
-                projectDescription:'',
-                projectBudget:'',
-                projectSkills:'',
-                bidamount:'',
-                duration:''
+        serchUser:{
+              search:'',
+              page: 0,
+              size: 10
             },
             isLoggedIn: false,
             message: '',
-            showAddMovieComponent : false,
-            showUpdateMovieComponent : false,
-            showDeleteMovieComponent : false
+            // currentCustomers: [],
         };
-          this._onAddClick = this._onAddClick.bind(this);
-          this._onUpdateClick = this._onUpdateClick.bind(this);
-          this._onDeleteClick = this._onDeleteClick.bind(this);
+
     }
-    _onAddClick() {
-        this.setState({
-          showAddMovieComponent: true,
-          showUpdateMovieComponent : false,
-          showDeleteMovieComponent : false
-        });
-      }
-      _onUpdateClick() {
-          this.setState({
-            showAddMovieComponent: false,
-            showUpdateMovieComponent: true,
-            showDeleteMovieComponent : false
-          });
-        }
-      _onDeleteClick() {
-            this.setState({
-              showAddMovieComponent: false,
-              showUpdateMovieComponent : false,
-              showDeleteMovieComponent: true,
-            });
-          }
     componentWillMount(){
-        var temPid = this.state.userdata.projectId;
-        console.log("Before fetch " +this.state.userdata.projectId);
-        API.fetchProjectDetails(this.state.userdata)
-            .then((res) => {
-                console.log("status " +res.details);
-                if (res.status === '201') {
-                    console.log("In success" +res.details[0].budgetRange);
-                    this.setState({
-                        isLoggedIn: true,
-                        userdata: {
-                            projectId: temPid,
-                            projectName:res.details[0].projectName,
-                            projectDescription:res.details[0].projectDescription,
-                            projectBudget:res.details[0].budgetRange,
-                            projectSkills:res.details[0].skills,
-                        }
-                    });
-                } else if (res.status === '401') {
-                    this.setState({
-                        isLoggedIn: false,
-                        message: "No projects found..!!",
-                    });
-                    this.props.history.push('/projectdetails');
-                }
-            });
+        console.log("In ComponentWillMount()");
+        this.setState({
+          search:'',
+          page: 0,
+          size: 10,
+          // currentCustomers: []
+        });
     }
-    handleSubmit = () => {
-        // API.postBid(this.state.userdata)
-        //     .then((res) => {
-        //         console.log(res.status);
-        //         if (res.status === '201') {
-        //             this.setState({
-        //                 isLoggedIn: true,
-        //                 message: "Bid Posted Successfully..!!"
-        //             });
-        //             this.props.history.push('/projectdetails');
-        //         } else if (res.status === '401') {
-        //             this.setState({
-        //                 message: "post Failed. Try again..!!",
-        //             });
-        //         }
-        //     });
-
-    };
-
-
-    render(){
+      render(){
         return(
 
             <div style={divStyle3}>

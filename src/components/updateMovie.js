@@ -5,6 +5,7 @@ import  logo from '../image/netflix-logo.jpg';
 import * as API from '../api/index';
 import Login from "./login";
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import DeleteMovie from '../components/deleteMovie';
 
 let imgStyle = {height: '100px', padding: '10px', width: '300px'};
 let divStyle2 = {height:'45px'};
@@ -27,8 +28,12 @@ class UpdateMovie extends Component{
         isLoggedIn: false,
         message: '',
         movieList: [],
-
-
+        delMovieName : '',
+        movieDict : [],
+        isUpdateRequested: false,
+        movieData: [],
+        movieID: "",
+        delmessage: ""
     };
 
 
@@ -39,12 +44,34 @@ class UpdateMovie extends Component{
         movieList: [],
         search: '',
         page: 0,
-        size: 0
+        size: 0,
+        delMovieName: '',
+        isUpdateRequested: false,
+        movieID: "",
+        delmessage: ""
+      });
+      this.state.movieDict.push({
+        key:"1",
+        value:"1111"
       });
             }
 
     handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+  }
+
+  handleDelMovie(event){
+    console.log("Delete movie: ", this.state.delMovieName);
+    // console.log("Movie Dict: ", this.state.movieDict)
+  }
+
+  handleUpdateMovie(event){
+    console.log("Update movie: ");
+    this.setState({
+      isUpdateRequested: true
+    });
+
+    // console.log("Movie Dict: ", this.state.movieDict)
   }
 
   handleSearch(movieData){
@@ -53,22 +80,28 @@ class UpdateMovie extends Component{
                     API.searchMovie(movieData)
                         .then((res) => {
                             // console.log("response:  " , res);
-                            if (res) {
+                            if (res.length > 0 ) {
                                 console.log(' Success')
                                 this.setState({
                                     isLoggedIn: true,
                                     moviedata: res,
-                                    movieList: []
+                                    movieList: [],
+                                    movieData: res
                                 });
+                                // data = res.data.content;
+                                console.log("MovieData : ", this.state.movieData);
+                                // this.props.history.push("/updateMovie");
                                 data = res;
                                 let i = 0;
+                                let len = 0;
+                                len = data.length;
                                 console.log("Movie names before is: ", this.state.movieList);
                                 console.log("Suceesfully found movie with details as: ", data);
-                                console.log("Content is as: ", data.content);
-                                console.log("Content length is : ", data.content.length);
-                                for(i =0; i<=data.content.length -1; i++){
-                                  console.log("Movie name : ",  data.content[i].title)
-                                  this.state.movieList.push(data.content[i].title);
+                                // console.log("Content is as: ", data.content);
+                                console.log("Content length is : ",len);
+                                for(i =0; i<=data.length -1; i++){
+                                  console.log("Movie name : ",  data[i].title)
+                                  this.state.movieList.push(data[i].title);
                                 }
                                 console.log("Movie names after are: ", this.state.movieList);
                                 this.props.history.push('/adminAddMovie');
@@ -90,73 +123,74 @@ class UpdateMovie extends Component{
 
   }
 
-    handleSubmit = () => {
-        //validations
+handleDelete = (movieID) => {
+  console.log("Handling delete movie with pid",movieID);
 
+  API.deleteMovie(movieID)
+    .then((res) => {
+        if (res.status === 200) {
+            this.setState({
+                delmessage: "Movie Deleted successfully!!",
+            });
 
-        // if(this.state.userdata.username.length === 0){
-        //     errors.push("Kindly enter user Name");
-        //  }
-         //else if(!noAlphabets.test(this.state.userdata.username)) {
-        //     errors.push("Invalid Username");
-        // }
+            console.log("In delete movie call.");
+            alert("Movie was deleted successfully!!");
+            this.props.history.push("/adminAddMovie");
+        } else if (!res.status === 200) {
+            console.log("in fail");
+            this.setState({
+                isLoggedIn: false,
+                message: "Wrong username or password. Try again..!!"
+            });
 
-        // if(this.state.userdata.password.length === 0){
-        //     errors.push("Kindly enter a password");
-        // }
-        // else if(!noAlphabets.test(this.state.userdata.password)) {
-        //     errors.push("Invalid Password");
-        // }
+        }
+    });
 
-        // if(this.state.userdata.email.length === 0){
-        //     errors.push("Kindly enter email");
-        // } else if (!email_regex.test(this.state.userdata.email)){
-        //     errors.push("Invalid email");
-        // }
-        //
-        // if(errors.length === 0) {
-        //     this.props.history.push('/dashboard');
-        //     API.saveData(this.state.userdata)
-        //         .then((res) => {
-        //             console.log(res.status);
-        //             if (res.status === '201') {
-        //                 this.setState({
-        //                     isLoggedIn: true,
-        //                     message: "Account Created! You can Login..!!"
-        //                 });
-        //                 console.log("after set", this.props);
-        //                 this.props.history.push('/signup');
-        //                 console.log("after set", this.props);
-        //                 //history.push('/login');
-        //             } else if (res.status === '401') {
-        //                 this.setState({
-        //                     isLoggedIn: false,
-        //                     message: "Signup. Try again..!!",
-        //
-        //                 });
-        //             }
-        //         });
-        // }else{
-        //     this.setState ({
-        //         validation_error: errors
-        //     })
-         //}
-    };
+}
 
     render(){
+      var self = this;
 {/*return component for withKeys*/}
+
+Object.keys(this.state.movieData).map(pd => {
+  console.log(
+    "data is here after search " + this.state.movieData[pd].title
+  );
+});
+
 
 const withKeys = this.state.movieList.map((function(item){
                 return(
-                    <tr >
+                    <tr value={item}>
                         {/*changed coloumn names as per mongo db column names
                         <td><input type="radio" checked={false}/></td>&nbsp;&nbsp;&nbsp;&nbsp;*/}
                         <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <td><Button name="Update Movie" bsStyle="info" class="btn btn-primary ">Update</Button></td>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <td><Button name="Delete Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myDeleteModal">Delete</Button></td>
+                        <td><Button name="Delete Movie" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myDeleteModal"
+                        >Delete</Button></td>
                     </tr>
                 )
             }))
+
+
+const withfilter = this.state.movieData &&
+              Object.keys(this.state.movieData).map(pd => {
+                return (
+                  <tr
+                    key={this.state.movieData[pd]._id}>
+                  <td key={this.state.movieData[pd]._id} >{this.state.movieData[pd].title}</td>
+
+                    <td><Button name="Update Movie" bsStyle="info" key={this.state.movieData[pd]._id} class="btn btn-primary ">Update</Button></td>
+                    <td><Button name="Delete Movie" bsStyle="info" key={this.state.movieData[pd]._id} class="btn btn-primary "
+                    onClick={() => this.handleDelete(this.state.movieData[pd]._id)} data-toggle="modal" data-target="#myDeleteModal">Delete</Button></td>
+                    {/*<td className='ProjectTable-cell' key={this.state.projectData[pd]._id}>*/}
+                    {/*<Button bsStyle="danger" bsSize="sm" block*/}
+                    {/*onClick={() => this.handleWatch(this.state.projectData[pd]._id)}> Watch </Button>*/}
+                    {/*</td>*/}
+                  </tr>
+                );
+              });
+
 
 
         return(
@@ -202,7 +236,8 @@ const withKeys = this.state.movieList.map((function(item){
                     <td><b>Update</b></td>&nbsp;&nbsp;&nbsp;&nbsp;
                     <td><b>Delete</b></td>
                   </tr>
-                  {withKeys}
+                  {withfilter}
+
                   </tbody>
                 </table>
 {/*
@@ -257,13 +292,13 @@ const withKeys = this.state.movieList.map((function(item){
                       <div class="modal-content">
                         <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                          <h4 class="modal-title">Below movie will be deleted</h4>
+                          <h4 class="modal-title"> Movie deleted succussfully</h4>
                         </div>
                         <div class="modal-body">
-                          <p>More movie details: </p>
+                          <p> Selected movie removed from the database!</p>
                         </div>
                         <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
+
                           <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                         </div>
                       </div>
@@ -274,6 +309,8 @@ const withKeys = this.state.movieList.map((function(item){
                 </form>
                 </div>
             </div>
+
+
         );
     }
   }

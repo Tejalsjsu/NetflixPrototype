@@ -27,7 +27,9 @@ class MovieDetails extends Component{
         isLoggedIn: false,
         message: '',
         top_ten_movies : [],
-        duration: ''
+        duration: '',
+        allMovies: [],
+        movieWithPlays: [],
 
     };
 
@@ -38,39 +40,49 @@ class MovieDetails extends Component{
 
   componentWillMount(){
     this.setState({
-      moviedata: [
-        {
-        movieTitle: 'Tin Tin',
-        numberOfPlays: '23'
-      },
-      {
-        movieTitle: 'Star Trek',
-        numberOfPlays: '123'
-      },
-      {
-        movieTitle: 'Mad Max Fury Road',
-        numberOfPlays: '290'
-      },
-      {
-        movieTitle: 'Twilight',
-        numberOfPlays: '125'
-      }
-    ],
-    // top_ten_movies : ["A", "B", "C", "D", "1", "2", "3", "4", "5"]
-
+      // searchMovie: '',
+      // movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"],
+      allMovies: [],
+      movieWithPlays: [],
+      top_ten_movies:[]
     });
+
 
     API.getMovieList()
         .then((res) => {
-            console.log("response ", res);
-            if (res.status === '200') {
+            console.log("response in getMovie List : ", res);
+            console.log("response length : ", res.length);
+            // console.log("Title & Plays-->", res);
+            // console.log("response is here-->", res);
+            if (res.length > 0) {
                 // console.log("In success" +res.details[0].budgetRange);
                 this.setState({
                     isLoggedIn: true,
-                    top_ten_movies: res
+                    allMovies: res
                 });
-                console.log("All Movies are here : ", this.top_ten_movies);
-                console.log("Title : ",  this.top_ten_movies.title);
+                let i = 0;
+                let len = 0;
+                len = res.length;
+
+                // console.log("Movie names before is: ", this.state.movieList);
+                // console.log("Succesfully found user list as: ", data);
+                // console.log("Content is as: ", data.content);
+                console.log("Content length is : ",len);
+                for(i =0; i<= res.length -1; i++){
+                  console.log("Titles ",  res[i].title)
+                  console.log("Plays ",  res[i].numberOfPlays)
+                  let tempMovie = "";
+                  tempMovie = res[i].title+" - "+ res[i].numberOfPlays;
+                  this.state.top_ten_movies.push(res[i].title);
+                  this.state.movieWithPlays.push(tempMovie);
+                  console.log("All Movies : ", tempMovie);
+                  console.log("Movie with plays array : ", this.state.movieWithPlays);
+                  console.log("Top 10 Movies : ", this.state.top_ten_movies);
+                  // this.state.movieList.push(data.content[i].title);
+                }
+                this.setState({allMovies : this.state.movieWithPlays});
+                console.log("All Movies-> : ", this.state.allMovies);
+                console.log("Top 10 : ", this.state.top_ten_movies);
             } else if (res.status === '401') {
                 this.setState({
                     isLoggedIn: false,
@@ -80,79 +92,23 @@ class MovieDetails extends Component{
             }
         });
 
-
   }
-
-    handleSubmit = () => {
-        //validations
-
-
-        // if(this.state.userdata.username.length === 0){
-        //     errors.push("Kindly enter user Name");
-        //  }
-         //else if(!noAlphabets.test(this.state.userdata.username)) {
-        //     errors.push("Invalid Username");
-        // }
-
-        // if(this.state.userdata.password.length === 0){
-        //     errors.push("Kindly enter a password");
-        // }
-        // else if(!noAlphabets.test(this.state.userdata.password)) {
-        //     errors.push("Invalid Password");
-        // }
-
-        // if(this.state.userdata.email.length === 0){
-        //     errors.push("Kindly enter email");
-        // } else if (!email_regex.test(this.state.userdata.email)){
-        //     errors.push("Invalid email");
-        // }
-        //
-        // if(errors.length === 0) {
-        //     this.props.history.push('/dashboard');
-        //     API.saveData(this.state.userdata)
-        //         .then((res) => {
-        //             console.log(res.status);
-        //             if (res.status === '201') {
-        //                 this.setState({
-        //                     isLoggedIn: true,
-        //                     message: "Account Created! You can Login..!!"
-        //                 });
-        //                 console.log("after set", this.props);
-        //                 this.props.history.push('/signup');
-        //                 console.log("after set", this.props);
-        //                 //history.push('/login');
-        //             } else if (res.status === '401') {
-        //                 this.setState({
-        //                     isLoggedIn: false,
-        //                     message: "Signup. Try again..!!",
-        //
-        //                 });
-        //             }
-        //         });
-        // }else{
-        //     this.setState ({
-        //         validation_error: errors
-        //     })
-         //}
-    };
 
     render(){
 
-      const movieAndPlays = this.state.moviedata.map((function(item){
-                      return(
-                          <tr>
-                              {/*changed coloumn names as per mongo db column names*/}
 
-                              <td>{item.movieTitle}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              <td>{item.numberOfPlays}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          </tr>
-                      )
-                  }))
+    const movieAndPlays = this.state.movieWithPlays.map((function(item){
+                                                          return(
+                                                              <tr>
+                                                                  <td><h4>{item}</h4></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                              </tr>
+                                                          )
+                                                      }))
       const topTenMovies = this.state.top_ten_movies.map((function(item){
-                                  console.log(item);
+
                                   return(
                                       <tr>
-                                          <td>{item.title}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                          <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                       </tr>
                                   )
                               }))
@@ -162,17 +118,17 @@ class MovieDetails extends Component{
             <div style={divStyle1} className="col-sm-3">
             {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
 
-            <p style={formHead1}>Movie details in MovieCentral</p>
+            <p style={formHead1}><h3>Movie details in MovieCentral</h3></p>
             <hr color="#E3E1E1"/>
                 <form style={formStyle1}>
-                <table>
+                <table align="center">
                   <tr>
-                    <td><b><i>Movie Name</i></b></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <td><b><i>Number of plays</i></b></td>
+                    <td><h4><b>Movie Name - Number of plays</b></h4></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   </tr>
                   {movieAndPlays}
                 </table><br/>
-                  Select duration for Top 10 list:
+                <hr/>
+                  <h4><b>Select duration for Top 10 list:</b></h4>
                 <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
 
                   <option selected="true" value="day">Last 24 hours</option>
@@ -214,7 +170,7 @@ class MovieDetails extends Component{
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Current top 10 movie list </h4>
+        <h4 class="modal-title"><b>Current top 10 movie list</b></h4>
       </div>
       <div class="modal-body">
       {/*<select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
@@ -223,7 +179,7 @@ class MovieDetails extends Component{
         <option value="week">Last week</option>
         <option value="month">Last month</option>
       </select><br />*/}
-      <table>
+      <table align="center">
       {topTenMovies}
       </table>
       </div>
