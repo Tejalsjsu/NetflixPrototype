@@ -616,15 +616,15 @@ export const getMovies = () =>
                               ...headers,
                               'Content-Type': 'application/json',
                               // 'Authorization': details.jwtToken
-                              'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0Mzk4MjcwNiwicm9sZSI6IkFETUlOIn0.uBAomO-Nyua6kQ3qNYPp0Ig14yn1wJw7sGKGIeZ9P7u3L4GF7k5EMmG9keQpm8aex6zjpkRuz_dockFV89SyXg'
+                              'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dWFuLnVuZ0BzanN1LmVkdSIsImV4cCI6MTU0NDA4NTk2NSwicm9sZSI6IkFETUlOIn0.JM6P91PMMYGtdIi8KDJRLrgrZgL-_JLmhFC-a43YlYVRsidZq499Zku8WVGkHKGGNRplqgR6_xNartjifAdnJQ'
                           },
                           credentials: 'include',
                           body: JSON.stringify(searchUser)
                       }).then((res) => res.json())
                           .then((data) => {
-                            console.log('All User info : '+data);
-                            console.log('All content  : '+data.content);
-                            return data;
+                            console.log('All User info -: ', data);
+                            console.log('All content  : ', data.content);
+                            return data.content;
                           })
                           .catch(error => {
                               console.log("This is error");

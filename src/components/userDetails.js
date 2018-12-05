@@ -47,10 +47,11 @@ class UserDetails extends Component{
                 renewalDate: '12/20',
                 viewed_movie_list: ["Movie 12", "Movie 23", "Movie 34","Movie 45"],
               top_ten_users : ["User top1 B", "User top9", "User D", "User A", "User B", "User C", "User D"],
-              currentCustomers: ["Amy","Bob", "John", "Tom", "Tim"],
+              // currentCustomers: ["Amy","Bob", "John", "Tom", "Tim"],
               search: '',
               page: 0,
-              size: 10
+              size: 10,
+              currentCustomers: []
         });
 
 
@@ -61,18 +62,21 @@ class UserDetails extends Component{
       API.getUsers(this.state.searchUser)
             .then((res) => {
                 // console.log("response:  " , res);
-                if (res.status === 200) {
+                if (res.length > 0) {
                     console.log(' Success')
                     data = res;
                     let i = 0;
                     let len = 0;
-                    len = data.content.length;
+                    len = res.length;
                     // console.log("Movie names before is: ", this.state.movieList);
-                    console.log("Succesfully found user list as: ", data);
-                    console.log("Content is as: ", data.content);
-                    console.log("Content length is : ",len);
-                    for(i =0; i<= data.content.length -1; i++){
-                      console.log("Roles : ",  data.content[i].role)
+                    console.log("Succesfully found user list as: ", res);
+                    // console.log("Content is as: ", data.content);
+                    console.log("User data array length is : ",len);
+                    for(i =0; i<= data.length -1; i++){
+                      if(data[i].role === "USER"){
+                        this.state.currentCustomers.push(data[i].profileName);
+                      }
+                      console.log("CURRENT customer list : ",  this.state.currentCustomers)
                       // this.state.movieList.push(data.content[i].title);
                     }
                     // console.log("Movie names after are: ", this.state.movieList);
@@ -185,8 +189,9 @@ class UserDetails extends Component{
                   <tr>
                     <td><b><i>Current Customers Using Movie Central </i></b></td>&nbsp;&nbsp;&nbsp;&nbsp;
                   </tr>
-                  </tbody>
                   {customers}
+                  </tbody>
+
                   {/*<tr data-toggle="modal" data-target="#myModal">
                     <td>A</td>&nbsp;&nbsp;&nbsp;&nbsp;
                   </tr>
