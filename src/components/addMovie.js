@@ -162,7 +162,7 @@ class AddMovie extends Component{
                 onChange={(event) => {this.setState({addmoviedata: {...this.state.addmoviedata,availability: event.target.value}});}}>
                   <option value="Select">Select subscription type</option>
                   <option value="Free">Free</option>
-                  <option value="SubscriptionOnly">Subscription only</option>
+                  <option value="Subscription">Subscription only</option>
                   <option value="PayPerView">Pay per view</option>
                   {/*<option value="Paid">Paid</option>*/}
                 </select><br />
