@@ -703,7 +703,7 @@ export const getMovieList = () =>
       return error;
     });
 
-export const searchMovie = movieDetails =>
+export const searchMovie = (searchText, filterValues, page, size) =>
   fetch(`${api}/movie/search`, {
     method: "POST",
     headers: {
@@ -714,7 +714,7 @@ export const searchMovie = movieDetails =>
     },
     credentials: "include",
     // body: JSON.stringify(details)
-    body: JSON.stringify(movieDetails)
+    body: JSON.stringify({searchText, filterValues, page, size})
   })
     .then(res => res.json())
     .then(data => {

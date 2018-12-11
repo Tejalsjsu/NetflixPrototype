@@ -6,6 +6,7 @@ import * as API from '../api/index';
 import Login from "./login";
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import DeleteMovie from '../components/deleteMovie';
+import * as CONSTANTS from "../constants";
 
 let imgStyle = {height: '100px', padding: '10px', width: '300px'};
 let divStyle2 = {height:'45px'};
@@ -14,16 +15,31 @@ let divStyle1 = {align: 'right', backgroundColor: '#FEFDFD', padding: '12px', ma
 let formHead1 = {color:'blue', fontFamily : 'Open Sans', fontSize: '55', fontWeight: 'bold'};
 var data = [];
 
+var yearGenerate = () => {
+  var yearOptions = [];
+  for (var i = 1990; i <= 2019; i++) {
+    yearOptions.push(<option value={i}>{i}</option>);
+  }
+  return yearOptions;
+};
+
 class UpdateMovie extends Component{
   constructor(props){
     super(props);
   }
     state = {
-        moviedata: {
-            search: '',
-            page: 0,
-            size: 0
+
+        length:0,
+        search: '',
+        filters:{
+          year: 0,
+          actors: '',
+          rating: '',
+          genre: '',
+          numberOfStars: 0
         },
+        page: 0,
+        size: 0,
         validation_error: [],
         isLoggedIn: false,
         message: '',
@@ -61,9 +77,7 @@ class UpdateMovie extends Component{
 
         // movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"]
         movieList: [],
-        search: '',
-        page: 0,
-        size: 0,
+
         delMovieName: '',
         isUpdateRequested: false,
         movieID: "",
@@ -82,7 +96,19 @@ class UpdateMovie extends Component{
         rating: '',
         subscription: '',
         price: 0,
-        updateMovieID: 0
+        updateMovieID: 0,
+
+        search: '',
+        filters:{
+          year: 0,
+          actors: '',
+          rating: '',
+          genre: '',
+          numberOfStars: 0
+        },
+        page: 0,
+        size: 10
+
       });
       this.state.movieDict.push({
         key:"1",
@@ -108,10 +134,15 @@ class UpdateMovie extends Component{
   //   // console.log("Movie Dict: ", this.state.movieDict)
   // }
 
-  handleSearch(movieData){
-    console.log("Searching for movie : ", movieData);
+  handleSearch(searchText, filterValues, page, size ){
+    console.log("**************************");
+    console.log("Inside handle search API");
+    console.log("Search: ", searchText);
+    console.log("Filters: ",filterValues);
+    console.log("Page: ", page);
+    console.log("Size: ", size);
           // console.log("Searching for : ", this.state.moviedata.search);
-                    API.searchMovie(movieData)
+                    API.searchMovie(searchText, filterValues, page, size)
                         .then((res) => {
                             // console.log("response:  " , res);
                             if (res.length > 0 ) {
@@ -123,21 +154,62 @@ class UpdateMovie extends Component{
                                     movieData: res
                                 });
                                 // data = res.data.content;
-                                console.log("MovieData : ", this.state.movieData);
+                                // console.log("MovieData : ", this.state.moviedata);
                                 // this.props.history.push("/updateMovie");
                                 data = res;
                                 let i = 0;
                                 let len = 0;
                                 len = data.length;
-                                console.log("Movie names before is: ", this.state.movieList);
-                                console.log("Suceesfully found movie with details as: ", data);
+                                console.log("Movie list before is: ", this.state.movieList);
+                                console.log("Movie Data before is: ", this.state.movieData);
+                                // console.log("All data: ", data);
                                 // console.log("Content is as: ", data.content);
-                                console.log("Content length is : ",len);
-                                for(i =0; i<=data.length -1; i++){
-                                  console.log("Movie name : ",  data[i].title)
-                                  this.state.movieList.push(data[i].title);
-                                }
-                                console.log("Movie names after are: ", this.state.movieList);
+                                // console.log("Content length is : ",len);
+
+                                  if(!filterValues.year==0 || !filterValues.genre=="" || !filterValues.numberOfStars==0 || !filterValues.actors=="" || !filterValues.rating==""){
+                                    console.log("IN HEREERERERER!!!!")
+                                      for(i =0; i<=data.length -1; i++){
+                                        
+                                        if(filterValues.genre!="" && data[i].genre == filterValues.genre){
+                                          console.log("----> ", filterValues.genre)
+                                          this.state.movieList.push(data[i].title);
+                                        }
+                                        if(filterValues.year!=0 && data[i].year == filterValues.year && this.state.movieList.indexOf(data[i].title) < 0){
+                                          this.state.movieList.push(data[i].title);
+                                        }
+                                        else if(filterValues.rating!="" && data[i].rating == filterValues.rating && this.state.movieList.indexOf(data[i].title) < 0){
+                                          this.state.movieList.push(data[i].title);
+                                        }
+                                        else if(filterValues.numberOfStars!=0 && data[i].numberOfStars == filterValues.numberOfStars && this.state.movieList.indexOf(data[i].title) < 0){
+                                          this.state.movieList.push(data[i].title);
+                                        }
+                                        else if(filterValues.actors!=0 && data[i].actors == filterValues.actors && this.state.movieList.indexOf(data[i].title) < 0){
+                                          this.state.movieList.push(data[i].title);
+                                        }
+
+
+                                        // console.log("Movie name is: ",  data[i].title)
+                                        // this.state.movieList.push(data[i].title);
+                                      }
+                                    }
+
+                                    if(this.state.movieList.length>0){
+                                    for(i =0; i<=this.state.movieData.length -1; i++){
+                                      if(this.state.movieList.indexOf(this.state.movieData[i].title) > -1){
+                                        console.log("KEEP!");
+                                      }else{
+                                        console.log("DELETEEEEEE!");
+                                        delete this.state.movieData[i];
+                                      }
+                                    }
+                                  }
+                                console.log("MovieList: ", this.state.movieList);
+                                console.log("MovieData ", this.state.movieData);
+
+                                // if(filterValues.year==0 && filterValues.genre=="" && filterValues.numberOfStars==0 && filterValues.actors=="" && filterValues.rating==""){
+                                //   this.state.movieData = res;
+                                // }
+                                // console.log("Updated movieData is : ", this.state.movieData);
                                 this.props.history.push('/adminAddMovie');
                             } else if (res.status === '401') {
                                 console.log("No records");
@@ -271,6 +343,21 @@ handleDelete = (movieID) => {
 
 }
 
+handleNext = () => {
+  if (this.state.length === CONSTANTS.PAGESIZE) {
+    var currentPage = this.state.pageSize + 1;
+    this.setState({ pageSize: currentPage });
+    this.handleWatch(currentPage);
+  }
+};
+
+handlePrev = () => {
+  if (this.state.pageSize > 0) {
+    var currentPage = this.state.pageSize - 1;
+    this.setState({ pageSize: currentPage });
+    this.handleWatch(currentPage);
+  }
+};
 
     render(){
       var self = this;
@@ -338,18 +425,24 @@ const withfilter = this.state.movieData &&
 
             <p style={formHead1}>Search and update Movie details below</p>
             <hr color="#E3E1E1"/>
-            <input type="text" className="form-control" placeholder="Search movie"
+            <input type="text" className="form-control" placeholder="Search by Movie" value={this.state.search}
             onChange={(event) => {
                 this.setState({
-                    moviedata: {
-                        ...this.state.moviedata,
                         search: event.target.value,
                         page: 0,
                         size : 10
-                    }
                 });
-            }}    />
+            }}/><br/>
+            <input type="text" className="form-control" placeholder="Search by Actor"
+            onChange={(event) => {
+                this.setState({
+                      filters:{
+                          ...this.state.filters,
+                          actors: event.target.value,
+                                }
 
+                });
+            }}    /><br/>
           {/*<input type="text" className="form-control" placeholder="Node ID" value={this.state.updatenodedata.unodeID}
                                                   onChange={(event) => {
                                                       this.setState({
@@ -360,8 +453,91 @@ const withfilter = this.state.movieData &&
                                                       });
                                                   }}/>
                                                   <br/>*/}
+
+
+
+            <select
+              className="form-control"
+              onChange={(event) => {
+                  this.setState({
+                      filters: {
+                          ...this.state.filters,
+                          genre: event.target.value,
+
+                      }
+                  });
+              }}
+            >
+              <option value="">Select Genre</option>
+              <option value="comedy">Comedy</option>
+              <option value="romantic">Romantic</option>
+              <option value="action">Action</option>
+              <option value="drama">Drama</option>
+            </select>
+            <br />
+            <select
+              className="form-control"
+
+              onChange={(event) => {
+                  this.setState({
+                      filters: {
+                          ...this.state.filters,
+                          year: event.target.value,
+
+                      }
+                  });
+              }}
+            >
+            <option value="Select">Select Year</option>
+            {yearGenerate().map(item => item)}
+            </select>
+            <br />
+
+            <select
+              className="form-control"
+              onChange={(event) => {
+                  this.setState({
+                      filters: {
+                          ...this.state.filters,
+                          rating: event.target.value,
+                        }
+                  });
+              }}
+            >
+              <option value="Select">Select Rating</option>
+              <option value="R">R</option>
+              <option value="U/A">U/A</option>
+                        </select>
+                        <br/>
+
+                        <select
+                          className="form-control"
+                          onChange={(event) => {
+                              this.setState({
+                                  filters: {
+                                      ...this.state.filters,
+                                      numberOfStars: event.target.value,
+
+
+                                  }
+                              });
+                          }}
+                        >
+                          <option value="">Select Stars</option>
+                          <option value="0">0</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                                    </select><br/>
+
+
+
+
+
             <Button name="Search Movie" bsStyle="info" class="btn btn-primary "
-            onClick={() => this.handleSearch(this.state.moviedata)}>Search Movie</Button><br/>
+            onClick={() => this.handleSearch(this.state.search, this.state.filters, this.state.page, this.state.size)}>Search Movie</Button><br/>
             <hr color="#E3E1E1"/>
                 <form>
                 <p>Below are the movie results from search:</p>
@@ -377,6 +553,20 @@ const withfilter = this.state.movieData &&
 
                   </tbody>
                 </table>
+                <button
+                  type="button"
+                  class="btn"
+                  onClick={() => this.handlePrev()}
+                >
+                  &laquo; Previous
+                </button>
+                <button
+                  type="button"
+                  class="btn"
+                  onClick={() => this.handleNext()}
+                >
+                  Next &raquo;
+                </button>
 {/*
                 <input type="text" className="form-control" placeholder="Title" value={this.state.userdata.email} readonly="readonly"/> <br/>
                 <input type="text" className="form-control" placeholder="Genre" onChange={this.handleInputChange} /><br />
