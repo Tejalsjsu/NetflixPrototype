@@ -14,17 +14,21 @@ import DeleteMovie from '../components/deleteMovie';
 import AdminFinancials from '../components/adminFinancials';
 // import Signup from '../components/signup';
 
+import * as CONSTANTS from "../constants";
 import queryString from 'query-string';
 import cookie from "react-cookies";
+import YouTube from 'react-youtube';
+
 // let imgStyle = {height: '70px', padding: '10px'};
 let divStyle2 = {height:'45px'};
 let divStyle3 ={backgroundColor:'#E3E1E1'};
 let divStyle1 = {align: 'center', backgroundColor: '#FEFDFD', padding: '28px', marginTop: '1px'};
 var Carousel = require('react-bootstrap').Carousel;
+var NavLink = require('react-router-dom').NavLink;
 let imgStyle = {width: '100%', height: '400px'};
 let footerText = {color: '#5DADE2'}
 var img1 = require('../image/netflixBG.jpg');
-
+var data = [];
 
 class AdminAddMovie extends Component{
     constructor(props){
@@ -55,11 +59,17 @@ class AdminAddMovie extends Component{
             movieWithPlays : [],
             allMovies : [],
             noOfPlays : '',
+            projectData: []
         };
           this._onAddClick = this._onAddClick.bind(this);
           this._onUpdateClick = this._onUpdateClick.bind(this);
           this._onDeleteClick = this._onDeleteClick.bind(this);
     }
+
+    activateClass = (props) =>{
+        this.className= 'active'
+    }
+
     _onAddClick() {
         this.setState({
           showAddMovieComponent: true,
@@ -86,9 +96,33 @@ class AdminAddMovie extends Component{
         // searchMovie: '',
         // movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"],
         allMovies: [],
-        movieWithPlays: []
+        movieWithPlays: [],
+        projectData: []
       });
+      let movie = {
+        page: 0,
+        size: 10
+      };
 
+
+      API.fetchAllMovies(movie).then(res => {
+        console.log("status then");
+        if (res.status === 200) {
+          this.setState({
+            isLoggedIn: true,
+            //projectData: res
+            projectData: res.data.content
+          });
+          data = res.data.content;
+          console.log(this.state.projectData);
+          this.props.history.push("/adminAddMovie");
+        } else if (res.status === "401") {
+          this.setState({
+            isLoggedIn: false,
+            message: "No projects found..!!"
+          });
+        }
+      });
 
       API.getMovieList()
           .then((res) => {
@@ -130,27 +164,115 @@ class AdminAddMovie extends Component{
               }
           });
     }
-    handleSubmit = () => {
-        // API.postBid(this.state.userdata)
-        //     .then((res) => {
-        //         console.log(res.status);
-        //         if (res.status === '201') {
-        //             this.setState({
-        //                 isLoggedIn: true,
-        //                 message: "Bid Posted Successfully..!!"
-        //             });
-        //             this.props.history.push('/projectdetails');
-        //         } else if (res.status === '401') {
-        //             this.setState({
-        //                 message: "post Failed. Try again..!!",
-        //             });
-        //         }
-        //     });
 
+    handleNext = () => {
+      if (this.state.projectData.length === CONSTANTS.PAGESIZE) {
+        var currentPage = this.state.pageSize + 1;
+        this.setState({ pageSize: currentPage });
+        this.handleWatch(currentPage);
+      }
     };
 
+    handlePrev = () => {
+      if (this.state.pageSize > 0) {
+        var currentPage = this.state.pageSize - 1;
+        this.setState({ pageSize: currentPage });
+        this.handleWatch(currentPage);
+      }
+    };
+
+    
 
     render(){
+
+      var self = this;
+
+      Object.keys(this.state.projectData).map(pd => {
+        console.log(
+          "data is here after search " + this.state.projectData
+        );
+      });
+
+      const opts = {
+      height: '390',
+      width: '640',
+      playerVars: { // https://developers.google.com/youtube/player_parameters
+        autoplay: 1
+      }
+    };
+
+      const withfilter =
+        this.state.projectData &&
+        Object.keys(this.state.projectData).map(pd => {
+          return (
+            <tr
+              key={this.state.projectData[pd]._id}
+              onClick={self.handleClick}
+              className="odd ProjectTable-row project-details"
+            >
+              <td
+                key={this.state.projectData[pd].title}
+                className="ProjectTable-cell"
+              >
+                <a
+                  href={`/movieDetails?MovieId=${this.state.projectData[pd]._id}`}
+                >
+                  {this.state.projectData[pd].title}
+                </a>
+                <br />
+                Actors: {this.state.projectData[pd].actors} <br />
+                Directed By: {this.state.projectData[pd].directors} <br />
+                Genre : {this.state.projectData[pd].genre} <br />
+                {this.state.projectData[pd].synopsis}
+              </td>
+              <td
+                className="ProjectTable-cell"
+                key={this.state.projectData[pd]._id}
+              >
+                {" "}
+                {this.state.projectData[pd].year}
+              </td>
+              <td
+                className="ProjectTable-cell"
+                key={this.state.projectData[pd]._id}
+              >
+                {" "}
+                {this.state.projectData[pd].studio}
+              </td>
+              <td
+                className="ProjectTable-cell"
+                key={this.state.projectData[pd]._id}
+              >
+                {" "}
+                {this.state.projectData[pd].country}
+              </td>
+              <td
+                className="ProjectTable-cell"
+                key={this.state.projectData[pd]._id}
+              >
+                {" "}
+                {this.state.projectData[pd].rating}
+              </td>
+              <td
+                className="ProjectTable-cell"
+                key={this.state.projectData[pd]._id}
+              >
+                {" "}
+                {this.state.projectData[pd].price}
+              </td>
+              <td
+                className="ProjectTable-cell"
+                key={this.state.projectData[pd]._id}
+              >
+
+                <Button name="Play Movie" bsStyle="success" class="btn btn-primary" onClick={this.activateClass}><NavLink to="/adminPlayMovie">Play</NavLink></Button>
+              </td>
+
+            </tr>
+          );
+        });
+
+
         return(
 
             <div style={divStyle3}>
@@ -181,6 +303,43 @@ class AdminAddMovie extends Component{
                 </div>
                     <div className="container">
                     <div  className="col-sm-8">
+                    {!this.state.showAddMovieComponent && !this.state.showUpdateMovieComponent ?
+                    <div>
+                    <table className="ProjectTable">
+                      <thead className="ProjectTable-head">
+                        <tr>
+                          <th className="ProjectTable-header ProjectTable-summaryColumn">
+                            Title
+                          </th>
+                          <th className="ProjectTable-header">Year</th>
+                          <th className="ProjectTable-header">Studio</th>
+                          <th className="ProjectTable-header">Country</th>
+                          <th className="ProjectTable-header">Ratings</th>
+                          <th className="ProjectTable-header">Price</th>
+                          <th className="ProjectTable-header">Play</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/*{nameslist}*/}
+                        {withfilter}
+                      </tbody>
+                    </table>
+                    {/*Container ends here */}
+                    <button
+                      type="button"
+                      class="btn"
+                      onClick={() => this.handlePrev()}
+                    >
+                      &laquo; Previous
+                    </button>
+                    <button
+                      type="button"
+                      class="btn"
+                      onClick={() => this.handleNext()}
+                    >
+                      Next &raquo;
+                    </button>
+                    </div> : null }
 
                          {this.state.showAddMovieComponent ? <AddMovie/> : null}
                          {this.state.showUpdateMovieComponent ? <UpdateMovie/> : null}
@@ -209,7 +368,12 @@ class AdminAddMovie extends Component{
 
             </div>
         );
-    }
+}
+        _onReady(event) {
+    // access to player in all event handlers via event.target
+    event.target.pauseVideo();
+  }
+
 }
 
 export default withRouter(AdminAddMovie);

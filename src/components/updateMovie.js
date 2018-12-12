@@ -29,6 +29,7 @@ class UpdateMovie extends Component{
   }
     state = {
 
+        projectData: [],
         length:0,
         search: '',
         filters:{
@@ -106,6 +107,13 @@ class UpdateMovie extends Component{
           genre: '',
           numberOfStars: 0
         },
+        search: "",
+        Rating: "",
+        stars: "",
+        actors: "",
+        genre: "",
+        pageSize: 0,
+        year: "",
         page: 0,
         size: 10
 
@@ -125,14 +133,78 @@ class UpdateMovie extends Component{
     // console.log("Movie Dict: ", this.state.movieDict)
   }
 
-  // handleUpdateMovie(event){
-  //   console.log("Update movie: ");
-  //   this.setState({
-  //     isUpdateRequested: true
-  //   });
-  //
-  //   // console.log("Movie Dict: ", this.state.movieDict)
-  // }
+  handleWatch = currentPage => {
+    console.log("in handle watch");
+
+    let movie = { page: currentPage, size: CONSTANTS.PAGESIZE };
+    //search keywords
+    if (this.state.search !== "") {
+      movie.search = this.state.search;
+    }
+    //filter options
+    movie.filters = {};
+
+    if (this.state.Rating !== "") {
+      movie.filters.rating = this.state.Rating;
+    }
+
+    if (this.state.actors !== "") {
+      movie.filters.actors = this.state.actors;
+    }
+
+    if (this.state.stars !== "") {
+      movie.filters.numberOfStars = this.state.stars;
+    }
+
+    if (this.state.year !== "") {
+      movie.filters.year = this.state.year;
+    }
+
+    if (this.state.genre !== "") {
+      movie.filters.genre = this.state.genre;
+    }
+
+    if (Object.keys(movie.filters).length == 0) {
+      delete movie.filters;
+    }
+
+    // {
+    //   search: this.state.search,
+    //   filters: {
+    //     rating: this.state.Rating,
+    //     actors: this.state.actors,
+    //     numberOfStars: this.state.stars,
+    //     year: this.state.year,
+    //     genre: this.state.genre
+    //   },
+    //   page: 0,
+    //   size: 10
+    // };
+    if (this.state.profileName != undefined) {
+      // this.props.history.push('/dashboard');
+      //Fetch all movies
+      console.log("movie payload search ", movie);
+      API.fetchAllMovies(movie).then(res => {
+        console.log("status then");
+        if (res.status === 200) {
+          this.setState({
+            isLoggedIn: true,
+            //projectData: res
+            projectData: res.data.content
+          });
+          data = res.data.content;
+          console.log("search ", +this.state.projectData);
+          this.props.history.push("/dashboard");
+        } else if (res.status === "401") {
+          this.setState({
+            isLoggedIn: false,
+            message: "No projects found..!!"
+          });
+        }
+      });
+      // fetch all project ends here
+    }
+  };
 
   handleSearch(searchText, filterValues, page, size ){
     console.log("**************************");
@@ -169,7 +241,7 @@ class UpdateMovie extends Component{
                                   if(!filterValues.year==0 || !filterValues.genre=="" || !filterValues.numberOfStars==0 || !filterValues.actors=="" || !filterValues.rating==""){
                                     console.log("IN HEREERERERER!!!!")
                                       for(i =0; i<=data.length -1; i++){
-                                        
+
                                         if(filterValues.genre!="" && data[i].genre == filterValues.genre){
                                           console.log("----> ", filterValues.genre)
                                           this.state.movieList.push(data[i].title);
@@ -363,6 +435,43 @@ handlePrev = () => {
       var self = this;
 {/*return component for withKeys*/}
 
+Object.keys(this.state.projectData).map(pd => {
+  console.log(
+    "data is here after search " + this.state.projectData[pd].country
+  );
+});
+
+const withMorefilter =
+  this.state.projectData &&
+  Object.keys(this.state.projectData).map(pd => {
+    return (
+      <tr
+        key={this.state.projectData[pd]._id}
+        onClick={self.handleClick}
+
+      >
+        <td
+          key={this.state.projectData[pd].title}
+
+        >
+        <td><Button name="Update Movie" bsStyle="info" key={this.state.movieData[pd]._id} class="btn btn-primary "
+        onClick={() => this.handleUpdateNav(this.state.movieData[pd]._id, this.state.movieData[pd].title)}
+         >Update</Button></td>
+        <td><Button name="Delete Movie" bsStyle="info" key={this.state.movieData[pd]._id} class="btn btn-primary "
+        onClick={() => this.handleDelete(this.state.movieData[pd]._id)} data-toggle="modal" data-target="#myDeleteModal">Delete</Button></td>
+
+        </td>
+
+
+        {/*<td className='ProjectTable-cell' key={this.state.projectData[pd]._id}>*/}
+        {/*<Button bsStyle="danger" bsSize="sm" block*/}
+        {/*onClick={() => this.handleWatch(this.state.projectData[pd]._id)}> Watch </Button>*/}
+        {/*</td>*/}
+      </tr>
+    );
+  });
+
+
 Object.keys(this.state.movieData).map(pd => {
   // console.log("Title " + this.state.movieData[pd].title);
   // console.log("Genre " + this.state.movieData[pd].genre);
@@ -425,6 +534,8 @@ const withfilter = this.state.movieData &&
 
             <p style={formHead1}>Search and update Movie details below</p>
             <hr color="#E3E1E1"/>
+
+
             <input type="text" className="form-control" placeholder="Search by Movie" value={this.state.search}
             onChange={(event) => {
                 this.setState({
@@ -532,10 +643,6 @@ const withfilter = this.state.movieData &&
                           <option value="5">5</option>
                                     </select><br/>
 
-
-
-
-
             <Button name="Search Movie" bsStyle="info" class="btn btn-primary "
             onClick={() => this.handleSearch(this.state.search, this.state.filters, this.state.page, this.state.size)}>Search Movie</Button><br/>
             <hr color="#E3E1E1"/>
@@ -550,7 +657,7 @@ const withfilter = this.state.movieData &&
                     <td><b>Delete</b></td>
                   </tr>
                   {withfilter}
-
+                  {withMorefilter}
                   </tbody>
                 </table>
                 <button
