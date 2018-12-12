@@ -16,6 +16,8 @@ import BrowseProjects from './components/browseProjects'
 import Subscription from './components/subscription'
 import registrationConfirmation from './components/registrationConfirmation'
 import playMovie from './components/playMovie'
+import AdminPlayMovie from './components/adminPlayMovie'
+
 
 import CurrentWorkAsFreelancer from './components/CurrentWorkAsFreelancer';
 
@@ -64,6 +66,7 @@ class App extends Component {
                   <Route path="/userActivity" component={UserActivity}/>
                   <Route path="/movieActivity" component={MovieActivity}/>
                   <Route path="/AdminUpdateMovie" component={AdminUpdateMovie}/>
+                  <Route path="/AdminPlayMovie" component={AdminPlayMovie}/>
               </div>
           </BrowserRouter>
 
