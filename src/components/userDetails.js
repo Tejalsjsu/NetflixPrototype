@@ -66,15 +66,15 @@ class UserDetails extends Component{
       console.log("Search page: ", this.state.searchUser.page);
       console.log("Search size: ", this.state.searchUser.size);
 
-      API.getUsers(this.state.searchUser)
+      API.getUsers(this.state.searchUser, this.state.page, this.state.size)
             .then((res) => {
-                 console.log("response:  " , res);
-                if (res.length > 0) {
+                 console.log("response from API:  " , res)
+                if (res.length >0 || res.status==200) {
                     console.log(' Success')
                     this.setState ({
                         userlist: res
                     })
-                    console.log('user list ', this.state.userlist)
+                    console.log('------->user list ', this.state.userlist)
                     data = res;
                     let i = 0;
                     let len = 0;

@@ -637,8 +637,8 @@ export const getFinancialsByMonthly = (year, month) =>
       return error;
     });
 
-export const getUsers = searchUser =>
-  fetch(`${api}/admin/search`, {
+export const getUsers = (search, page, size) =>
+  fetch(`${api}/userprofile/admin/search`, {
     method: "POST",
     headers: {
       ...headers,
@@ -646,7 +646,7 @@ export const getUsers = searchUser =>
       Authorization: localStorage.JWTToken
     },
     credentials: "include",
-    body: JSON.stringify(searchUser)
+    body: JSON.stringify(search, page, size)
   })
     .then(res => res.json())
     .then(data => {
