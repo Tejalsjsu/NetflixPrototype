@@ -4,8 +4,8 @@ import "../App.css";
 import { Button } from "react-bootstrap";
 import logo from "../image/netflix-logo.jpg";
 import * as API from "../api/index";
-import Dashboard from "./dashboard";
-import AdminAddMovie from "./adminAddMovie";
+import Dashboard from "./movie/dashboard/dashboard";
+import AdminAddMovie from "./admin/adminAddMovie";
 import Signup from "./signup";
 import cookie from "react-cookies";
 import axios from "axios";
@@ -65,10 +65,11 @@ class Login extends Component {
             message: "Welcome to my App..!!",
             token: res.data.JWTToken,
             profileName: res.data.profileName,
-            role: res.role
+            role: res.data.role
           });
           localStorage.setItem("JWTToken", this.state.token);
           localStorage.setItem("profileName", this.state.profileName);
+          localStorage.setItem("role", this.state.role);
           //cookie.save('JWTToken', this.state.token, { path: '/' });
           if (res.data.role == "ADMIN")
             this.props.history.push("/adminAddMovie");

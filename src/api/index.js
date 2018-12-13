@@ -638,7 +638,7 @@ export const getFinancialsByMonthly = (year, month) =>
     });
 
 export const getUsers = (search, page, size) =>
-  fetch(`${api}/userprofile/admin/search`, {
+  fetch(`${api}/admin/search`, {
     method: "POST",
     headers: {
       ...headers,
@@ -714,7 +714,7 @@ export const searchMovie = (searchText, filterValues, page, size) =>
     },
     credentials: "include",
     // body: JSON.stringify(details)
-    body: JSON.stringify({searchText, filterValues, page, size})
+    body: JSON.stringify({ searchText, filterValues, page, size })
   })
     .then(res => res.json())
     .then(data => {
@@ -749,22 +749,24 @@ export const deleteMovie = movieID =>
     });
 
 export const updateMovie = (movieID, movieDetails) =>
-            fetch(`${api}/admin/movie/${movieID}`, {
-                method: 'PUT',
-                headers: {
-                    ...headers,
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.JWTToken
-                },
-                credentials: 'include',
-                body: JSON.stringify(movieDetails)
-            }).then((res) => res.json())
-                .then((data) => {return data;})
-                .catch(error => {
-                    console.log("This is error");
-                    return error;
-                });
-
+  fetch(`${api}/admin/movie/${movieID}`, {
+    method: "PUT",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json",
+      Authorization: localStorage.JWTToken
+    },
+    credentials: "include",
+    body: JSON.stringify(movieDetails)
+  })
+    .then(res => res.json())
+    .then(data => {
+      return data;
+    })
+    .catch(error => {
+      console.log("This is error");
+      return error;
+    });
 
 // export const fetchSensorData = () =>
 //                                     fetch(`${api}/sensorsimulation`, {

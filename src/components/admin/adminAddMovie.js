@@ -1,20 +1,17 @@
 import React, { Component } from "react";
 import { Link, withRouter, Route } from "react-router-dom";
-import "../App.css";
+import "../../App.css";
 import { Button } from "react-bootstrap";
-import logo from "../image/fl-logo.png";
-import * as API from "../api/index";
-import Dashboard from "./dashboard";
-import Signup from "./signup";
+import logo from "../../image/fl-logo.png";
+import * as API from "../../api/index";
+import Signup from "../signup";
 // import NavBar from '../components/navbar';
-import AdminNavBar from "../components/adminNavBar";
-import AddMovie from "../components/addMovie";
-import UpdateMovie from "../components/updateMovie";
-import DeleteMovie from "../components/deleteMovie";
-import AdminFinancials from "../components/adminFinancials";
+import AddMovie from "./addMovie";
+import UpdateMovie from "../updateMovie";
+import DeleteMovie from "../deleteMovie";
 // import Signup from '../components/signup';
 
-import * as CONSTANTS from "../constants";
+import * as CONSTANTS from "../../constants";
 import queryString from "query-string";
 import cookie from "react-cookies";
 import YouTube from "react-youtube";
@@ -32,7 +29,7 @@ var Carousel = require("react-bootstrap").Carousel;
 var NavLink = require("react-router-dom").NavLink;
 let imgStyle = { width: "100%", height: "400px" };
 let footerText = { color: "#5DADE2" };
-var img1 = require("../image/netflixBG.jpg");
+var img1 = require("../../image/netflixBG.jpg");
 var data = [];
 
 class AdminAddMovie extends Component {
@@ -278,7 +275,6 @@ class AdminAddMovie extends Component {
 
     return (
       <div style={divStyle3}>
-        <AdminNavBar />
         <div className=".container-fluid">
           <div id="myCarousel" className="carousel slide" data-ride="carousel">
             <div className="carousel-inner" role="listbox">

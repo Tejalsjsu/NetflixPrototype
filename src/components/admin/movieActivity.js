@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Link, withRouter, Route } from "react-router-dom";
-import "../App.css";
+import "../../App.css";
 import { Button } from "react-bootstrap";
 
-import UserDetails from "../components/userDetails";
+import AdminMovieDetails from "../adminmovieDetails";
 // import Signup from '../components/signup';
 
 import queryString from "query-string";
@@ -20,10 +20,10 @@ let divStyle1 = {
 var Carousel = require("react-bootstrap").Carousel;
 let imgStyle = { width: "100%", height: "400px" };
 let footerText = { color: "#5DADE2" };
-var img1 = require("../image/netflixBG.jpg");
+var img1 = require("../../image/netflixBG.jpg");
 var data = [];
 
-class UserActivity extends Component {
+class MovieActivity extends Component {
   constructor(props) {
     super(props);
     // console.log({props.param.projectName});
@@ -31,25 +31,21 @@ class UserActivity extends Component {
     var temp = pid && pid.projectid;
 
     this.state = {
-      serchUser: {
-        search: "",
-        page: 0,
-        size: 10
-      },
       isLoggedIn: false,
       message: ""
-      // currentCustomers: [],
+      // allMovies : [],
+      // noOfPlays : '',
+      // movieWithPlays : []
     };
   }
-  componentWillMount() {
-    console.log("In ComponentWillMount()");
-    this.setState({
-      search: "",
-      page: 0,
-      size: 10
-      // currentCustomers: []
-    });
-  }
+
+  // componentWillMount(){
+  // }
+
+  // handleClick=(movieID) =>
+  // {
+  //   console.log(movieID);
+  // }
   render() {
     return (
       <div style={divStyle3}>
@@ -66,7 +62,7 @@ class UserActivity extends Component {
                       onClick={this._onAddClick}
                     >
                       {" "}
-                      User Activity Monitoring
+                      Movie Activity and Monitoring
                     </Button>{" "}
                     &nbsp;&nbsp;&nbsp;
                     <h3>MovieCentral </h3>
@@ -86,10 +82,10 @@ class UserActivity extends Component {
 
           <div className="container">
             <div className="col-sm-8">
-              <UserDetails />
+              <AdminMovieDetails />
+              <br />
             </div>
           </div>
-
           <div>
             <br />
             <footer className="footer">
@@ -106,4 +102,4 @@ class UserActivity extends Component {
   }
 }
 
-export default withRouter(UserActivity);
+export default withRouter(MovieActivity);

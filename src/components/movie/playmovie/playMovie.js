@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Link, withRouter, Route } from "react-router-dom";
-import "../App.css";
+import "../../../App.css";
 import { Button } from "react-bootstrap";
-import logo from "../image/netflix-logo.jpg";
-import * as API from "../api/index";
-import AdminAddMovie from "./admin/adminAddMovie";
+import logo from "../../../image/netflix-logo.jpg";
+import * as API from "../../../api/index";
+import Dashboard from "../dashboard/dashboard";
 import YouTube from "react-youtube";
 
 let imgStyle = { height: "100px", padding: "10px", width: "300px" };
@@ -17,7 +17,7 @@ let divStyle1 = {
   marginTop: "1px"
 };
 
-class adminPlayMovie extends Component {
+class playMovie extends Component {
   constructor(props) {
     super(props);
   }
@@ -75,7 +75,7 @@ class adminPlayMovie extends Component {
       <div style={divStyle3}>
         <Route
           exact
-          path="/adminPlayMovie"
+          path="/playMovie"
           render={() => (
             <div>
               <div className="col-sm-2" style={divStyle2}>
@@ -104,10 +104,10 @@ class adminPlayMovie extends Component {
                 />{" "}
                 <br />
                 <br />
-                <a href="/adminAddMovie">
+                <a href="/dashboard">
                   <Button bsStyle="danger" bsSize="sm">
                     {" "}
-                    Go Back To Admin Page{" "}
+                    Go Back To App{" "}
                   </Button>
                 </a>
                 <br />
@@ -118,10 +118,10 @@ class adminPlayMovie extends Component {
 
         <Route
           exact
-          path="/adminAddMovie"
+          path="/dashboard"
           render={() => (
             <div>
-              <AdminAddMovie />
+              <Dashboard />
             </div>
           )}
         />
@@ -130,4 +130,4 @@ class adminPlayMovie extends Component {
   }
 }
 
-export default withRouter(adminPlayMovie);
+export default withRouter(playMovie);

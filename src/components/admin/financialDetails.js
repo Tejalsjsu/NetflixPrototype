@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
 import { Link, Route, withRouter } from "react-router-dom";
-import logo from "../image/netflix-logo.jpg";
-import * as API from "../api/index";
-import Login from "./login";
+import logo from "../../image/netflix-logo.jpg";
+import * as API from "../../api/index";
+import Login from "../login";
 import {
   Dropdown,
   DropdownToggle,

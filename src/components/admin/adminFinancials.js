@@ -1,17 +1,9 @@
 import React, { Component } from "react";
 import { Link, withRouter, Route } from "react-router-dom";
-import "../App.css";
+import "../../App.css";
 import { Button } from "react-bootstrap";
-import logo from "../image/fl-logo.png";
-import * as API from "../api/index";
-import Dashboard from "./dashboard";
-import Signup from "./signup";
-// import NavBar from '../components/navbar';
-import AdminNavBar from "../components/adminNavBar";
-import AddMovie from "../components/addMovie";
-import UpdateMovie from "../components/updateMovie";
-import DeleteMovie from "../components/deleteMovie";
-import FinancialDetails from "../components/financialDetails";
+
+import FinancialDetails from "./financialDetails";
 // import Signup from '../components/signup';
 
 import queryString from "query-string";
@@ -28,7 +20,7 @@ let divStyle1 = {
 var Carousel = require("react-bootstrap").Carousel;
 let imgStyle = { width: "100%", height: "400px" };
 let footerText = { color: "#5DADE2" };
-var img1 = require("../image/netflixBG.jpg");
+var img1 = require("../../image/netflixBG.jpg");
 
 class AdminAddMovie extends Component {
   constructor(props) {
@@ -129,7 +121,6 @@ class AdminAddMovie extends Component {
   render() {
     return (
       <div style={divStyle3}>
-        <AdminNavBar />
         <div className=".container-fluid">
           <div id="myCarousel" className="carousel slide" data-ride="carousel">
             <div className="carousel-inner" role="listbox">

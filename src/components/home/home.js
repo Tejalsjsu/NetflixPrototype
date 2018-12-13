@@ -1,6 +1,6 @@
 var { Button } = require("react-bootstrap");
-var img1 = require("../image/homeBG.png");
-var img2 = require("../image/banner2.png");
+var img1 = require("../../image/homeBG.png");
+var img2 = require("../../image/banner2.png");
 var React = require("react");
 var Carousel = require("react-bootstrap").Carousel;
 let imgStyle = { width: "100%", height: "770px" };
