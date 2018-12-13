@@ -638,7 +638,7 @@ export const getFinancialsByMonthly = (year, month) =>
     });
 
 export const getUsers = (search, page, size) =>
-  fetch(`${api}/userprofile/admin/search`, {
+  fetch(`${api}/admin/search`, {
     method: "POST",
     headers: {
       ...headers,

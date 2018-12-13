@@ -21,10 +21,10 @@ class UserDetails extends Component{
   }
     state = {
         userdata: {
-            profileName: '',
-            subscriptionType: '',
-            renewalDate: '',
-            viewed_movie_list: []
+          profileName: '',
+          subscribed: '',
+          nextRenewalDate: ''
+            // viewed_movie_list: []
         },
         userlist:'',
         searchUser:{
@@ -54,6 +54,7 @@ class UserDetails extends Component{
                 subscriptionType: 'Free',
                 renewalDate: '12/20',
                 viewed_movie_list: ["Movie 12", "Movie 23", "Movie 34","Movie 45"],
+                userdata : '',
               // top_ten_users : ["User top1 B", "User top9", "User D", "User A", "User B", "User C", "User D"],
               // currentCustomers: ["Cust1 ", "CUst2, ", "Cust1 ", "CUst2, "],
               search: '',
@@ -62,25 +63,26 @@ class UserDetails extends Component{
               // currentCustomers: [],
               // top_ten_users: []
         });
-      console.log("Search this: ", this.state.searchUser);
-      console.log("Search page: ", this.state.searchUser.page);
-      console.log("Search size: ", this.state.searchUser.size);
+      // console.log("Search this: ", this.state.searchUser);
+      // console.log("Search page: ", this.state.searchUser.page);
+      // console.log("Search size: ", this.state.searchUser.size);
 
       API.getUsers(this.state.searchUser, this.state.page, this.state.size)
             .then((res) => {
-                 console.log("response from API:  " , res)
-                if (res.length >0 || res.status==200) {
+                 console.log("response from API on FE:  " , res)
+                if (res.length>0 || res.status==200) {
                     console.log(' Success')
                     this.setState ({
                         userlist: res
                     })
-                    console.log('------->user list ', this.state.userlist)
+                    // console.log('------->user list ', this.state.userlist)
                     data = res;
+                    // this.state.userdata = res;
                     let i = 0;
                     let len = 0;
                     len = res.length;
-                    //console.log("Succesfully found user list as: ", res);
-                    //console.log("User data array length is : ",len);
+                    console.log("Succesfully found user list in userdata as : ", this.state.userdata);
+                    // console.log("User data array length is : ",len);
                     for(i =0; i<= data.length -1; i++){
                       if(data[i].role === "USER"){
                         let tempUser = "";
@@ -92,7 +94,7 @@ class UserDetails extends Component{
                     this.setState({
                         profileName: JSON.stringify(this.state.currentCustomers)
                 })
-                    console.log("CURRENT customer list here: ",  this.state.userdata.profileName)
+                    // console.log("CURRENT customer list here: ",  this.state.userdata.profileName)
                 } else if (res.status === '401') {
                     console.log("No records");
                     this.setState({
@@ -110,6 +112,49 @@ class UserDetails extends Component{
 
 }
 
+handleUserSelect = (userID) => {
+console.log("Handling particular user fetch: ", userID);
+  this.setState({
+    isUpdateRequested: true,
+    userdata:{
+    profileName: '',
+    subscribed: '',
+    nextRenewalDate: ''
+  }
+  });
+  console.log("User id selected is: ", userID);
+  // console.log("User to be updated --->: ", this.state.userdata.title);
+
+
+  Object.keys(this.state.userlist).map(pd => {
+    if(this.state.userlist[pd]._id == userID){
+      console.log("UserID --> " + this.state.userlist[pd]._id);
+      // console.log("Profile Name " + this.state.userlist[pd].profileName);
+      // console.log("Subscription " + this.state.userlist[pd].subscribed);
+      // console.log("Renewal Date " + this.state.userlist[pd].nextRenewalDate);
+      this.state.profileName = this.state.userlist[pd].profileName;
+      this.state.subscribed = this.state.userlist[pd].subscribed;
+      this.state.nextRenewalDate = this.state.userlist[pd].nextRenewalDate;
+
+      // this.setState({
+      //   userdata:{
+      //   profileName: this.state.userlist[pd].profileName,
+      //   subscribed: this.state.userlist[pd].subscribed,
+      //   nextRenewalDate: this.state.userlist[pd].nextRenewalDate,
+      // }
+      // });
+      console.log("User data fetched is here : ", this.state.userdata);
+      // console.log("State profile name ", this.state.profileName);
+      // console.log("State subscribed: ", this.state.subscribed);
+      // console.log("State renewal: ", this.state.nextRenewalDate);
+  } else{
+    console.log("Not matched");
+  }
+
+  });
+
+  }
+
 handleUserSubmit = () => {
         console.log("Inside handleUserSubmit");
         console.log("CURRENT customer list -> ",  this.state.currentCustomers);
@@ -122,7 +167,7 @@ handleUserSubmit = () => {
 
 
     render(){
-      console.log("Inside render !!!")
+      // console.log("Inside render !!!")
         var self = this;
         const userFromList =
             this.state.userlist &&
@@ -132,17 +177,33 @@ handleUserSubmit = () => {
                 return (
                     <tr
                         key={this.state.userlist[pd]._id}
-                        onClick={self.handleClick}
+                        onClick={() => this.handleUserSelect(this.state.userlist[pd]._id)}
                         className=""
                     >
-                        <td className="" key={this.state.userlist[pd]._id}>
+                        <a href="#" data-toggle="modal" data-target="#myUserModal" key={this.state.userlist[pd]._id}><td className="" key={this.state.userlist[pd]._id}>
                             {" "}
                             {this.state.userlist[pd].profileName}
-                        </td>
+                        </td></a>
+
                     </tr>
                 );
             });
 
+
+
+            const withUserData =
+              this.state.userlist &&
+              Object.keys(this.state.userlist).map(pd => {
+                return (
+                  <tr
+                    key={this.state.userlist[pd]._id}
+                    onClick={self.handleClick}>
+                    <td
+                      key={this.state.userlist[pd].profileName} >
+                    </td>
+                  </tr>
+                );
+              });
 
         const CurrentUsers = this.state.currentCustomers.map((function(item){
                       return(
@@ -205,7 +266,7 @@ handleUserSubmit = () => {
                   </tr>*/}
 
                 </table><br/>
-
+<p></p>
                 <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
                   <option value="day">Last 24 hours</option>
                   <option value="week">Last week</option>
@@ -214,20 +275,20 @@ handleUserSubmit = () => {
                 <Button name="Top10" bsStyle="info" class="btn btn-primary " data-toggle="modal" data-target="#myTop10Modal" onClick={() => this.handleUserSubmit()}>Click here to view top 10 users list</Button><br/>
 
               {/*Modal for customer list*/}
-                <div class="modal fade" id="myModal" data-toggle="myModal">
+                <div class="modal fade" id="myUserModal" data-toggle="myUserModal">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">User details and movie history of user ABC</h4>
+                        <h4 class="modal-title">User details of {this.state.profileName}</h4>
                       </div>
                       <div class="modal-body">
-                      <label> User name:</label><input className="form-control" name="type" readonly="readonly" placeholder="ABC"/><br/>
-                      <label> Subscription:</label><input className="form-control" name="type" readonly="readonly" placeholder="Free"/><br/>
-                      <label> Renewal Date:</label><input className="form-control" name="type" readonly="readonly" placeholder="11/30/18"/><br/>
+                      <label> User name:</label><input className="form-control" name="type" readonly="readonly" placeholder="-" value={this.state.profileName}/><br/>
+                      <label> Subscription:</label><input className="form-control" name="type" readonly="readonly" placeholder="Not subscribed" value={this.state.subscribed}/><br/>
+                      <label> Renewal Date:</label><input className="form-control" name="type" readonly="readonly" placeholder="-" value={this.state.nextRenewalDate}/><br/>
                       <table>
                       <tbody>
-                      {movieHistory}
+                      {/*Movie history here*/}
                         </tbody>
                       </table>
                       </div>
