@@ -231,7 +231,7 @@ class movieDetails extends Component {
 
     return (
       <div style={divStyle3}>
-        <NavBar />
+        {!this.props.isAdmin ? <NavBar /> : ""}
         <Route
           exact
           path="/movieDetails"

@@ -312,19 +312,9 @@ class Dashboard extends Component {
           path="/dashboard"
           render={() => (
             <div>
-              <NavBar />
+              {!this.props.isAdmin ? <NavBar /> : ""}
               <div>
                 <div className="container">
-                  {/*start from here*/}
-                  {/*<div className="container-fluid">*/}
-                  {/*<div className="align-right">*/}
-                  {/*<ul className="pager">*/}
-                  {/*<li><a href="#" className="active">Employer</a></li>*/}
-                  {/*<li><a href="#">Freelancer</a></li>*/}
-                  {/*</ul>*/}
-                  {/*</div>*/}
-                  {/*</div>*/}
-
                   <div className="text-left">
                     <h1> Browse Movies, {this.state.profileName} </h1> <br />{" "}
                     <br />
@@ -358,9 +348,10 @@ class Dashboard extends Component {
                               <Button
                                 bsStyle="success"
                                 bsSize="sm"
-                                onClick={() =>
-                                  this.handleWatch(this.state.pageSize)
-                                }
+                                onClick={() => {
+                                  this.setState({ pageSize: 0 });
+                                  this.handleWatch(0);
+                                }}
                               >
                                 {" "}
                                 Search{" "}
@@ -545,11 +536,6 @@ class Dashboard extends Component {
                       Next &raquo;
                     </button>
                   </div>
-
-                  {/*add code here*/}
-                  {/*Welcome to my App..!! This is dashboard <br/>*/}
-                  {/*UserName:  {this.props.username ? this.props.username: '' }  <br/>*/}
-                  {/*Email : {this.props.email}*/}
                 </div>
               </div>
             </div>
