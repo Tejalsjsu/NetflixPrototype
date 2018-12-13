@@ -5,6 +5,7 @@ import  logo from '../image/netflix-logo.jpg';
 import * as API from '../api/index';
 import Login from "./login";
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import * as CONSTANTS from "../constants";
 
 let imgStyle = {height: '100px', padding: '10px', width: '300px'};
 let divStyle2 = {height:'45px'};
@@ -30,6 +31,7 @@ class MovieDetails extends Component{
         duration: '',
         allMovies: [],
         movieWithPlays: [],
+        pageSize : 0
 
     };
 
@@ -50,8 +52,8 @@ class MovieDetails extends Component{
 
     API.getMovieList()
         .then((res) => {
-            console.log("response in getMovie List : ", res);
-            console.log("response length : ", res.length);
+            // console.log("response in getMovie List : ", res);
+            // console.log("response length : ", res.length);
             // console.log("Title & Plays-->", res);
             // console.log("response is here-->", res);
             if (res.length > 0) {
@@ -66,23 +68,30 @@ class MovieDetails extends Component{
 
                 // console.log("Movie names before is: ", this.state.movieList);
                 // console.log("Succesfully found user list as: ", data);
-                // console.log("Content is as: ", data.content);
-                console.log("Content length is : ",len);
+                // console.log("Movies: ", this.allMovies);
+                // console.log("Content length is : ",len);
                 for(i =0; i<= res.length -1; i++){
-                  console.log("Titles ",  res[i].title)
-                  console.log("Plays ",  res[i].numberOfPlays)
+                  // console.log("Title ",  res[i].title)
+                  // console.log("Plays ",  res[i].numberOfPlays)
                   let tempMovie = "";
                   tempMovie = res[i].title+" - "+ res[i].numberOfPlays;
-                  this.state.top_ten_movies.push(res[i].title);
+                  // this.state.top_ten_movies.push(res[i].title);
                   this.state.movieWithPlays.push(tempMovie);
-                  console.log("All Movies : ", tempMovie);
-                  console.log("Movie with plays array : ", this.state.movieWithPlays);
-                  console.log("Top 10 Movies : ", this.state.top_ten_movies);
+                  // console.log("All Movies : ", tempMovie);
+                  // console.log("Movie with plays array : ", this.state.movieWithPlays);
+                  // console.log("Top 10 Movies : ", this.state.top_ten_movies);
                   // this.state.movieList.push(data.content[i].title);
                 }
+                for(i =0; i <= 9; i++){
+                  let tempTopNumber = 0;
+                  tempTopNumber = (i+1)+". "+ res[i].title;
+                  this.state.top_ten_movies.push(tempTopNumber);
+
+                }
                 this.setState({allMovies : this.state.movieWithPlays});
-                console.log("All Movies-> : ", this.state.allMovies);
-                console.log("Top 10 : ", this.state.top_ten_movies);
+                // console.log("All Movies-> : ", this.state.allMovies);
+                // console.log("Top 10 : ", this.state.top_ten_movies);
+
             } else if (res.status === '401') {
                 this.setState({
                     isLoggedIn: false,
@@ -94,13 +103,29 @@ class MovieDetails extends Component{
 
   }
 
+  handleNext = () => {
+    if (this.state.allMovies.length === CONSTANTS.PAGESIZE) {
+      var currentPage = this.state.pageSize + 1;
+      this.setState({ pageSize: currentPage });
+      // this.handleWatch(currentPage);
+    }
+  };
+
+  handlePrev = () => {
+    if (this.state.pageSize > 0) {
+      var currentPage = this.state.pageSize - 1;
+      this.setState({ pageSize: currentPage });
+      // this.handleWatch(currentPage);
+    }
+  };
+
     render(){
 
 
     const movieAndPlays = this.state.movieWithPlays.map((function(item){
                                                           return(
                                                               <tr>
-                                                                  <td><h4>{item}</h4></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                  <td><b><h4>{item}</h4></b></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                               </tr>
                                                           )
                                                       }))
@@ -118,15 +143,28 @@ class MovieDetails extends Component{
             <div style={divStyle1} className="col-sm-3">
             {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
 
-            <p style={formHead1}><h3>Movie details in MovieCentral</h3></p>
+            <p style={formHead1}><h3>Movie Name and Number of Plays</h3></p>
             <hr color="#E3E1E1"/>
                 <form style={formStyle1}>
                 <table align="center">
-                  <tr>
-                    <td><h4><b>Movie Name - Number of plays</b></h4></td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  </tr>
+                  <tbody>
                   {movieAndPlays}
+                  </tbody>
                 </table><br/>
+                <button
+                  type="button"
+                  class="btn"
+                  onClick={() => this.handlePrev()}
+                >
+                  &laquo;
+                </button>
+                <button
+                  type="button"
+                  class="btn"
+                  onClick={() => this.handleNext()}
+                >
+                  &raquo;
+                </button>
                 <hr/>
                   <h4><b>Select duration for Top 10 list:</b></h4>
                 <select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
