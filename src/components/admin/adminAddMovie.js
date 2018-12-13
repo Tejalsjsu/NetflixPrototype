@@ -1,17 +1,20 @@
 import React, { Component } from "react";
 import { Link, withRouter, Route } from "react-router-dom";
-import "../../App.css";
+import "../App.css";
 import { Button } from "react-bootstrap";
-import logo from "../../image/fl-logo.png";
-import * as API from "../../api/index";
-import Signup from "../signup";
+import logo from "../image/fl-logo.png";
+import * as API from "../api/index";
+import Dashboard from "./dashboard";
+import Signup from "./signup";
 // import NavBar from '../components/navbar';
-import AddMovie from "./addMovie";
-import UpdateMovie from "../updateMovie";
-import DeleteMovie from "../deleteMovie";
+import AdminNavBar from "../components/adminNavBar";
+import AddMovie from "../components/addMovie";
+import UpdateMovie from "../components/updateMovie";
+import DeleteMovie from "../components/deleteMovie";
+import AdminFinancials from "../components/adminFinancials";
 // import Signup from '../components/signup';
 
-import * as CONSTANTS from "../../constants";
+import * as CONSTANTS from "../constants";
 import queryString from "query-string";
 import cookie from "react-cookies";
 import YouTube from "react-youtube";
@@ -29,7 +32,7 @@ var Carousel = require("react-bootstrap").Carousel;
 var NavLink = require("react-router-dom").NavLink;
 let imgStyle = { width: "100%", height: "400px" };
 let footerText = { color: "#5DADE2" };
-var img1 = require("../../image/netflixBG.jpg");
+var img1 = require("../image/netflixBG.jpg");
 var data = [];
 
 class AdminAddMovie extends Component {
@@ -61,7 +64,8 @@ class AdminAddMovie extends Component {
       movieWithPlays: [],
       allMovies: [],
       noOfPlays: "",
-      projectData: []
+      projectData: [],
+      pageSize: 0
     };
     this._onAddClick = this._onAddClick.bind(this);
     this._onUpdateClick = this._onUpdateClick.bind(this);
@@ -99,11 +103,12 @@ class AdminAddMovie extends Component {
       // movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"],
       allMovies: [],
       movieWithPlays: [],
-      projectData: []
+      projectData: [],
+      pageSize: 0
     });
     let movie = {
       page: 0,
-      size: 10
+      size: 20
     };
 
     API.fetchAllMovies(movie).then(res => {
@@ -166,20 +171,21 @@ class AdminAddMovie extends Component {
   }
 
   handleNext = () => {
-    if (this.state.projectData.length === CONSTANTS.PAGESIZE) {
-      var currentPage = this.state.pageSize + 1;
-      this.setState({ pageSize: currentPage });
-      this.handleWatch(currentPage);
+    if (this.state.allMovies.length === CONSTANTS.PAGESIZE) {
+      var currentPage = this.state.size + 1;
+      this.setState({ size: currentPage });
+      // this.handleWatch(currentPage);
     }
   };
 
   handlePrev = () => {
-    if (this.state.pageSize > 0) {
-      var currentPage = this.state.pageSize - 1;
-      this.setState({ pageSize: currentPage });
-      this.handleWatch(currentPage);
+    if (this.state.size > 0) {
+      var currentPage = this.state.size - 1;
+      this.setState({ size: currentPage });
+      // this.handleWatch(currentPage);
     }
   };
+
 
   render() {
     var self = this;
@@ -210,11 +216,9 @@ class AdminAddMovie extends Component {
               key={this.state.projectData[pd].title}
               className="ProjectTable-cell"
             >
-              <a
-                href={`/movieDetails?MovieId=${this.state.projectData[pd]._id}`}
-              >
-                {this.state.projectData[pd].title}
-              </a>
+            <b>
+                {this.state.projectData[pd].title}</b>
+
               <br />
               Actors: {this.state.projectData[pd].actors} <br />
               Directed By: {this.state.projectData[pd].directors} <br />
@@ -275,6 +279,7 @@ class AdminAddMovie extends Component {
 
     return (
       <div style={divStyle3}>
+        <AdminNavBar />
         <div className=".container-fluid">
           <div id="myCarousel" className="carousel slide" data-ride="carousel">
             <div className="carousel-inner" role="listbox">
@@ -345,14 +350,14 @@ class AdminAddMovie extends Component {
                     class="btn"
                     onClick={() => this.handlePrev()}
                   >
-                    &laquo; Previous
+                    &laquo;
                   </button>
                   <button
                     type="button"
                     class="btn"
                     onClick={() => this.handleNext()}
                   >
-                    Next &raquo;
+                    &raquo;
                   </button>
                 </div>
               ) : null}
