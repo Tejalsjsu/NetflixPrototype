@@ -36,10 +36,10 @@ class FinancialDetails extends Component {
   }
   state = {
     financedata: {
-      totalFreeUsers: "",
-      totalSubscriptionUsers: "",
-      totalPayPerUsers: "",
-      totalPaidUsers: "",
+      totalSubscriptionUsers: 0,
+      totalPayPerViewUsers: 0,
+      totalFreeUsers: 0,
+      totalPaidUsers: 0,
       totalIncomeFreeUsers: 0,
       totalIncomeSubscriptionUsers: 0,
       totalIncomePayPerUsers: 0,
@@ -48,22 +48,25 @@ class FinancialDetails extends Component {
     validation_error: [],
     isLoggedIn: false,
     message: "",
+    usermessage: "",
     totalIncome: 0,
+    totalUsers: 0,
     month: "",
     year: ""
   };
 
   componentWillMount() {
     this.setState({
-      totalFreeUsers: "0",
-      totalSubscriptionUsers: "0",
-      totalPayPerUsers: "0",
-      totalPaidUsers: "0",
+      totalSubscriptionUsers: 0,
+      totalPayPerViewUsers: 0,
+      totalFreeUsers: 0,
+      totalPaidUsers: 0,
       totalIncomeFreeUsers: 0,
       totalIncomeSubscriptionUsers: 0,
       totalIncomePayPerUsers: 0,
       totalIncomePaidUsers: 0,
-      totalIncome: 0
+      totalIncome: 0,
+      totalUsers: 0
     });
 
     API.getFinancials().then(res => {
@@ -130,26 +133,60 @@ class FinancialDetails extends Component {
         });
       }
     });
-  }
 
-  // handleChange = event => {
-  //   console.log(event.target.name);
-  //   if (event.target.name === "month") {
-  //     console.log("hit here");
-  //     this.setState({ totalFreeUsers: "10" });
-  //   }
-  //   if (event.target.name === "year") {
-  //     this.setState({ year: event.target.value });
-  //   }
-  //   console.log(this.state);
-  // };
+    API.getUserStats().then(res => {
+      if (res.length > 0) {
+        this.setState({
+          isLoggedIn: true
+        });
+        let i = 0;
+        console.log("Total number of users yearly/until now: ", res);
+        for (i = 0; i <= res.length - 1; i++) {
+          if (res[i].typeOfUser === "Subcribed") {
+            this.setState({ totalSubscriptionUsers: res[i].numberOfUsers });
+            console.log("Subscription users: ", res[i].numberOfUsers);
+          } else if (res[i].typeOfUser === "PayPerView") {
+            this.setState({ totalPayPerViewUsers: res[i].numberOfUsers });
+            console.log("Ppv users: ", res[i].numberOfUsers);
+          }else if (res[i].typeOfUser === "Active") {
+            this.setState({ totalFreeUsers: res[i].numberOfUsers });
+            console.log("Free income: ", res[i].numberOfUsers);
+        }else if (res[i].typeOfUser === "Uniqued") {
+          this.setState({ totalPaidUsers: res[i].numberOfUsers });
+          console.log("Paid users: ", res[i].numberOfUsers);
+      }
+      this.setState({
+        totalUsers:
+          this.state.totalPayPerViewUsers +
+          this.state.totalSubscriptionUsers +
+          this.state.totalPaidUsers +
+          this.state.totalFreeUsers
+      });
+    }
+      } else {
+        if (res.status === "401") {
+          this.setState({
+            isLoggedIn: false,
+            usermessage: "Not able to fetch yearly user details!!"
+          });
+          this.props.history.push("/login");
+        }
+        this.setState({
+          isLoggedIn: true,
+          usermessage: "There is no user record for this year!",
+          totalSubscriptionUsers: 0,
+          totalPayPerViewUsers: 0,
+          totalFreeUsers: 0,
+          totalPaidUsers: 0,
+          totalUsers: 0
+        });
+      }
+    });
+
+  }
 
   handleMonthly = () => {
     API.getFinancialsByMonthly(this.state.year, this.state.month).then(res => {
-      // console.log("response is here : ", res);
-      // console.log("response length : ", res.length);
-      // console.log("Title & Plays-->", res);
-      // console.log("response is here-->", res);
       if (res.length > 0) {
         // console.log("In success" +res.details[0].budgetRange);
         this.setState({
@@ -158,13 +195,7 @@ class FinancialDetails extends Component {
           message: ""
         });
         let i = 0;
-        // let len = 0;
-        // len = res.length;
-
         console.log("Financials recieved Monthly: ", res);
-        // console.log("Succesfully found user list as: ", data);
-        // console.log("Content is as: ", res.content);
-        // console.log("Content length is : ",len);
         for (i = 0; i <= res.length - 1; i++) {
           if (res[i].typeOfPayment === "renewal") {
             this.setState({ totalIncomeSubscriptionUsers: res[i].sum });
@@ -186,16 +217,6 @@ class FinancialDetails extends Component {
               this.state.totalIncomeSubscriptionUsers
           });
         }
-        // console.log("Titles ",  res[i].title)
-        // console.log("Plays ",  res[i].numberOfPlays)
-        // let tempMovie = "";
-        // tempMovie = res[i].title+" - "+ res[i].numberOfPlays;
-        // this.state.movieWithPlays.push(tempMovie);
-        // console.log("All Movies : ", tempMovie);
-        // console.log("Movie with plays array : ", this.state.movieWithPlays);
-        // this.state.movieList.push(data.content[i].title);
-        // }
-        // console.log("All Movies : ", this.state.allMovies);
       } else {
         if (res.status === "401") {
           this.setState({
@@ -212,6 +233,59 @@ class FinancialDetails extends Component {
         });
       }
     });
+
+    API.getUserStatsByMonthly(this.state.year, this.state.month).then(res => {
+      if (res.length > 0) {
+        // console.log("In success" +res.details[0].budgetRange);
+        this.setState({
+          isLoggedIn: true,
+          // allMovies: res
+          usermessage: ""
+        });
+        let i = 0;
+        console.log("Users count: ", res);
+        for (i = 0; i <= res.length - 1; i++) {
+          if (res[i].typeOfUser === "Subcribed") {
+            this.setState({ totalSubscriptionUsers: res[i].numberOfUsers });
+            console.log("Subscription users: ", res[i].numberOfUsers);
+          } else if (res[i].typeOfUser === "PayPerView") {
+            this.setState({ totalPayPerViewUsers: res[i].numberOfUsers });
+            console.log("Ppv users: ", res[i].numberOfUsers);
+          }else if (res[i].typeOfUser === "Active") {
+            this.setState({ totalFreeUsers: res[i].numberOfUsers });
+            console.log("Free income: ", res[i].numberOfUsers);
+        }else if (res[i].typeOfUser === "Uniqued") {
+          this.setState({ totalPaidUsers: res[i].numberOfUsers });
+          console.log("Paid users: ", res[i].numberOfUsers);
+      }
+      this.setState({
+        totalUsers:
+          this.state.totalPayPerViewUsers +
+          this.state.totalSubscriptionUsers +
+          this.state.totalPaidUsers +
+          this.state.totalFreeUsers
+      });
+    }
+  }else {
+        if (res.status === "401") {
+          this.setState({
+            isLoggedIn: false,
+            usermessage: "Not able to fetch user number of different types!!"
+          });
+          this.props.history.push("/login");
+        }
+        this.setState({
+          isLoggedIn: true,
+          usermessage: "There is no user record for selected month!!",
+          totalSubscriptionUsers: 0,
+          totalPayPerViewUsers: 0,
+          totalFreeUsers: 0,
+          totalPaidUsers: 0,
+          totalUsers: 0
+        });
+      }
+    });
+
   };
 
   render() {
@@ -230,6 +304,11 @@ class FinancialDetails extends Component {
           {this.state.message && (
             <div className="alert alert-warning" role="alert">
               {this.state.message}
+            </div>
+          )}
+          {this.state.usermessage && (
+            <div className="alert alert-warning" role="alert">
+              {this.state.usermessage}
             </div>
           )}
           <form style={formStyle1}>
@@ -301,7 +380,7 @@ class FinancialDetails extends Component {
               <tr>
                 <td>3</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>PayPerView</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                <td>{this.state.totalPayPerUsers}</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                <td>{this.state.totalPayPerViewUsers}</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>{this.state.totalIncomePayPerUsers}</td>
               </tr>
               <tr>
@@ -312,12 +391,19 @@ class FinancialDetails extends Component {
               </tr>
             </table>
             <br />
-            <label>Total income for selected month:</label>
+            <label>Total income for selected duration:</label>
             <input
               className="form-control"
               placeholder="$111"
               readonly="readonly"
               value={this.state.totalIncome}
+            />
+            <label>Total users for selected duration:</label>
+            <input
+              className="form-control"
+              placeholder="$111"
+              readonly="readonly"
+              value={this.state.totalUsers}
             />
           </form>
         </div>
