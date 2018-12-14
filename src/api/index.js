@@ -802,6 +802,50 @@ export const getUserMovieHistory = userId =>
       return error;
     });
 
+    export const getUserStats = () =>
+      fetch(`${api}/admin/userStats/yearly`, {
+        method: "GET",
+        headers: {
+          ...headers,
+          "Content-Type": "application/json",
+          // 'Authorization': details.jwtToken
+          Authorization: localStorage.getItem("JWTToken")
+        },
+        credentials: "include"
+        // body: JSON.stringify(details)
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log("All users until now : " + data);
+          return data;
+        })
+        .catch(error => {
+          console.log("This is error");
+          return error;
+        });
+
+  export const getUserStatsByMonthly = (year, month) =>
+      fetch(`${api}/admin/userStats/monthly?year=${year}&&month=${month}`, {
+        method: "GET",
+        headers: {
+          ...headers,
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("JWTToken")
+          // 'Authorization': details.jwtToken
+        },
+        credentials: "include"
+        // body: JSON.stringify(details)
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log("All user list : " + data);
+          return data;
+        })
+        .catch(error => {
+          console.log("This is error");
+          return error;
+        });
+
 // export const fetchSensorData = () =>
 //                                     fetch(`${api}/sensorsimulation`, {
 //                                         method: 'POST',
