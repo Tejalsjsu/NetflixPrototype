@@ -1,24 +1,13 @@
 import React, { Component } from "react";
 import { Link, withRouter, Route } from "react-router-dom";
-import "../App.css";
+import "../../../App.css";
 import { Button } from "react-bootstrap";
-import logo from "../image/fl-logo.png";
-import * as API from "../api/index";
-import Dashboard from "./dashboard";
-import Signup from "./signup";
-import NavBar from "../components/navbar";
+import * as API from "../../../api/index";
+import Dashboard from "../dashboard/dashboard";
+
 import queryString from "query-string";
-import playMovie from "./playMovie";
-import cookie from "react-cookies";
-let imgStyle = { height: "70px", padding: "10px" };
-let divStyle2 = { height: "45px" };
+
 let divStyle3 = { backgroundColor: "#E3E1E1" };
-let divStyle1 = {
-  align: "center",
-  backgroundColor: "#FEFDFD",
-  padding: "28px",
-  marginTop: "1px"
-};
 
 class movieDetails extends Component {
   constructor(props) {
@@ -207,7 +196,6 @@ class movieDetails extends Component {
     });
   };
 
-
   render() {
     var self = this;
     const reviews =
@@ -237,7 +225,6 @@ class movieDetails extends Component {
 
     return (
       <div style={divStyle3}>
-        {!this.props.isAdmin ? <NavBar /> : ""}
         <Route
           exact
           path="/movieDetails"
