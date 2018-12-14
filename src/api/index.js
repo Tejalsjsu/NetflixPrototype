@@ -769,6 +769,27 @@ export const updateMovie = (movieID, movieDetails) =>
       return error;
     });
 
+    export const getUserMovieHistory = userId =>
+      //fetch(`${api}/users/getUserProfile`, {
+      fetch(`${api}/movie/play/byUser/${userId}`, {
+        method: "GET",
+        headers: {
+          ...headers,
+          "Content-Type": "application/json",
+          Authorization: localStorage.JWTToken
+        },
+        credentials: "include"
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          return data;
+        })
+        .catch(error => {
+          console.log("This is error in fetch user Profile");
+          return error;
+        });
+
 // export const fetchSensorData = () =>
 //                                     fetch(`${api}/sensorsimulation`, {
 //                                         method: 'POST',

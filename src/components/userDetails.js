@@ -30,6 +30,7 @@ let formHead1 = {
 let formStyle1 = { align: "center", fontFamily: "Open Sans", fontSize: "70" };
 // let tableStyle1 = {align:'center', padding: '19px 9px 9px 9px'}
 var data = [];
+var moviedata = [];
 
 class UserDetails extends Component {
   constructor(props) {
@@ -57,7 +58,9 @@ class UserDetails extends Component {
     validation_error: [],
     isLoggedIn: false,
     message: "",
-    top_ten_movies: []
+    top_ten_movies: [],
+    movieHistory: [],
+    movieHistoryNames: ""
 
     // currentCustomersHC: []
   };
@@ -66,15 +69,16 @@ class UserDetails extends Component {
     console.log("CompWillMount");
     this.setState({
       profileName: localStorage.getItem("profileName"),
-      subscriptionType: "Free",
-      renewalDate: "12/20",
-      viewed_movie_list: ["Movie 12", "Movie 23", "Movie 34", "Movie 45"],
+      // subscriptionType: "Free",
+      // renewalDate: "12/20",
+      // viewed_movie_list: ["Movie 12", "Movie 23", "Movie 34", "Movie 45"],
       userdata: "",
       // top_ten_users : ["User top1 B", "User top9", "User D", "User A", "User B", "User C", "User D"],
       // currentCustomers: ["Cust1 ", "CUst2, ", "Cust1 ", "CUst2, "],
       search: "",
       page: 0,
-      size: 10
+      size: 10,
+      movieHistoryNames: ""
       // currentCustomers: [],
       // top_ten_users: []
     });
@@ -168,6 +172,57 @@ class UserDetails extends Component {
         console.log("Not matched");
       }
     });
+
+    console.log("**********************Checking if this is handled: ");
+    API.getUserMovieHistory(userID).then(
+      res => {
+        console.log("Movies for user are:  ", res);
+        if (res.length > 0 || res.status == 200) {
+          console.log(" Success");
+          this.setState({
+            usermovielist: res,
+            movieHistory: [],
+            movieHistoryNames : ""
+          });
+          // console.log('------->user list ', this.state.userlist)
+          moviedata = res;
+          // this.state.userdata = res;
+          let i = 0;
+          let len = 0;
+          len = res.length;
+          let movieName = "";
+          // console.log(
+          //   "Succesfully found user list in userdata as : ",
+          //   this.state.userdata
+          // );
+          // console.log("User data array length is : ",len);
+          for (i = 0; i <= moviedata.length - 1; i++) {
+              let tempMovie = "";
+              tempMovie = moviedata[i].movie.title;
+              this.state.movieHistory.push(tempMovie);
+              movieName = moviedata[i].movie.title;
+              this.state.movieHistoryNames += " "+moviedata[i].movie.title+" ";
+              // this.state.currentCustomers.push(tempUser);
+          }
+          console.log("MOVIES CHECK: ",  this.state.movieHistory);
+          console.log("MOVIES Names string: ",  this.state.movieHistoryNames);
+        } else if (res.status === "401") {
+          console.log("No records");
+          this.setState({
+            isLoggedIn: true,
+            message: "No records found..!!"
+          });
+        } else if (res.status === "402") {
+          this.setState({
+            isLoggedIn: false,
+            message: "Session Expired..!!"
+          });
+          this.props.history.push("/login");
+        }
+      }
+    );
+
+
   };
 
   handleUserSubmit = () => {
@@ -233,14 +288,6 @@ class UserDetails extends Component {
     console.log("Current users const ", CurrentUsers);
 
     const topTenUsers = this.state.top_ten_users.map(function(item) {
-      return (
-        <tr>
-          <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        </tr>
-      );
-    });
-
-    const movieHistory = this.state.viewed_movie_list.map(function(item) {
       return (
         <tr>
           <td>{item}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -355,8 +402,13 @@ class UserDetails extends Component {
                     />
                     <br />
                     <table>
-                      <tbody>{/*Movie history here*/}</tbody>
+                      <tbody>
+
+                      </tbody>
                     </table>
+                    <p>User viewed below movies:</p>
+                    <p>{this.state.movieHistoryNames}</p>
+                    <p>{this.state.movieHistory}</p>
                   </div>
                   <div class="modal-footer">
                     <button
