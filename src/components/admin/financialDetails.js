@@ -148,21 +148,21 @@ class FinancialDetails extends Component {
           } else if (res[i].typeOfUser === "PayPerView") {
             this.setState({ totalPayPerViewUsers: res[i].numberOfUsers });
             console.log("Ppv users: ", res[i].numberOfUsers);
-          }else if (res[i].typeOfUser === "Active") {
+          } else if (res[i].typeOfUser === "Active") {
             this.setState({ totalFreeUsers: res[i].numberOfUsers });
             console.log("Free income: ", res[i].numberOfUsers);
-        }else if (res[i].typeOfUser === "Uniqued") {
-          this.setState({ totalPaidUsers: res[i].numberOfUsers });
-          console.log("Paid users: ", res[i].numberOfUsers);
-      }
-      this.setState({
-        totalUsers:
-          this.state.totalPayPerViewUsers +
-          this.state.totalSubscriptionUsers +
-          this.state.totalPaidUsers +
-          this.state.totalFreeUsers
-      });
-    }
+          } else if (res[i].typeOfUser === "Uniqued") {
+            this.setState({ totalPaidUsers: res[i].numberOfUsers });
+            console.log("Paid users: ", res[i].numberOfUsers);
+          }
+          this.setState({
+            totalUsers:
+              this.state.totalPayPerViewUsers +
+              this.state.totalSubscriptionUsers +
+              this.state.totalPaidUsers +
+              this.state.totalFreeUsers
+          });
+        }
       } else {
         if (res.status === "401") {
           this.setState({
@@ -182,7 +182,6 @@ class FinancialDetails extends Component {
         });
       }
     });
-
   }
 
   handleMonthly = () => {
@@ -251,22 +250,22 @@ class FinancialDetails extends Component {
           } else if (res[i].typeOfUser === "PayPerView") {
             this.setState({ totalPayPerViewUsers: res[i].numberOfUsers });
             console.log("Ppv users: ", res[i].numberOfUsers);
-          }else if (res[i].typeOfUser === "Active") {
+          } else if (res[i].typeOfUser === "Active") {
             this.setState({ totalFreeUsers: res[i].numberOfUsers });
             console.log("Free income: ", res[i].numberOfUsers);
-        }else if (res[i].typeOfUser === "Uniqued") {
-          this.setState({ totalPaidUsers: res[i].numberOfUsers });
-          console.log("Paid users: ", res[i].numberOfUsers);
-      }
-      this.setState({
-        totalUsers:
-          this.state.totalPayPerViewUsers +
-          this.state.totalSubscriptionUsers +
-          this.state.totalPaidUsers +
-          this.state.totalFreeUsers
-      });
-    }
-  }else {
+          } else if (res[i].typeOfUser === "Uniqued") {
+            this.setState({ totalPaidUsers: res[i].numberOfUsers });
+            console.log("Paid users: ", res[i].numberOfUsers);
+          }
+          this.setState({
+            totalUsers:
+              this.state.totalPayPerViewUsers +
+              this.state.totalSubscriptionUsers +
+              this.state.totalPaidUsers +
+              this.state.totalFreeUsers
+          });
+        }
+      } else {
         if (res.status === "401") {
           this.setState({
             isLoggedIn: false,
@@ -285,7 +284,6 @@ class FinancialDetails extends Component {
         });
       }
     });
-
   };
 
   render() {
@@ -360,18 +358,21 @@ class FinancialDetails extends Component {
             <table>
               <tr>
                 <td>Sr. No.</td>&nbsp;&nbsp;
+                <td>Financial type</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>User type</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>Total users</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>Total income</td>
               </tr>
               <tr>
                 <td>1</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                <td>Free</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                <td>-</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                <td>Active</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>{this.state.totalFreeUsers}</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>-</td>
               </tr>
               <tr>
                 <td>2</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                <td>Subscribed</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>Subscribed</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>{this.state.totalSubscriptionUsers}</td>
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -380,12 +381,15 @@ class FinancialDetails extends Component {
               <tr>
                 <td>3</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>PayPerView</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                <td>{this.state.totalPayPerViewUsers}</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                <td>PayPerView</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                <td>{this.state.totalPayPerViewUsers}</td>
+                &nbsp;&nbsp;&nbsp;&nbsp;
                 <td>{this.state.totalIncomePayPerUsers}</td>
               </tr>
               <tr>
                 <td>4</td>&nbsp;&nbsp;&nbsp;&nbsp;
-                <td>Paid</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                <td>-</td>&nbsp;&nbsp;&nbsp;&nbsp;
+                <td>Uniqued</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>{this.state.totalPaidUsers}</td>&nbsp;&nbsp;&nbsp;&nbsp;
                 <td>-</td>
               </tr>
