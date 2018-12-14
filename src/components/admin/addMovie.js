@@ -120,8 +120,6 @@ class AddMovie extends Component {
         this.setState({
           message: "Movie Added!!"
         });
-        this.props.history.push("/adminAddMovie");
-        console.log("In add movie call.");
       } else if (res.status === "401") {
         console.log("in fail");
         this.setState({

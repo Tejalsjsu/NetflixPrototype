@@ -73,24 +73,6 @@ class Dashboard extends Component {
     }
   }
 
-  handleLogout = () => {
-    console.log("in logout");
-    API.logout(this.state.username).then(res => {
-      if (res.status === "201") {
-        console.log("in 201");
-        this.setState({
-          isLoggedIn: false
-        });
-        this.props.history.push("/login");
-      } else if (res.status === "401") {
-        this.setState({
-          isLoggedIn: true
-        });
-        // this.props.history.push("/login");
-      }
-    });
-  };
-
   handleWatch = currentPage => {
     console.log("in handle watch");
 
@@ -174,6 +156,15 @@ class Dashboard extends Component {
     }
   }
 
+  updateMovie = movieId => {
+    this.props.history.push({
+      pathname: "/adminAddMovie",
+      state: {
+        movieId: movieId
+      }
+    });
+  };
+
   render() {
     var self = this;
 
@@ -242,10 +233,27 @@ class Dashboard extends Component {
               {" "}
               {this.state.projectData[pd].price}
             </td>
-            {/*<td className='ProjectTable-cell' key={this.state.projectData[pd]._id}>*/}
-            {/*<Button bsStyle="danger" bsSize="sm" block*/}
-            {/*onClick={() => this.handleWatch(this.state.projectData[pd]._id)}> Watch </Button>*/}
-            {/*</td>*/}
+            {localStorage.getItem("role") &&
+            localStorage.getItem("role") === "ADMIN" ? (
+              <React.Fragment>
+                <td
+                  className="ProjectTable-cell"
+                  key={this.state.projectData[pd]._id}
+                >
+                  {" "}
+                  <Button
+                    className="btn btn-primary"
+                    onClick={() =>
+                      this.updateMovie(this.state.projectData[pd]._id)
+                    }
+                  >
+                    Update / Delete
+                  </Button>
+                </td>
+              </React.Fragment>
+            ) : (
+              ""
+            )}
           </tr>
         );
       });
@@ -444,6 +452,14 @@ class Dashboard extends Component {
                   <th className="ProjectTable-header">Country</th>
                   <th className="ProjectTable-header">Ratings</th>
                   <th className="ProjectTable-header">Price</th>
+                  {localStorage.getItem("role") &&
+                  localStorage.getItem("role") === "ADMIN" ? (
+                    <React.Fragment>
+                      <th className="ProjectTable-header" />
+                    </React.Fragment>
+                  ) : (
+                    ""
+                  )}
                 </tr>
               </thead>
               <tbody>

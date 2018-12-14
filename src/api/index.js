@@ -742,7 +742,13 @@ export const deleteMovie = movieID =>
   })
     .then(res => res.json())
     .then(data => {
-      return data;
+      if (data.status && data.status !== 200) {
+        let ResponseJSON = { status: 400, data: data };
+        return ResponseJSON;
+      } else {
+        let ResponseJSON = { status: 200, data: data };
+        return ResponseJSON;
+      }
     })
     .catch(error => {
       console.log("This is error");
@@ -762,7 +768,13 @@ export const updateMovie = (movieID, movieDetails) =>
   })
     .then(res => res.json())
     .then(data => {
-      return data;
+      if (data.status && data.status !== 200) {
+        let ResponseJSON = { status: 400, data: data };
+        return ResponseJSON;
+      } else {
+        let ResponseJSON = { status: 200, data: data };
+        return ResponseJSON;
+      }
     })
     .catch(error => {
       console.log("This is error");
