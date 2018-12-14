@@ -28,7 +28,8 @@ class playMovie extends Component {
       password: "",
       //email: '',
       //token:'',
-      userId: ""
+      userId: "",
+      movieURL: this.props.location.state.movieURL
     },
     isLoggedIn: false,
     message: ""
@@ -98,7 +99,7 @@ class playMovie extends Component {
                 </div>
                 <hr color="#E3E1E1" />
                 <YouTube
-                  videoId="D6xkbGLQesk"
+                  videoId={this.state.userdata.movieURL}
                   opts={opts}
                   onReady={this._onReady}
                 />{" "}

@@ -46,7 +46,8 @@ class movieDetails extends Component {
         country: "",
         rating: "",
         availability: "",
-        price: ""
+        price: "",
+        movieURL: ""
       },
       reviewText: "",
       postStars: "",
@@ -81,7 +82,8 @@ class movieDetails extends Component {
             rating: res.data.rating,
             availability: res.data.availability,
             year: res.data.year,
-            movieId: temp
+            movieId: temp,
+            movieURL: res.data.movieURL
           }
         });
       } else if (res.status === "401") {
@@ -172,7 +174,10 @@ class movieDetails extends Component {
       console.log(res.status);
       if (res.status === 200) {
         if (res.data.allowed == true) {
-          this.props.history.push("/playMovie");
+          this.props.history.push({
+            pathname: "/playMovie",
+            state: { movieURL: this.state.userdata.movieURL }
+          });
         } else if (
           res.data.typeOfMovie == "PayPerView" ||
           res.data.typeOfMovie == "PPV"

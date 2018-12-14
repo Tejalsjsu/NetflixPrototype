@@ -37,24 +37,6 @@ class Navigation extends Component {
                 >
                   <ul className="nav navbar-nav">
                     {localStorage.getItem("role") &&
-                    localStorage.getItem("role") === "USER" ? (
-                      <React.Fragment>
-                        <li>
-                          <NavLink to="/dashboard">Dashboard</NavLink>
-                        </li>
-                        <li>
-                          <NavLink to="/movieScoreboard">
-                            Movie Scoreboard
-                          </NavLink>
-                        </li>
-                        <li>
-                          <NavLink to="/subscription">Subscription</NavLink>
-                        </li>
-                      </React.Fragment>
-                    ) : (
-                      ""
-                    )}
-                    {localStorage.getItem("role") &&
                     localStorage.getItem("role") === "ADMIN" ? (
                       <React.Fragment>
                         <li>
@@ -63,15 +45,33 @@ class Navigation extends Component {
                           </NavLink>
                         </li>
                         <li>
+                          <NavLink to="/AdminFinancials">
+                            Financial Reports
+                          </NavLink>
+                        </li>
+                        <li>
                           <NavLink to="/userActivity">User Activity</NavLink>
                         </li>
                         <li>
                           <NavLink to="/movieActivity">Movie Activity</NavLink>
                         </li>
+                      </React.Fragment>
+                    ) : (
+                      ""
+                    )}
+                    <li>
+                      <NavLink to="/dashboard">Movie Dashboard</NavLink>
+                    </li>
+                    {localStorage.getItem("role") &&
+                    localStorage.getItem("role") === "USER" ? (
+                      <React.Fragment>
                         <li>
-                          <NavLink to="/AdminFinancials">
-                            Financial Reports
+                          <NavLink to="/movieScoreboard">
+                            Movie Scoreboard
                           </NavLink>
+                        </li>
+                        <li>
+                          <NavLink to="/subscription">Subscription</NavLink>
                         </li>
                       </React.Fragment>
                     ) : (

@@ -317,46 +317,6 @@ class AdminAddMovie extends Component {
           </div>
           <div className="container">
             <div className="col-sm-8">
-              {!this.state.showAddMovieComponent &&
-              !this.state.showUpdateMovieComponent ? (
-                <div>
-                  <table className="ProjectTable">
-                    <thead className="ProjectTable-head">
-                      <tr>
-                        <th className="ProjectTable-header ProjectTable-summaryColumn">
-                          Title
-                        </th>
-                        <th className="ProjectTable-header">Year</th>
-                        <th className="ProjectTable-header">Studio</th>
-                        <th className="ProjectTable-header">Country</th>
-                        <th className="ProjectTable-header">Ratings</th>
-                        <th className="ProjectTable-header">Price</th>
-                        <th className="ProjectTable-header">Play</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {/*{nameslist}*/}
-                      {withfilter}
-                    </tbody>
-                  </table>
-                  {/*Container ends here */}
-                  <button
-                    type="button"
-                    class="btn"
-                    onClick={() => this.handlePrev()}
-                  >
-                    &laquo; Previous
-                  </button>
-                  <button
-                    type="button"
-                    class="btn"
-                    onClick={() => this.handleNext()}
-                  >
-                    Next &raquo;
-                  </button>
-                </div>
-              ) : null}
-
               {this.state.showAddMovieComponent ? <AddMovie /> : null}
               {this.state.showUpdateMovieComponent ? <UpdateMovie /> : null}
               {this.state.showDeleteMovieComponent ? <DeleteMovie /> : null}
