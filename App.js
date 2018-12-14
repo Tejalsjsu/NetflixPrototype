@@ -46,7 +46,7 @@ class App extends Component {
             path="/registrationConfirmation"
             component={registrationConfirmation}
           />
-          <Route path="/editprofile" component={EditProfile} />
+          <Route path="/profile" component={Profile} />
           <Route path="/browseProjects" component={BrowseProjects} />
 
           <Route

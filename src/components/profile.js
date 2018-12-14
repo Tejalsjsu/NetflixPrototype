@@ -3,6 +3,8 @@ import { Button } from "react-bootstrap";
 import { withRouter, Route, NavLink } from "react-router-dom";
 import * as API from "../api";
 import cookie from "react-cookies";
+import avatar from "../image/avatar.jpg";
+
 let imgHeight = { height: "190px" };
 let img = require("../image/profile.jpg");
 let profilePic = { width: "300px" };
@@ -16,27 +18,15 @@ class Profile extends Component {
     this.state = {
       isEditing: false,
       name: "",
-      userId: cookie.load("userId"),
-      data: "",
-      signupDate: ""
+      userId: localStorage.getItem("userId"),
+      email: "",
+      role: localStorage.getItem("role"),
+      isSubcribed: false,
+      nextRenewalDate: null,
+      startSubcribedDate: null
     };
     this.toggleEdit = this.toggleEdit.bind(this);
   }
-
-  state = {
-    userdata: {
-      name: "",
-      proffesionHeading: "",
-      Description: "",
-      userId: cookie.load("userId"),
-      signupDate: "",
-      email: ""
-    },
-    data: "",
-    isLoggedIn: false,
-    isEditing: false,
-    message: ""
-  };
 
   handleChange(e) {
     this.setState({ value: e });
@@ -48,24 +38,20 @@ class Profile extends Component {
 
   componentWillMount() {
     API.fetchUserProfile(this.state.userId).then(res => {
-      console.log("status " + [res.details.json]);
-      if (res.status === "201") {
-        this.setState({
-          isLoggedIn: true,
-          name: res.details[0].userName,
-          proffesionHeading: res.details[0].professionalHeading,
-          skills: res.details[0].skills,
-          signupDate: res.details[0].signUpDate,
-          Description: res.details[0].aboutUser,
-          email: res.details[0].userEmail
-        });
-        console.log("state " + this.state.name);
-      } else if (res.status === "401") {
-        this.setState({
-          isLoggedIn: false,
-          message: "No projects found..!!"
-        });
+      console.log("status ", res);
+      if (!res.username) {
+        this.props.history.push("/login");
       }
+      //update username
+      this.setState({
+        email: res.username,
+        name: res.profileName,
+        isSubcribed: res.subcribed,
+        nextRenewalDate: res.nextRenewalDate ? res.nextRenewalDate : null,
+        startSubcribedDate: res.startSubcribedDate
+          ? res.startSubcribedDate
+          : null
+      });
     });
   }
 
@@ -78,68 +64,60 @@ class Profile extends Component {
   render() {
     return (
       <div style={bgcolor}>
-        <Route
-          exact
-          path="/profile"
-          render={() => (
-            <div className="container" style={bgcolor}>
-              <div className="col-md-4" style={bgwhite}>
-                <br />
-                <div className="media">
-                  <div className="media-left padding-img" style={bgwhite}>
-                    <img
-                      src={img}
-                      className="media-object img-circle"
-                      style={profilePic}
-                    />
-                  </div>{" "}
-                  <br />
-                  <div className="padding">
-                    <div>
-                      {" "}
-                      Member since:{" "}
-                      {new Date(this.state.signupDate).toLocaleDateString()}
-                    </div>
-                    <div> Email: {this.state.email} </div>
-                    <div>
-                      {" "}
-                      Last Updated:{" "}
-                      {new Date(this.state.signupDate).toLocaleDateString()}
-                    </div>
-                    <div> No Projects: 10</div>
-                    <div> No Bids: 10</div>
-                    <br /> <br />
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-8" style={bgwhite}>
-                <div className="media-body text-left padding">
-                  <h2> {this.state.name}</h2> <br />
-                  <h3 className="media-heading font-grey">
-                    {this.state.proffesionHeading}
-                  </h3>{" "}
-                  <br />
-                  <br /> <br />
-                  <h2>About Me</h2>
-                  <div className="well well-lg font-grey">
-                    {" "}
-                    {this.state.Description}{" "}
-                  </div>
-                  <br />
-                  <br /> <br />
-                </div>
-              </div>
-
-              <div className="col-md-12 text-left" style={bgwhite}>
-                <h2> Skills</h2>
-                <h3 className="font-grey well well-lg font-grey">
-                  {" "}
-                  {this.state.skills}
-                </h3>
-              </div>
+        <div className="container" style={bgcolor}>
+          <div className="col-md-4" style={bgwhite}>
+            <br />
+            <div className="media">
+              <div className="media-left padding-img" style={bgwhite}>
+                <img
+                  src={avatar}
+                  className="media-object img-circle"
+                  style={profilePic}
+                />
+              </div>{" "}
+              <br />
             </div>
-          )}
-        />
+          </div>
+          <div className="col-md-8" style={bgwhite}>
+            <div className="media-body text-left padding">
+              <h3 className="media-heading font-grey">
+                {this.state.proffesionHeading}
+              </h3>{" "}
+              <br />
+              <br /> <br />
+              <h2>
+                Welcome {this.state.role} : {this.state.name}
+              </h2>
+              <div className="well well-lg font-grey">
+                <div className="padding">
+                  <div>
+                    {" "}
+                    Subcribed since:{" "}
+                    {this.state.isSubcribed
+                      ? new Date(
+                          this.state.startSubcribedDate
+                        ).toLocaleDateString()
+                      : "N/A"}
+                  </div>
+                  <div>
+                    {" "}
+                    Subcribed Until:{" "}
+                    {this.state.isSubcribed
+                      ? new Date(
+                          this.state.nextRenewalDate
+                        ).toLocaleDateString()
+                      : "N/A"}
+                  </div>
+                  <div> Email: {this.state.email} </div>
+                  <br /> <br />
+                </div>
+              </div>
+              <br />
+              <br /> <br />
+            </div>
+          </div>
+        </div>
+
         <div>
           <br />
           <footer className="footer">
@@ -155,4 +133,4 @@ class Profile extends Component {
   }
 }
 
-export default withRouter(Profile);
+export default Profile;

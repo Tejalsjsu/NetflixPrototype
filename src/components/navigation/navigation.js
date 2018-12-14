@@ -82,7 +82,7 @@ class Navigation extends Component {
                   <ul className="nav navbar-nav navbar-right">
                     {/* <li><NavLink to="/profile">< span className="glyphicon glyphicon-log-in"></span> Admin Profile </NavLink></li>*/}
                     <li>
-                      <NavLink to="/login">
+                      <NavLink to="/profile">
                         <span className="glyphicon glyphicon-log-in" /> Profile{" "}
                       </NavLink>
                     </li>

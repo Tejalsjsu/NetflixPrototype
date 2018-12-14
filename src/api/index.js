@@ -377,13 +377,14 @@ export const editUpdateProfile = userdata =>
       return error;
     });
 
-export const fetchUserProfile = () =>
+export const fetchUserProfile = userId =>
   //fetch(`${api}/users/getUserProfile`, {
-  fetch(`${api}/kafka/kafkaProducer/getUserProfile`, {
-    method: "POST",
+  fetch(`${api}/getUserProfile/${userId}`, {
+    method: "GET",
     headers: {
       ...headers,
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      Authorization: localStorage.JWTToken
     },
     credentials: "include"
   })
