@@ -287,6 +287,7 @@ class Dashboard extends Component {
                           });
                         }}
                       />{" "}
+                      &nbsp;&nbsp;&nbsp;
                       <Button
                         bsStyle="success"
                         bsSize="sm"

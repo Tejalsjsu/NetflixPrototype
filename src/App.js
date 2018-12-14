@@ -7,6 +7,8 @@ import Home from "./components/home/home";
 import Signup from "./components/signup";
 import Profile from "./components/profile";
 import MovieDetails from "./components/movie/movieDetails/movieDetails";
+import Scoreboard from "./components/movie/scoreboard/scoreboard";
+import ScoreboardByMostWatchedMovies from "./components/movie/scoreboard/scoreboardByMostWatchedMovies";
 import EditProfile from "./components/editprofile";
 import Subscription from "./components/user/subcription/subscription";
 import registrationConfirmation from "./components/registrationConfirmation";
@@ -38,13 +40,11 @@ class App extends Component {
           <Route path="/movieDetails" component={MovieDetails} />
           <Route path="/subscription" component={Subscription} />
           <Route path="/playMovie" component={playMovie} />
-          <Route
-            path="/registrationConfirmation"
-            component={registrationConfirmation}
-          />
+          <Route path="/registrationConfirmation" component={registrationConfirmation}/>
           <Route path="/editprofile" component={EditProfile} />
-
           <Route path="/addMoney" component={AddMoney} />
+          <Route path="/movieScoreboard" component={Scoreboard} />
+          <Route path="/scoreboardByMostWatchedMovies" component={ScoreboardByMostWatchedMovies} />
           <Route path="/adminAddMovie" component={AdminAddMovie} />
           <Route path="/adminFinancials" component={AdminFinancials} />
           <Route path="/userActivity" component={UserActivity} />
