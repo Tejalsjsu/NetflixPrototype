@@ -62,10 +62,10 @@ class Login extends Component {
     API.doLogin(loginData).then(res => {
       console.log(res);
       if (res.status === 200) {
-        console.log("after login ", res.data.isEnable);
-        if (res.data.isEnable === false)
+        if (res.data.isEnable === false) {
+          console.log("after login1 ", res.data.isEnable);
           this.props.history.push("/registrationConfirmation");
-        else {
+        } else {
           this.setState({
             isLoggedIn: true,
             message: "Welcome to my App..!!",
@@ -76,7 +76,7 @@ class Login extends Component {
           localStorage.setItem("JWTToken", this.state.token);
           localStorage.setItem("profileName", this.state.profileName);
           localStorage.setItem("role", this.state.role);
-          //cookie.save('JWTToken', this.state.token, { path: '/' });
+          cookie.save("JWTToken", this.state.token, { path: "/" });
           if (res.data.role == "ADMIN")
             this.props.history.push("/adminAddMovie");
           else {
@@ -167,40 +167,9 @@ class Login extends Component {
             </div> //here
           )}
         />
-
-        <Route
-          exact
-          path="/dashboard"
-          render={() => (
-            <div>
-              <Dashboard
-                username={this.state.userdata.username}
-                email={this.state.userdata.username}
-              />
-            </div>
-          )}
-        />
-        <Route
-          exact
-          path="/adminAddMovie"
-          render={() => (
-            <div>
-              <AdminAddMovie />
-            </div>
-          )}
-        />
-        <Route
-          exact
-          path="/signup"
-          render={() => (
-            <div>
-              <Signup />
-            </div>
-          )}
-        />
       </div>
     );
   }
 }
 
-export default withRouter(Login);
+export default Login;
