@@ -326,4 +326,4 @@ class FinancialDetails extends Component {
   }
 }
 
-export default withRouter(FinancialDetails);
+export default FinancialDetails;

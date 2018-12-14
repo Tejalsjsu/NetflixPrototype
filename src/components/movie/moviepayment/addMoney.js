@@ -348,4 +348,4 @@ class addMoney extends Component {
   }
 }
 
-export default withRouter(addMoney);
+export default addMoney;

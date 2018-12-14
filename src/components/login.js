@@ -48,6 +48,12 @@ class Login extends Component {
     });
   }
 
+  componentDidMount() {
+    if (localStorage.getItem("JWTToken")) {
+      this.props.history.push("/dashboard");
+    }
+  }
+
   handleSubmit = () => {
     let loginData = {
       username: this.state.userdata.username,

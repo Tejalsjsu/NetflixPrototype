@@ -164,6 +164,11 @@ class AdminAddMovie extends Component {
     });
   }
 
+  componentDidMount() {
+    if (!localStorage.getItem("JWTToken")) {
+      this.props.history.push("/");
+    }
+  }
   handleNext = () => {
     if (this.state.allMovies.length === CONSTANTS.PAGESIZE) {
       var currentPage = this.state.size + 1;
@@ -347,6 +352,7 @@ class AdminAddMovie extends Component {
       </div>
     );
   }
+
   _onReady(event) {
     // access to player in all event handlers via event.target
     event.target.pauseVideo();

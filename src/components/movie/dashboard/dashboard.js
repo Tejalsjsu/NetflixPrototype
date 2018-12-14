@@ -73,12 +73,6 @@ class Dashboard extends Component {
     }
   }
 
-  componentDidMount() {
-    if (!localStorage.getItem("JWTToken")) {
-      this.props.history.push("login");
-    }
-  }
-
   handleLogout = () => {
     console.log("in logout");
     API.logout(this.state.username).then(res => {
@@ -173,6 +167,12 @@ class Dashboard extends Component {
       this.handleWatch(currentPage);
     }
   };
+
+  componentDidMount() {
+    if (!localStorage.getItem("JWTToken")) {
+      this.props.history.push("/");
+    }
+  }
 
   render() {
     var self = this;

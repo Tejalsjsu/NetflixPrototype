@@ -62,6 +62,12 @@ class playMovie extends Component {
     });
   };
 
+  componentDidMount() {
+    if (!localStorage.getItem("JWTToken")) {
+      this.props.history.push("/");
+    }
+  }
+
   render() {
     const opts = {
       height: "390",
@@ -74,61 +80,45 @@ class playMovie extends Component {
 
     return (
       <div style={divStyle3}>
-        <Route
-          exact
-          path="/playMovie"
-          render={() => (
-            <div>
-              <div className="col-sm-2" style={divStyle2}>
-                {" "}
-              </div>
+        <div>
+          <div className="col-sm-2" style={divStyle2}>
+            {" "}
+          </div>
 
-              <div style={divStyle1} className="col-sm-7">
-                {/*<div>*/}
-                {/*<div>*/}
-                <img src={logo} style={imgStyle} alt="logo" />
-                <hr color="#E3E1E1" />
-                <div>
-                  {/*<div className="col-md-3">*/}
-                  {this.state.message && (
-                    <div className="alert alert-warning" role="alert">
-                      {this.state.message}
-                    </div>
-                  )}
-                  {/*</div>*/}
+          <div style={divStyle1} className="col-sm-7">
+            {/*<div>*/}
+            {/*<div>*/}
+            <img src={logo} style={imgStyle} alt="logo" />
+            <hr color="#E3E1E1" />
+            <div>
+              {/*<div className="col-md-3">*/}
+              {this.state.message && (
+                <div className="alert alert-warning" role="alert">
+                  {this.state.message}
                 </div>
-                <hr color="#E3E1E1" />
-                <YouTube
-                  videoId={this.state.userdata.movieURL}
-                  opts={opts}
-                  onReady={this._onReady}
-                />{" "}
-                <br />
-                <br />
-                <a href="/dashboard">
-                  <Button bsStyle="danger" bsSize="sm">
-                    {" "}
-                    Go Back To App{" "}
-                  </Button>
-                </a>
-                <br />
-              </div>
-            </div> //here
-          )}
-        />
-
-        <Route
-          exact
-          path="/dashboard"
-          render={() => (
-            <div>
-              <Dashboard />
+              )}
+              {/*</div>*/}
             </div>
-          )}
-        />
+            <hr color="#E3E1E1" />
+            <YouTube
+              videoId={this.state.userdata.movieURL}
+              opts={opts}
+              onReady={this._onReady}
+            />{" "}
+            <br />
+            <br />
+            <a href="/dashboard">
+              <Button bsStyle="danger" bsSize="sm">
+                {" "}
+                Go Back To App{" "}
+              </Button>
+            </a>
+            <br />
+          </div>
+        </div>{" "}
       </div>
     );
   }
 }
 
-export default withRouter(playMovie);
+export default playMovie;

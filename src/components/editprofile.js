@@ -114,10 +114,11 @@ class EditProfile extends Component {
       }
     });
   }
-
-  // toggleEdit() {
-  //     this.setState({isEditing: !this.state.isEditing})
-  // }
+  componentDidMount() {
+    if (!localStorage.getItem("JWTToken")) {
+      this.props.history.push("/login");
+    }
+  }
 
   render() {
     return (

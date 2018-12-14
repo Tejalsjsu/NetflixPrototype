@@ -50,6 +50,13 @@ class UserActivity extends Component {
       // currentCustomers: []
     });
   }
+
+  componentDidMount() {
+    if (!localStorage.getItem("JWTToken")) {
+      this.props.history.push("/");
+    }
+  }
+
   render() {
     return (
       <div style={divStyle3}>

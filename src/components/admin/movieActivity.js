@@ -46,6 +46,12 @@ class MovieActivity extends Component {
   // {
   //   console.log(movieID);
   // }
+  componentDidMount() {
+    if (!localStorage.getItem("JWTToken")) {
+      this.props.history.push("/");
+    }
+  }
+
   render() {
     return (
       <div style={divStyle3}>
@@ -102,4 +108,4 @@ class MovieActivity extends Component {
   }
 }
 
-export default withRouter(MovieActivity);
+export default MovieActivity;

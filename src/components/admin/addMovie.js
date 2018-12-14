@@ -416,4 +416,4 @@ class AddMovie extends Component {
   }
 }
 
-export default withRouter(AddMovie);
+export default AddMovie;

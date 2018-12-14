@@ -33,6 +33,12 @@ class registrationConfirmation extends Component {
     });
   }
 
+  componentDidMount() {
+    if (localStorage.getItem("JWTToken")) {
+      this.props.history.push("/dashboard");
+    }
+  }
+
   handleSubmit = () => {
     axios.defaults.withCredentials = true;
     axios

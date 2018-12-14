@@ -69,6 +69,12 @@ class Profile extends Component {
     });
   }
 
+  componentDidMount() {
+    if (!localStorage.getItem("JWTToken")) {
+      this.props.history.push("/");
+    }
+  }
+
   render() {
     return (
       <div style={bgcolor}>

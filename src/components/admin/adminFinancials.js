@@ -118,6 +118,12 @@ class AdminAddMovie extends Component {
     //     });
   };
 
+  componentDidMount() {
+    if (!localStorage.getItem("JWTToken")) {
+      this.props.history.push("/");
+    }
+  }
+
   render() {
     return (
       <div style={divStyle3}>
@@ -174,4 +180,4 @@ class AdminAddMovie extends Component {
   }
 }
 
-export default withRouter(AdminAddMovie);
+export default AdminAddMovie;
