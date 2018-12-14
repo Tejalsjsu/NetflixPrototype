@@ -28,7 +28,7 @@ class playMovie extends Component {
       password: "",
       //email: '',
       //token:'',
-      userId: "",
+      userId: localStorage.getItem("userId"),
       movieURL: this.props.location.state.movieURL
     },
     isLoggedIn: false,

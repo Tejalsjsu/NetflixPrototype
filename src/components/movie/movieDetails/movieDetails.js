@@ -170,7 +170,7 @@ class movieDetails extends Component {
           });
         } else if (
           res.data.typeOfMovie == "PayPerView" ||
-          res.data.typeOfMovie == "PPV"
+          res.data.typeOfMovie == "Paid"
         ) {
           this.props.history.push(
             "/addMoney?total=" +

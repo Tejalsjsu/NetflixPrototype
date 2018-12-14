@@ -286,7 +286,7 @@ class UpdateMovie extends Component {
                   <option value="Free">Free</option>
                   <option value="Subcribed">Subscription only</option>
                   <option value="PayPerView">Pay-per-view</option>
-                  {/*<option value="Paid">Paid</option>*/}
+                  <option value="Paid">Paid</option>
                 </select>
                 <br />
                 <label>Price</label>

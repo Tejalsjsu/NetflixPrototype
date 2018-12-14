@@ -71,11 +71,13 @@ class Login extends Component {
             message: "Welcome to my App..!!",
             token: res.data.JWTToken,
             profileName: res.data.profileName,
-            role: res.data.role
+            role: res.data.role,
+            userId: res.data.userId
           });
           localStorage.setItem("JWTToken", this.state.token);
           localStorage.setItem("profileName", this.state.profileName);
           localStorage.setItem("role", this.state.role);
+          localStorage.setItem("userId", this.state.userId);
           cookie.save("JWTToken", this.state.token, { path: "/" });
           if (res.data.role == "ADMIN")
             this.props.history.push("/adminAddMovie");
