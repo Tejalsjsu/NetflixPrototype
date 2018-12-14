@@ -34,100 +34,74 @@ let formStyle1 = { align: "center", fontFamily: "Open Sans", fontSize: "70" };
 class MovieDetails extends Component {
   constructor(props) {
     super(props);
-  }
-  state = {
-    moviedata: [
-      {
-        movieTitle: "",
-        numberOfPlays: ""
-      }
-    ],
-    validation_error: [],
-    isLoggedIn: false,
-    message: "",
-    top_ten_movies: [],
-    duration: "",
-    allMovies: [],
-    movieWithPlays: [],
-    pageSize: 0
-  };
 
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    this.state = {
+      message: "",
+      top_ten_movies: [],
+      movieWithPlays: [],
+      days: 1
+    };
   }
 
   componentWillMount() {
-    this.setState({
-      // searchMovie: '',
-      // movieList:["Movie ABC1", "Movie cde2", "Movie XYZ3", "Movie DDD4"],
-      allMovies: [],
-      movieWithPlays: [],
-      top_ten_movies: []
-    });
+    this.handleViewTopTenMovie(10000, true, false);
+  }
 
-    API.getMovieList().then(res => {
+  handleViewTopTenMovie = (days, isOverall, isTopTen) => {
+    API.getMovieList(days).then(res => {
       // console.log("response in getMovie List : ", res);
       // console.log("response length : ", res.length);
       // console.log("Title & Plays-->", res);
       // console.log("response is here-->", res);
       if (res.length > 0) {
         // console.log("In success" +res.details[0].budgetRange);
-        this.setState({
-          isLoggedIn: true,
-          allMovies: res
-        });
         let i = 0;
-        let len = 0;
-        len = res.length;
+        let len = res.length;
 
-        // console.log("Movie names before is: ", this.state.movieList);
-        // console.log("Succesfully found user list as: ", data);
-        // console.log("Movies: ", this.allMovies);
-        // console.log("Content length is : ",len);
+        let tempMovieList = [];
         for (i = 0; i <= res.length - 1; i++) {
           // console.log("Title ",  res[i].title)
           // console.log("Plays ",  res[i].numberOfPlays)
           let tempMovie = "";
           tempMovie = res[i].title + " - " + res[i].numberOfPlays;
           // this.state.top_ten_movies.push(res[i].title);
-          this.state.movieWithPlays.push(tempMovie);
+          tempMovieList.push(tempMovie);
           // console.log("All Movies : ", tempMovie);
           // console.log("Movie with plays array : ", this.state.movieWithPlays);
           // console.log("Top 10 Movies : ", this.state.top_ten_movies);
           // this.state.movieList.push(data.content[i].title);
         }
-        for (i = 0; i <= 9; i++) {
-          let tempTopNumber = 0;
-          tempTopNumber = i + 1 + ". " + res[i].title;
-          this.state.top_ten_movies.push(tempTopNumber);
+        if (isOverall) {
+          this.setState({
+            movieWithPlays: tempMovieList
+          });
         }
-        this.setState({ allMovies: this.state.movieWithPlays });
-        // console.log("All Movies-> : ", this.state.allMovies);
-        // console.log("Top 10 : ", this.state.top_ten_movies);
+        if (isTopTen) {
+          let topTen = res.length < 10 ? res.length : 10;
+          let tempTopTenMovielist = [];
+          for (i = 0; i < topTen; i++) {
+            let tempTopNumber = 0;
+            tempTopNumber =
+              i +
+              1 +
+              ". " +
+              res[i].title +
+              " - " +
+              res[i].numberOfPlays +
+              " plays";
+            tempTopTenMovielist.push(tempTopNumber);
+          }
+          this.setState({
+            top_ten_movies: tempTopTenMovielist
+          });
+        }
       } else if (res.status === "401") {
         this.setState({
-          isLoggedIn: false,
-          message: "Not able to fetch admin financials!!"
+          message: "Not able to fetch movies!!!"
         });
         this.props.history.push("/login");
       }
     });
-  }
-
-  handleNext = () => {
-    if (this.state.allMovies.length === CONSTANTS.PAGESIZE) {
-      var currentPage = this.state.pageSize + 1;
-      this.setState({ pageSize: currentPage });
-      // this.handleWatch(currentPage);
-    }
-  };
-
-  handlePrev = () => {
-    if (this.state.pageSize > 0) {
-      var currentPage = this.state.pageSize - 1;
-      this.setState({ pageSize: currentPage });
-      // this.handleWatch(currentPage);
-    }
   };
 
   render() {
@@ -178,14 +152,18 @@ class MovieDetails extends Component {
             <select
               className="form-control"
               name={this.props.name}
-              value={this.props.value}
-              onChange={this.props.handleChange}
+              value={this.state.days}
+              onChange={event => {
+                this.setState({
+                  days: event.target.value
+                });
+              }}
             >
-              <option selected="true" value="day">
+              <option selected="true" value="1">
                 Last 24 hours
               </option>
-              <option value="week">Last week</option>
-              <option value="month">Last month</option>
+              <option value="7">Last week</option>
+              <option value="30">Last month</option>
             </select>
             <br />
             <Button
@@ -194,6 +172,9 @@ class MovieDetails extends Component {
               class="btn btn-primary "
               data-toggle="modal"
               data-target="#myTop10Modal"
+              onClick={() =>
+                this.handleViewTopTenMovie(this.state.days, false, true)
+              }
             >
               Click here to view top 10 movie list
             </Button>
@@ -284,6 +265,7 @@ class MovieDetails extends Component {
                     <h4 class="modal-title">
                       <b>Current top 10 movie list</b>
                     </h4>
+                    <h4>{this.state.message}</h4>
                   </div>
                   <div class="modal-body">
                     {/*<select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
