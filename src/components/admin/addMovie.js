@@ -20,8 +20,7 @@ let divStyle1 = {
   padding: "12px",
   marginTop: "27px",
   width: "900px",
-    marginLeft: "100px"
-
+  marginLeft: "100px"
 };
 let formHead1 = {
   color: "blue",
@@ -29,9 +28,9 @@ let formHead1 = {
   fontSize: "55",
   fontWeight: "bold"
 };
-let borderStyle ={
-    width: "200px"
-}
+let borderStyle = {
+  width: "200px"
+};
 
 class AddMovie extends Component {
   constructor(props) {
@@ -138,8 +137,8 @@ class AddMovie extends Component {
   render() {
     return (
       <div className="container">
-          <div style={borderStyle}> </div>
-        <div style={divStyle1} >
+        <div style={borderStyle}> </div>
+        <div style={divStyle1}>
           {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
 
           <p style={formHead1}>Add Movie details below</p>
@@ -161,11 +160,9 @@ class AddMovie extends Component {
               }}
             />{" "}
             <br />
-            <input
-              name="genre"
-              type="text"
+            <select
+              id="ddlCurrency"
               className="form-control"
-              placeholder="Genre"
               value={this.state.addmoviedata.genre}
               onChange={event => {
                 this.setState({
@@ -175,7 +172,13 @@ class AddMovie extends Component {
                   }
                 });
               }}
-            />
+            >
+              <option value="" selected="true" />
+              <option value="comedy">Comedy</option>
+              <option value="action">Action</option>
+              <option value="romantic">Romantic</option>
+              <option value="drama">Drama</option>
+            </select>
             <br />
             <input
               name="year"
@@ -305,11 +308,9 @@ class AddMovie extends Component {
               }}
             />
             <br />
-            <input
-              name="rating"
-              type="text"
+            <select
+              id="ddlCurrency"
               className="form-control"
-              placeholder="Rating"
               value={this.state.addmoviedata.rating}
               onChange={event => {
                 this.setState({
@@ -319,7 +320,14 @@ class AddMovie extends Component {
                   }
                 });
               }}
-            />
+            >
+              <option value="" />
+              <option value="G">G</option>
+              <option value="PG">PG</option>
+              <option value="PG-13">PG-13</option>
+              <option value="R">R</option>
+              <option value="NC-17">NC-17</option>
+            </select>
             <br />
             <select
               className="form-control"

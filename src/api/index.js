@@ -49,6 +49,28 @@ export const fetchAllMovies = payload =>
       return error;
     });
 
+export const fetchAllMoviesByRating = payload =>
+  fetch(`${api}/movie/getByRating`, {
+    method: "POST",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json",
+      Authorization: localStorage.JWTToken
+    },
+    credentials: "include",
+    body: JSON.stringify(payload)
+  })
+    .then(res => res.json())
+    .then(data => {
+      let ResponseJSON = { status: 200, data: data };
+      console.log(ResponseJSON);
+      return ResponseJSON;
+    })
+    .catch(error => {
+      console.log("This is error");
+      return error;
+    });
+
 export const fetchMovieById = payload =>
   fetch(`${api}/movie/` + payload, {
     method: "GET",
@@ -643,7 +665,11 @@ export const getUsers = (search, page, size) =>
       Authorization: localStorage.JWTToken
     },
     credentials: "include",
-    body: JSON.stringify(search, page, size)
+    body: JSON.stringify({
+      search: search,
+      page: page,
+      size: size
+    })
   })
     .then(res => res.json())
     .then(data => {

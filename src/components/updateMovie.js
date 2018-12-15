@@ -105,10 +105,9 @@ class UpdateMovie extends Component {
                 />{" "}
                 <br />
                 <label>Genre</label>
-                <input
-                  type="text"
+                <select
+                  id="ddlCurrency"
                   className="form-control"
-                  placeholder="Genre"
                   value={this.state.updateMovieData.genre}
                   onChange={event => {
                     this.setState({
@@ -118,7 +117,13 @@ class UpdateMovie extends Component {
                       }
                     });
                   }}
-                />
+                >
+                  <option value="" selected="true" />
+                  <option value="comedy">Comedy</option>
+                  <option value="action">Action</option>
+                  <option value="romantic">Romantic</option>
+                  <option value="drama">Drama</option>
+                </select>
                 <br />
                 <label>Year</label>
                 <input
@@ -253,10 +258,9 @@ class UpdateMovie extends Component {
                 />
                 <br />
                 <label>Rating</label>
-                <input
-                  type="text"
+                <select
+                  id="ddlCurrency"
                   className="form-control"
-                  placeholder="Rating"
                   value={this.state.updateMovieData.rating}
                   onChange={event => {
                     this.setState({
@@ -266,7 +270,14 @@ class UpdateMovie extends Component {
                       }
                     });
                   }}
-                />
+                >
+                  <option value="" />
+                  <option value="G">G</option>
+                  <option value="PG">PG</option>
+                  <option value="PG-13">PG-13</option>
+                  <option value="R">R</option>
+                  <option value="NC-17">NC-17</option>
+                </select>
                 <br />
                 <label>Availability</label>
                 <select

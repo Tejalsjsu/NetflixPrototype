@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import * as API from "../../../api";
 import * as CONSTANTS from "../../../constants";
-
+import { OrderedMap } from "immutable";
 import { Button } from "react-bootstrap";
 
 var data = [];
@@ -30,11 +30,29 @@ class Dashboard extends Component {
       actors: "",
       genre: "",
       pageSize: 0,
-      year: ""
+      year: "",
+      playList: new OrderedMap()
     };
   }
 
-  //
+  handleMoviePlaysList = days => {
+    API.getMovieList(days).then(res => {
+      var moviePlayList = new OrderedMap();
+      if (res.length >= 0) {
+        for (var i = 0; i < res.length; i++) {
+          moviePlayList = moviePlayList.set(res[i]._id, res[i].numberOfPlays);
+        }
+        this.setState({
+          playList: moviePlayList
+        });
+      } else if (res.status === "401") {
+        this.setState({
+          message: "Not able to fetch movies!!!"
+        });
+        this.props.history.push("/login");
+      }
+    });
+  };
 
   componentWillMount() {
     if (localStorage.hasOwnProperty("profileName")) {
@@ -154,6 +172,13 @@ class Dashboard extends Component {
     if (!localStorage.getItem("JWTToken")) {
       this.props.history.push("/");
     }
+    //calling once time
+    if (
+      localStorage.getItem("role") &&
+      localStorage.getItem("role") === "ADMIN"
+    ) {
+      this.handleMoviePlaysList(1000);
+    }
   }
 
   updateMovie = movieId => {
@@ -240,7 +265,14 @@ class Dashboard extends Component {
                   className="ProjectTable-cell"
                   key={this.state.projectData[pd]._id}
                 >
-                  {" "}
+                  {this.state.playList.get(this.state.projectData[pd]._id)
+                    ? this.state.playList.get(this.state.projectData[pd]._id)
+                    : "-"}
+                </td>
+                <td
+                  className="ProjectTable-cell"
+                  key={this.state.projectData[pd]._id}
+                >
                   <Button
                     className="btn btn-primary"
                     onClick={() =>
@@ -327,8 +359,11 @@ class Dashboard extends Component {
                     }}
                   >
                     <option value="" />
+                    <option value="G">G</option>
+                    <option value="PG">PG</option>
+                    <option value="PG-13">PG-13</option>
                     <option value="R">R</option>
-                    <option value="U/A">U/A</option>
+                    <option value="NC-17">NC-17</option>
                   </select>{" "}
                   &nbsp; &nbsp;
                 </div>
@@ -435,6 +470,7 @@ class Dashboard extends Component {
                       <option value="2">2</option>
                       <option value="3">3</option>
                       <option value="4">4</option>
+                      <option value="4">5</option>
                     </select>{" "}
                     &nbsp; &nbsp;
                   </div>
@@ -456,6 +492,7 @@ class Dashboard extends Component {
                   {localStorage.getItem("role") &&
                   localStorage.getItem("role") === "ADMIN" ? (
                     <React.Fragment>
+                      <th className="ProjectTable-header">Plays</th>
                       <th className="ProjectTable-header" />
                     </React.Fragment>
                   ) : (

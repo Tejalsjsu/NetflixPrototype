@@ -7,9 +7,7 @@ import UserDetails from "../components/userDetails";
 // import Signup from '../components/signup';
 
 import queryString from "query-string";
-import cookie from "react-cookies";
-// let imgStyle = {height: '70px', padding: '10px'};
-let divStyle2 = { height: "45px" };
+
 let divStyle3 = { backgroundColor: "#E3E1E1" };
 let divStyle1 = {
   align: "center",
@@ -17,11 +15,8 @@ let divStyle1 = {
   padding: "28px",
   marginTop: "1px"
 };
-var Carousel = require("react-bootstrap").Carousel;
-let imgStyle = { width: "100%", height: "400px" };
+
 let footerText = { color: "#5DADE2" };
-var img1 = require("../image/netflixBG.jpg");
-var data = [];
 
 class UserActivity extends Component {
   constructor(props) {
@@ -60,37 +55,7 @@ class UserActivity extends Component {
   render() {
     return (
       <div style={divStyle3}>
-        <div >
-          {/*<div id="myCarousel" className="carousel slide" data-ride="carousel">*/}
-            {/*<div className="carousel-inner" role="listbox">*/}
-              {/*<Carousel>*/}
-                {/*<Carousel.Item>*/}
-                  {/*<img style={imgStyle} alt="freelance.com" src={img1} />*/}
-                  {/*<Carousel.Caption>*/}
-                    {/*<Button*/}
-                      {/*bsStyle="danger"*/}
-                      {/*bsSize="large"*/}
-                      {/*onClick={this._onAddClick}*/}
-                    {/*>*/}
-                      {/*{" "}*/}
-                      {/*User Activity Monitoring*/}
-                    {/*</Button>{" "}*/}
-                    {/*&nbsp;&nbsp;&nbsp;*/}
-                    {/*<h3>MovieCentral </h3>*/}
-                    {/*<p>Watch at your convinience.</p>*/}
-                  {/*</Carousel.Caption>*/}
-                {/*</Carousel.Item>*/}
-                {/*/!*<Carousel.Item>*!/*/}
-                {/*/!*<img style={imgStyle} alt="freelance.com" src={img2} />*!/*/}
-                {/*/!*<Carousel.Caption>*!/*/}
-                {/*/!*<h3>Netflix</h3>*!/*/}
-                {/*/!*<p>atch from anywhere, anytime.</p>*!/*/}
-                {/*/!*</Carousel.Caption>*!/*/}
-                {/*/!*</Carousel.Item>*!/*/}
-              {/*</Carousel>*/}
-            {/*</div>*/}
-          {/*</div>*/}
-
+        <div>
           <div className="container">
             <div className="col-sm-8">
               <UserDetails />

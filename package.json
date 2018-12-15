@@ -8,6 +8,7 @@
     "dropzone": "^5.4.0",
     "fusioncharts": "^3.12.2",
     "gson": "^0.1.5",
+    "immutable": "^4.0.0-rc.12",
     "material-components-web": "^0.33.0",
     "material-ui-chip-input": "^0.18.7",
     "material-ui-pagination": "^1.1.6",

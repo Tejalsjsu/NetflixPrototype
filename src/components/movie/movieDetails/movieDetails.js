@@ -73,7 +73,8 @@ class movieDetails extends Component {
             availability: res.data.availability,
             year: res.data.year,
             movieId: temp,
-            movieURL: res.data.movieURL
+            movieURL: res.data.movieURL,
+            Image: res.data.imgURL
           }
         });
       } else if (res.status === "401") {
@@ -112,6 +113,11 @@ class movieDetails extends Component {
     });
   }
 
+  componentDidMount() {
+    if (!localStorage.getItem("JWTToken")) {
+      this.props.history.push("/");
+    }
+  }
   postReview = () => {
     //this.props.history.push('/playMovie');
     let reviewDetails = {
@@ -280,6 +286,13 @@ class movieDetails extends Component {
                 <div className="panel-body text-left projectBrief-inner">
                   <div className="project-brief margin-b5 col-sm-8">
                     <h2 className="project-brief-subheading bold">
+                      <img
+                        src={this.state.userdata.Image}
+                        alt="Image N/A"
+                        style={{ width: 300, height: 400 }}
+                      />
+                    </h2>
+                    <h2 className="project-brief-subheading bold">
                       {" "}
                       Movie Synopsis{" "}
                     </h2>
@@ -356,6 +369,7 @@ class movieDetails extends Component {
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
+                        <option value="4">5</option>
                       </select>
                       {/*<input type="number" placeholder="15" value={this.state.userdata.projectId}*/}
                       {/*maxLength={8}/>*/}
