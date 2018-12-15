@@ -77,15 +77,15 @@ class AdminAddMovie extends Component {
     return (
       <div style={divStyle3}>
         <div className=".container-fluid">
-          <div id="myCarousel" className="carousel slide" data-ride="carousel">
-            <div className="carousel-inner" role="listbox">
-              <Carousel>
-                <Carousel.Item>
-                  <img style={imgStyle} alt="freelance.com" src={img1} />
-                </Carousel.Item>
-              </Carousel>
-            </div>
-          </div>
+          {/*<div id="myCarousel" className="carousel slide" data-ride="carousel">*/}
+            {/*<div className="carousel-inner" role="listbox">*/}
+              {/*<Carousel>*/}
+                {/*<Carousel.Item>*/}
+                  {/*<img style={imgStyle} alt="freelance.com" src={img1} />*/}
+                {/*</Carousel.Item>*/}
+              {/*</Carousel>*/}
+            {/*</div>*/}
+          {/*</div>*/}
           <div className="container">
             <div className="col-sm-8">
               {this.state.showUpdateMovieComponent ? (

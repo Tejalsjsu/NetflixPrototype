@@ -19,7 +19,9 @@ let divStyle1 = {
   backgroundColor: "#FEFDFD",
   padding: "12px",
   marginTop: "27px",
-  width: "300px"
+  width: "900px",
+    marginLeft: "100px"
+
 };
 let formHead1 = {
   color: "blue",
@@ -27,6 +29,9 @@ let formHead1 = {
   fontSize: "55",
   fontWeight: "bold"
 };
+let borderStyle ={
+    width: "200px"
+}
 
 class AddMovie extends Component {
   constructor(props) {
@@ -132,9 +137,9 @@ class AddMovie extends Component {
 
   render() {
     return (
-      <div>
-        <div className="col-sm-4"> </div>
-        <div style={divStyle1} className="col-sm-3">
+      <div className="container">
+          <div style={borderStyle}> </div>
+        <div style={divStyle1} >
           {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
 
           <p style={formHead1}>Add Movie details below</p>

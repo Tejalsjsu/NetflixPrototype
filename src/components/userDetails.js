@@ -31,6 +31,8 @@ let formStyle1 = { align: "center", fontFamily: "Open Sans", fontSize: "70" };
 // let tableStyle1 = {align:'center', padding: '19px 9px 9px 9px'}
 var data = [];
 var moviedata = [];
+let movieNameList = ''
+let withUserMovieList = ''
 
 class UserDetails extends Component {
   constructor(props) {
@@ -54,31 +56,33 @@ class UserDetails extends Component {
       profileName: ""
     },
     top_ten_users: [],
-
+    sub: '',
+      moviesName:'',
     validation_error: [],
     isLoggedIn: false,
     message: "",
     top_ten_movies: [],
     movieHistory: [],
-    movieHistoryNames: ""
+    movieHistoryNames: '',
+      usermovielist:''
 
     // currentCustomersHC: []
   };
 
   componentWillMount() {
-    console.log("CompWillMount");
+    //console.log("CompWillMount");
     this.setState({
       profileName: localStorage.getItem("profileName"),
       // subscriptionType: "Free",
       // renewalDate: "12/20",
       // viewed_movie_list: ["Movie 12", "Movie 23", "Movie 34", "Movie 45"],
-      userdata: "",
+     // userdata: "",
       // top_ten_users : ["User top1 B", "User top9", "User D", "User A", "User B", "User C", "User D"],
       // currentCustomers: ["Cust1 ", "CUst2, ", "Cust1 ", "CUst2, "],
       search: "",
       page: 0,
       size: 10,
-      movieHistoryNames: ""
+     // movieHistoryNames: ""
       // currentCustomers: [],
       // top_ten_users: []
     });
@@ -100,10 +104,10 @@ class UserDetails extends Component {
           let i = 0;
           let len = 0;
           len = res.length;
-          console.log(
-            "Succesfully found user list in userdata as : ",
-            this.state.userdata
-          );
+          // console.log(
+          //   "Succesfully found user list in userdata as : ",
+          //   this.state.userdata
+          // );
           // console.log("User data array length is : ",len);
           for (i = 0; i <= data.length - 1; i++) {
             if (data[i].role === "USER") {
@@ -135,82 +139,71 @@ class UserDetails extends Component {
   }
 
   handleUserSelect = userID => {
-    console.log("Handling particular user fetch: ", userID);
-    this.setState({
-      isUpdateRequested: true,
-      userdata: {
-        profileName: "",
-        subscribed: "",
-        nextRenewalDate: ""
-      }
-    });
-    console.log("User id selected is: ", userID);
-    // console.log("User to be updated --->: ", this.state.userdata.title);
+    //console.log("Handling particular user fetch: ", userID);
+    // this.setState({
+    //   isUpdateRequested: true,
+    //   userdata: {
+    //     profileName: "",
+    //     subscribed: "",
+    //     nextRenewalDate: ""
+    //   }
+    // });
+    //console.log("User id selected is: ", userID);
+     //console.log("User to be updated --->: ", this.state.userlist);
 
     Object.keys(this.state.userlist).map(pd => {
       if (this.state.userlist[pd]._id == userID) {
-        console.log("UserID --> " + this.state.userlist[pd]._id);
-        // console.log("Profile Name " + this.state.userlist[pd].profileName);
-        // console.log("Subscription " + this.state.userlist[pd].subscribed);
-        // console.log("Renewal Date " + this.state.userlist[pd].nextRenewalDate);
-        this.state.profileName = this.state.userlist[pd].profileName;
-        this.state.subscribed = this.state.userlist[pd].subscribed;
-        this.state.nextRenewalDate = this.state.userlist[pd].nextRenewalDate;
-
-        // this.setState({
-        //   userdata:{
-        //   profileName: this.state.userlist[pd].profileName,
-        //   subscribed: this.state.userlist[pd].subscribed,
-        //   nextRenewalDate: this.state.userlist[pd].nextRenewalDate,
-        // }
-        // });
-        console.log("User data fetched is here : ", this.state.userdata);
-        // console.log("State profile name ", this.state.profileName);
-        // console.log("State subscribed: ", this.state.subscribed);
-        // console.log("State renewal: ", this.state.nextRenewalDate);
+         if (this.state.userlist[pd].subcribed){
+             this.state.sub = "Subscribed"
+         }else{
+             this.state.sub = "Not Subscribed"
+         }
+         //this.state.sub = this.state.userlist[pd].subcribed
+          this.setState({
+              //userdata: this.state.userlist[pd],
+               profileName: this.state.userlist[pd].profileName,
+                 //sub: this.state.userlist[pd].subcribed,
+              nextRenewalDate: this.state.userlist[pd].nextRenewalDate
+          })
       } else {
         console.log("Not matched");
       }
     });
 
-    console.log("**********************Checking if this is handled: ");
+    //console.log("**********************Checking if this is handled: ");
+      withUserMovieList = ''
     API.getUserMovieHistory(userID).then(
       res => {
-        console.log("Movies for user are:  ", res);
         if (res.length > 0 || res.status == 200) {
-          console.log(" Success");
+          //console.log(" Success");
           this.setState({
-            usermovielist: res,
-            movieHistory: [],
-            movieHistoryNames : ""
+            usermovielist: res
           });
-          // console.log('------->user list ', this.state.userlist)
+           //console.log('------->user list ', this.state.usermovielist)
           moviedata = res;
           // this.state.userdata = res;
           let i = 0;
           let len = 0;
           len = res.length;
           let movieName = "";
-          // console.log(
-          //   "Succesfully found user list in userdata as : ",
-          //   this.state.userdata
-          // );
-          // console.log("User data array length is : ",len);
           for (i = 0; i <= moviedata.length - 1; i++) {
-              let tempMovie = "";
-              tempMovie = moviedata[i].movie.title;
-              this.state.movieHistory.push(tempMovie);
-              movieName = moviedata[i].movie.title;
-              this.state.movieHistoryNames += " "+moviedata[i].movie.title+" ";
+              //let tempMovie = "";
+              //tempMovie = moviedata[i].movie.title;
+              //this.state.movieHistory.push(tempMovie);
+              //movieName = moviedata[i].movie.title;
+              this.state.moviesName += " "+moviedata[i].movie.title+" ";
+              movieNameList += " "+moviedata[i].movie.title+" ";
               // this.state.currentCustomers.push(tempUser);
           }
-          console.log("MOVIES CHECK: ",  this.state.movieHistory);
-          console.log("MOVIES Names string: ",  this.state.movieHistoryNames);
+         //console.log("MOVIES CHECK: ",  this.state.movieHistory);
+          console.log("MOVIES Names string: ",  this.state.moviesName);
+          //console.log('subscrib ', this.state.userdata.subscribed)
         } else if (res.status === "401") {
           console.log("No records");
           this.setState({
             isLoggedIn: true,
-            message: "No records found..!!"
+            message: "No records found..!!",
+              usermovielist: ''
           });
         } else if (res.status === "402") {
           this.setState({
@@ -218,6 +211,9 @@ class UserDetails extends Component {
             message: "Session Expired..!!"
           });
           this.props.history.push("/login");
+        }
+        else{
+            this.state.usermovielist = ''
         }
       }
     );
@@ -273,6 +269,20 @@ class UserDetails extends Component {
         );
       });
 
+      withUserMovieList = ''
+      withUserMovieList =
+          this.state.usermovielist &&
+          Object.keys(this.state.usermovielist).map(pd => {
+              return (
+                  <tr >
+                      <td key={this.state.usermovielist[pd].movie.title}>{this.state.usermovielist[pd].movie.title}
+                      </td>
+                  </tr>
+              );
+          });
+      this.state.usermovielist = ''
+      console.log('yhis ', withUserMovieList, this.state.usermovielist)
+
     const CurrentUsers = this.state.currentCustomers.map(function(item) {
       return (
         <tr>
@@ -294,11 +304,12 @@ class UserDetails extends Component {
         </tr>
       );
     });
+    console.log('here ', movieNameList)
 
     return (
       <div>
         <div className="col-sm-4"> </div>
-        <div style={divStyle1} className="col-sm-6">
+        <div style={divStyle1} className="col-sm-6" align="center">
           {/*<img src={logo} style={imgStyle} alt="logo"/>*/}
 
           <p style={formHead1}>Current active users in MovieCentral</p>
@@ -307,8 +318,8 @@ class UserDetails extends Component {
           <form style={formStyle1}>
             <table>
               <tbody>
-                <tr>
-                  <td>
+                <tr align="center">
+                  <td align="center">
                     <b>
                       <i>Current Customers Using Movie Central </i>
                     </b>
@@ -388,8 +399,8 @@ class UserDetails extends Component {
                       className="form-control"
                       name="type"
                       readonly="readonly"
-                      placeholder="Not subscribed"
-                      value={this.state.subscribed}
+                      placeholder="True"
+                      value={this.state.sub}
                     />
                     <br />
                     <label> Renewal Date:</label>
@@ -407,8 +418,14 @@ class UserDetails extends Component {
                       </tbody>
                     </table>
                     <p>User viewed below movies:</p>
-                    <p>{this.state.movieHistoryNames}</p>
-                    <p>{this.state.movieHistory}</p>
+                    {/*<p>{this.state.movieHistoryNames}</p>*/}
+                    <div align="center">
+                      {/*<p>{movieNameList}</p>*/}
+                      <table>
+                          {withUserMovieList}
+                      </table>
+                    </div>
+                    {/*<p>{this.state.movieHistory}</p>*/}
                   </div>
                   <div class="modal-footer">
                     <button
@@ -474,6 +491,10 @@ class UserDetails extends Component {
             {/*<!-- /.modal -->*/}
           </form>
         </div>
+          <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+          <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+
       </div>
     );
   }
