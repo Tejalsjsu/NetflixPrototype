@@ -23,7 +23,8 @@ class Profile extends Component {
       role: localStorage.getItem("role"),
       isSubcribed: false,
       nextRenewalDate: null,
-      startSubcribedDate: null
+      startSubcribedDate: null,
+      movieHistoryList: []
     };
     this.toggleEdit = this.toggleEdit.bind(this);
   }
@@ -61,7 +62,48 @@ class Profile extends Component {
     }
   }
 
+  viewMovieHistory = userId => {
+    API.getUserMovieHistory(userId).then(result => {
+      console.log(result);
+      this.setState({
+        movieHistoryList: result
+      });
+    });
+  };
+
   render() {
+    const withfilter =
+      this.state.movieHistoryList &&
+      Object.keys(this.state.movieHistoryList).map(pd => {
+        return (
+          <tr
+            key={this.state.movieHistoryList[pd].movie._id}
+            className="odd ProjectTable-row project-details"
+          >
+            <td
+              key={this.state.movieHistoryList[pd].movie.title}
+              className="ProjectTable-cell"
+            >
+              <a
+                href={`/movieDetails?MovieId=${
+                  this.state.movieHistoryList[pd].movie._id
+                }`}
+              >
+                {this.state.movieHistoryList[pd].movie.title}
+              </a>
+              <br />
+              Actors: {this.state.movieHistoryList[pd].movie.actors} <br />
+              Directed By: {
+                this.state.movieHistoryList[pd].movie.directors
+              }{" "}
+              <br />
+              Genre : {this.state.movieHistoryList[pd].movie.genre} <br />
+              {this.state.movieHistoryList[pd].movie.synopsis}
+            </td>
+          </tr>
+        );
+      });
+
     return (
       <div style={bgcolor}>
         <div className="container" style={bgcolor}>
@@ -109,11 +151,21 @@ class Profile extends Component {
                       : "N/A"}
                   </div>
                   <div> Email: {this.state.email} </div>
-                  <br /> <br />
+
+                  <Button
+                    name="Top10"
+                    bsStyle="info"
+                    class="btn btn-primary "
+                    data-toggle="modal"
+                    data-target="#myTop10Modal"
+                    onClick={() =>
+                      this.viewMovieHistory(localStorage.getItem("userId"))
+                    }
+                  >
+                    Click here to view watched movie history
+                  </Button>
                 </div>
               </div>
-              <br />
-              <br /> <br />
             </div>
           </div>
         </div>
@@ -127,6 +179,53 @@ class Profile extends Component {
               Technology Pty Limited (ACN 142 189 759)
             </p>
           </footer>
+          <div class="modal fade" id="myTop10Modal" data-toggle="myTop10Modal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-hidden="true"
+                  >
+                    &times;
+                  </button>
+                  <h4 class="modal-title">
+                    <b>Movie history</b>
+                  </h4>
+                  <h4>{this.state.message}</h4>
+                </div>
+                <div class="modal-body">
+                  {/*<select className="form-control" name={this.props.name} value={this.props.value} onChange={this.props.handleChange}>
+        <option value="Select">Select duration</option>
+        <option value="day">Last 24 hours</option>
+        <option value="week">Last week</option>
+        <option value="month">Last month</option>
+      </select><br />*/}
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                      </tr>
+                    </thead>
+                    <tbody>{withfilter}</tbody>
+                  </table>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+              {/*<!-- /.modal-content -->*/}
+            </div>
+            {/*<!-- /.modal-dialog -->*/}
+          </div>
         </div>
       </div>
     );
